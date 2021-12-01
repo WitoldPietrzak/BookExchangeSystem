@@ -1,13 +1,12 @@
 package org.bs.bookshare.mok.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.bs.bookshare.exceptions.AppBaseException;
 import org.bs.bookshare.exceptions.AppUserException;
 import org.bs.bookshare.model.AppRole;
 import org.bs.bookshare.model.AppUser;
-import org.bs.bookshare.mok.ejb.repositories.AppRoleRepository;
-import org.bs.bookshare.mok.ejb.repositories.AppUserRepository;
+import org.bs.bookshare.model.Roles;
+import org.bs.bookshare.mok.repositories.AppRoleRepository;
+import org.bs.bookshare.mok.repositories.AppUserRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -22,7 +21,7 @@ public class AppUserServiceImplementation implements AppUserService{
     private final AppUserRepository appUserRepository;
     private final AppRoleRepository appRoleRepository;
     @Override
-    public AppUser saveUser(AppUser user) throws AppUserException {
+    public AppUser createUser(AppUser user) throws AppUserException {
         List<AppUser> users = appUserRepository.findAll(); //TODO dodać wyjątki
         if(users.stream().anyMatch(u ->(u.getEmail().equals(user.getEmail())))){
             throw AppUserException.emailExists();
@@ -30,13 +29,11 @@ public class AppUserServiceImplementation implements AppUserService{
         if(users.stream().anyMatch(u ->(u.getLogin().equals(user.getLogin())))){
             throw AppUserException.loginExists();
         }
+        AppRole role = appRoleRepository.findByName(Roles.ROLE_USER.toString());
+        user.getAppRoles().add(role);
         return appUserRepository.save(user);
     }
 
-    @Override
-    public AppRole saveRole(AppRole role) {
-        return appRoleRepository.save(role);
-    }
 
     @Override
     public void addRoleToUser(Long id, String roleName) {

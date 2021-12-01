@@ -2,14 +2,11 @@ package org.bs.bookshare.mok.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.AppUserException;
-import org.bs.bookshare.model.AppUser;
-import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.mok.dto.CreateUserRequestDTO;
 import org.bs.bookshare.mok.dto.MessageResponseDTO;
 import org.bs.bookshare.mok.dto.UserListResponseDTO;
 import org.bs.bookshare.mok.service.AppUserService;
 import org.bs.bookshare.utils.converter.UserConverter;
-import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,16 +26,15 @@ public class AppUserController {
     private final AppUserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserListResponseDTO>> getUsers() { // TODO: DTO
-        return ResponseEntity.ok().body(userService.getAllUsers().stream().map(UserConverter::UserListResponseDTOFromUser).collect(Collectors.toList())); //TODO przerobić na jsona
+    public ResponseEntity<List<UserListResponseDTO>> getUsers() {
+        return ResponseEntity.ok().body(userService.getAllUsers().stream().map(UserConverter::UserListResponseDTOFromUser).collect(Collectors.toList()));
     }
 
     @PostMapping("/register")
-    public ResponseEntity saveUser(@RequestBody CreateUserRequestDTO user) {
+    public ResponseEntity<MessageResponseDTO> saveUser(@RequestBody CreateUserRequestDTO user) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/account/register").toUriString());
         try {
-            AppUser savedUser= userService.saveUser(UserConverter.userFromCreateUserRequestDTO(user));
-            userService.addRoleToUser(savedUser.getId(), Roles.ROLE_USER.toString());
+            userService.createUser(UserConverter.userFromCreateUserRequestDTO(user));
             return ResponseEntity.created(uri).body(new MessageResponseDTO("Konto utworzone pomyślnie"));  //TODO
         } catch (AppUserException e) {
             return ResponseEntity.badRequest().body(new MessageResponseDTO(e.getMessage()));

@@ -1,4 +1,4 @@
-package org.bs.bookshare.mok.ejb.repositories;
+package org.bs.bookshare.mok.repositories;
 
 import org.bs.bookshare.model.AppRole;
 import org.springframework.data.jpa.repository.JpaRepository;
