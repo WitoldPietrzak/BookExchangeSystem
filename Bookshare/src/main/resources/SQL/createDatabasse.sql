@@ -41,3 +41,10 @@ CREATE TABLE role_table(
 INSERT INTO role_table(id, role_name) VALUES (1, 'ROLE_USER');
 INSERT INTO role_table(id, role_name) VALUES (2, 'ROLE_ADMIN');
 INSERT INTO role_table(id, role_name) VALUES (3, 'ROLE_MODERATOR');
+
+create table user_table_app_roles
+(
+    app_user_id  BIGINT NOT NULL
+        CONSTRAINT ref_user REFERENCES user_table,
+    app_roles_id BIGINT NOT NULL CONSTRAINT ref_role REFERENCES role_table
+);
