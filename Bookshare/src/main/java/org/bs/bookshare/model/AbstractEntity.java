@@ -1,15 +1,43 @@
 package org.bs.bookshare.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Version;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AbstractEntity {
+    @Version
     private Long version;
     private LocalDateTime creationDateTime;
     private LocalDateTime modificationDateTime;
-    private User createdBy;
-    private User modifiedBy;
+    @ManyToOne
+    @JoinColumn(name = "created_by", referencedColumnName = "id")
+    private AppUser createdBy;
+    @ManyToOne
+    @JoinColumn(name = "modified_by", referencedColumnName = "id")
+    private AppUser modifiedBy;
     private String createdByIp;
     private String modifiedByIp;
+
+
+    @PrePersist
+    private void init() {
+        creationDateTime = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void initUpdate() {
+        modificationDateTime = LocalDateTime.now();
+    }
 }
