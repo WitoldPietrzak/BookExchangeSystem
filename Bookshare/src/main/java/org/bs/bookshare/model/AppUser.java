@@ -3,7 +3,7 @@ package org.bs.bookshare.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class User {
+public class User extends AbstractEntity {
     private String login;
     private String email;
     private String password;
