@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import java.net.URI;
 import java.util.List;
@@ -32,7 +33,7 @@ public class AppUserController {
     public ResponseEntity<List<UserListResponseDTO>> getUsers() {
         return ResponseEntity.ok().body(userService.getAllUsers().stream().map(UserConverter::UserListResponseDTOFromUser).collect(Collectors.toList()));
     }
-
+    @PermitAll
     @PostMapping("/register")
     public ResponseEntity<MessageResponseDTO> saveUser(@RequestBody CreateUserRequestDTO user) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/account/register").toUriString());
