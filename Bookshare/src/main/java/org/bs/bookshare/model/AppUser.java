@@ -23,15 +23,11 @@ import java.util.List;
 @AllArgsConstructor
 public class AppUser extends AbstractEntity {
     @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String login;
     private String email;
     private String password;
-//    private String firstName;
-//    private String lastName;
-//    private String phoneNumber;
     @Column(nullable = false)
     private Boolean activated = false;
     @Column(nullable = false)
@@ -42,7 +38,7 @@ public class AppUser extends AbstractEntity {
     private String lastUnsuccessfulLoginIp;
     private Integer loginAttempts = 0;
 //    List<BookCopy> possessedBooks;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<AppRole> appRoles = new LinkedList<>();
 
     public AppUser(String login, String email, String password) {
