@@ -18,6 +18,6 @@ import javax.persistence.Table;
 public class Genre extends AbstractEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    String id;
+    Long id;
     String name;
 }
