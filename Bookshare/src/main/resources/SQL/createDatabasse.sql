@@ -9,7 +9,7 @@ CREATE TABLE user_table
     id    BIGINT PRIMARY KEY,
     login VARCHAR(50)  NOT NULL CONSTRAINT login_unique UNIQUE,
     email VARCHAR(100) NOT NULL CONSTRAINT email_unique UNIQUE,
-    password CHAR(64) NOT NULL,
+    password CHAR(60) NOT NULL,
     activated BOOL DEFAULT FALSE NOT NULL,
     disabled BOOL DEFAULT FALSE NOT NULL,
     last_successful_login                     TIMESTAMPTZ,

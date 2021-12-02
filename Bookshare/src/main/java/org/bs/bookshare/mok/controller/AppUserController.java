@@ -2,6 +2,7 @@ package org.bs.bookshare.mok.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.AppUserException;
+import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.mok.dto.CreateUserRequestDTO;
 import org.bs.bookshare.mok.dto.MessageResponseDTO;
 import org.bs.bookshare.mok.dto.UserListResponseDTO;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.annotation.security.RolesAllowed;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class AppUserController {
     private final AppUserService userService;
 
+    @RolesAllowed({Roles.ROLE_USER})
     @GetMapping("/users")
     public ResponseEntity<List<UserListResponseDTO>> getUsers() {
         return ResponseEntity.ok().body(userService.getAllUsers().stream().map(UserConverter::UserListResponseDTOFromUser).collect(Collectors.toList()));
