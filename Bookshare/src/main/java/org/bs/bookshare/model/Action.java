@@ -6,5 +6,5 @@ public class Action {
     LocalDateTime dateTime;
     Boolean anonymous;
     ActionType actionType;
-    User user;
+    AppUser appUser;
 }
