@@ -1,6 +1,12 @@
 DROP TABLE IF EXISTS user_table_app_roles;
 DROP TABLE IF EXISTS user_table;
 DROP TABLE IF EXISTS role_table;
+DROP TABLE IF EXISTS user_table_app_roles;
+DROP TABLE IF EXISTS genre_table;
+DROP TABLE IF EXISTS book_table;
+DROP TABLE IF EXISTS book_copy_table;
+DROP TABLE IF EXISTS book_table_genres;
+
 
 DROP SEQUENCE IF EXISTS user_seq;
 
@@ -21,9 +27,11 @@ CREATE TABLE user_table
     login_attempts             INT  DEFAULT 0
         CONSTRAINT attempts_ge0 CHECK ( login_attempts >= 0 ),
     modified_by                BIGINT,
+    FOREIGN KEY (modified_by) REFERENCES user_table(id),
     modification_date_time     TIMESTAMPTZ,
     modified_by_ip             VARCHAR(256),
     created_by                 BIGINT,
+    FOREIGN KEY (created_by) REFERENCES user_table(id),
     creation_date_time         TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by_ip              VARCHAR(256),
 
@@ -61,13 +69,57 @@ CREATE TABLE user_table_app_roles
 CREATE TABLE genre_table
 (
     id   BIGINT PRIMARY KEY,
-    name VARCHAR(200) UNIQUE,
+    name VARCHAR(200) UNIQUE NOT NULL ,
     modified_by                BIGINT,
+    FOREIGN KEY (modified_by) REFERENCES user_table(id),
     modification_date_time     TIMESTAMPTZ,
     modified_by_ip             VARCHAR(256),
     created_by                 BIGINT,
-    creation_date_time         TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data utworzenia konta
+    FOREIGN KEY (created_by) REFERENCES user_table(id),
+    creation_date_time         TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by_ip              VARCHAR(256),
 
     version                    BIGINT
+);
+
+CREATE TABLE book_table
+(
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(200) UNIQUE NOT NULL,
+    author VARCHAR(100),
+    modified_by                BIGINT,
+    FOREIGN KEY (modified_by) REFERENCES user_table(id),
+    modification_date_time     TIMESTAMPTZ,
+    modified_by_ip             VARCHAR(256),
+    created_by                 BIGINT,
+    FOREIGN KEY (created_by) REFERENCES user_table(id),
+    creation_date_time         TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by_ip              VARCHAR(256),
+
+    version                    BIGINT
+);
+
+CREATE TABLE book_copy_table
+(
+    id BIGINT PRIMARY KEY,
+    book BIGINT NOT NULL,
+    FOREIGN KEY (book) REFERENCES book_copy_table(id),
+    modified_by                BIGINT,
+    FOREIGN KEY (modified_by) REFERENCES user_table(id),
+    modification_date_time     TIMESTAMPTZ,
+    modified_by_ip             VARCHAR(256),
+    created_by                 BIGINT,
+    FOREIGN KEY (created_by) REFERENCES user_table(id),
+    creation_date_time         TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by_ip              VARCHAR(256),
+
+    version                    BIGINT
+);
+
+CREATE TABLE book_table_genres
+(
+    app_user_id  BIGINT NOT NULL
+        CONSTRAINT ref_user REFERENCES user_table,
+    app_roles_id BIGINT NOT NULL
+        CONSTRAINT ref_role REFERENCES role_table
 );
