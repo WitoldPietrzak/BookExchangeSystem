@@ -20,4 +20,8 @@ public class Genre extends AbstractEntity{
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     String name;
+
+    public Genre(String name) {
+        this.name = name;
+    }
 }
