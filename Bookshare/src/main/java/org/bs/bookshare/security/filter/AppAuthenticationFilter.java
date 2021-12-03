@@ -3,6 +3,8 @@ package org.bs.bookshare.security.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bs.bookshare.auth.CustomAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+
 
     public AppAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -56,9 +59,14 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     }
 
-//    @Override
-//    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-//        response.setHeader("access_token","dupa");
-//        super.unsuccessfulAuthentication(request, response, failed);
-//    }
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        Map<String,String> responseMap = new HashMap<>();
+        response.setStatus(401);
+        responseMap.put("status",String.valueOf(response.getStatus()));
+        responseMap.put("error",failed.getMessage());
+        responseMap.put("message",failed.getMessage());
+        response.setContentType("application/json");
+        new ObjectMapper().writeValue(response.getOutputStream(),responseMap);
+    }  //TODO
 }

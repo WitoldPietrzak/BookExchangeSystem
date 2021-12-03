@@ -27,46 +27,46 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 public class AppAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().equals("/login")) {
-            filterChain.doFilter(request, response);
-        } else {
-            String authorizationHeader = request.getHeader(AUTHORIZATION);
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                try {
-                    String token = authorizationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes()); //TODO sekret
-                    JWTVerifier verifier = JWT.require(algorithm).build();
-                    DecodedJWT decodedJWT = verifier.verify(token);
-                    String username = decodedJWT.getSubject();
-                    String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
-                    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    stream(roles).forEach(role -> {
-                        authorities.add(new SimpleGrantedAuthority(role));
-                    });
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    filterChain.doFilter(request, response);
-                } catch (Exception e) {
-                    response.setHeader("error",e.getMessage());
-                    response.setStatus(FORBIDDEN.value());
-                    Map<String,String> response_message = new HashMap<>();
-                    response_message.put("error",e.getMessage());
-                    response.setContentType("application/json");
-                    new ObjectMapper().writeValue(response.getOutputStream(), response_message);
 
-                }  //TODO wyjątki i ich obsługa
-            }
-            else{
-                response.setHeader("error","Brak dostępu");
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (!request.getServletPath().equals("/login") && authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            try {
+                String token = authorizationHeader.substring("Bearer ".length());
+                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes()); //TODO sekret
+                JWTVerifier verifier = JWT.require(algorithm).build();
+                DecodedJWT decodedJWT = verifier.verify(token);
+                String username = decodedJWT.getSubject();
+                String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+                Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                stream(roles).forEach(role -> {
+                    authorities.add(new SimpleGrantedAuthority(role));
+                });
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                filterChain.doFilter(request, response);
+            } catch (Exception e) {
+                response.setHeader("error", e.getMessage());
                 response.setStatus(FORBIDDEN.value());
-                Map<String,String> response_message = new HashMap<>();
-                response_message.put("status",String.valueOf(FORBIDDEN.value()));
-                response_message.put("error",FORBIDDEN.toString());
+                Map<String, String> response_message = new HashMap<>();
+                response_message.put("error", e.getMessage());
                 response.setContentType("application/json");
-                new ObjectMapper().writeValue(response.getOutputStream(), response_message);   //TODO wyjątki i ich obsługa
-//                filterChain.doFilter(request, response);
+                new ObjectMapper().writeValue(response.getOutputStream(), response_message);
+
+            }  //TODO wyjątki i ich obsługa
+        } else {
+            try {
+                filterChain.doFilter(request, response);
+            } catch (Exception e) {
+                response.setHeader("error", e.getMessage());
+                response.setStatus(FORBIDDEN.value());
+                Map<String, String> response_message = new HashMap<>();
+                response_message.put("error", e.getMessage());
+                response.setContentType("application/json");
+                new ObjectMapper().writeValue(response.getOutputStream(), response_message);
             }
+
         }
+
 
     }
 }
