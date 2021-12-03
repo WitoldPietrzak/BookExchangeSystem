@@ -29,8 +29,14 @@ public class Book extends AbstractEntity {
     String author;
     @ManyToMany(fetch = FetchType.EAGER)
     List<Genre> genres = new LinkedList<>();
-    String releaseDate;
-//    @OneToMany(fetch = FetchType.EAGER)
-//    List<BookCopy> bookList = new LinkedList<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    List<BookReview> reviews = new LinkedList<>();
+    Integer releaseDate;
 
+    public Book(String title, String author, List<Genre> genres, Integer releaseDate) {
+        this.title = title;
+        this.author = author;
+        this.genres = genres;
+        this.releaseDate = releaseDate;
+    }
 }
