@@ -1,4 +1,4 @@
-package org.bs.bookshare.mok.dto;
+package org.bs.bookshare.mok.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
