@@ -8,9 +8,14 @@ import java.util.List;
 
 public interface AppUserService {
     AppUser createUser(AppUser user) throws AppUserException;
-    void addRoleToUser(Long id, String roleName);
+
+    void addRoleToUser(Long id, String roleName) throws AppUserException;
+
     AppUser getUser(Long id);
+
+    AppUser getUser(String login);
+
     List<AppUser> getAllUsers();
 
-
+    void changePassword(String login, String oldPassword, String newPassword, String newPasswordMatch) throws AppUserException;
 }

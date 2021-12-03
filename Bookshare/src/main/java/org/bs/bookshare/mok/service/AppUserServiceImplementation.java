@@ -48,9 +48,12 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
 
 
     @Override
-    public void addRoleToUser(Long id, String roleName) {
+    public void addRoleToUser(Long id, String roleName) throws AppUserException {
         AppUser user = appUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id.toString()));  //TODO Wyjątki
         AppRole role = appRoleRepository.findByName(roleName);
+        if(user.getAppRoles().contains(role)){
+            throw AppUserException.roleExists();
+        }
         user.getAppRoles().add(role);
 
     }
@@ -61,8 +64,31 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
     }
 
     @Override
+    public AppUser getUser(String login) {
+        return appUserRepository.findByLogin(login); //TODO Wyjątki
+    }
+
+    @Override
     public List<AppUser> getAllUsers() {
         return appUserRepository.findAll();
+    }
+
+    @Override
+    public void changePassword(String login, String oldPassword, String newPassword, String newPasswordMatch) throws AppUserException {
+        AppUser user = appUserRepository.findByLogin(login);
+        if (user == null) {
+            throw AppUserException.userNotFound();
+        }
+        if (!newPassword.equals(newPasswordMatch)) {
+            throw AppUserException.passwordsDontMatch();
+        }
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw AppUserException.IncorrectPassword();
+        }
+        if (oldPassword.equals(newPassword)) {
+            throw AppUserException.passwordUsed();
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));       //TODO Wyjątki
     }
 
     @Override
@@ -75,7 +101,6 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         user.getAppRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         });
-
-        return new User(user.getLogin(), user.getPassword(), authorities);
+        return new User(user.getLogin(), user.getPassword(), user.getActivated(), true, true, !user.getDisabled(), authorities);
     }
 }
