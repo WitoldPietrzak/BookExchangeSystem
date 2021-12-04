@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface BookService {
     Book createBook(Book book);
-    Book findBook(Long id);
+    Book findBook(Long id) throws BookException;
     List<Book> findBook(String name);
-    void removeBook(Long id);
+    void removeBook(Long id) throws BookException;
     List<Book> getAllBooks();
     Book updateBook(Book book) throws BookException;
 

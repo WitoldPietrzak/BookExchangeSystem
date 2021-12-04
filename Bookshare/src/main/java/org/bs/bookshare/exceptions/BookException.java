@@ -8,4 +8,7 @@ public class BookException extends AppBaseException {
     public static BookException versionMismatch() {
         return new BookException("VERSION_MISMATCH");
     }
+
+    public static BookException notFound() {return new BookException("BOOK_NOT_FOUND");
+    }
 }

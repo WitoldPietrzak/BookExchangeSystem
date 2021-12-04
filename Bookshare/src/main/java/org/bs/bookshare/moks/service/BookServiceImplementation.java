@@ -23,8 +23,8 @@ public class BookServiceImplementation implements BookService {  //TODO zabezpie
     }
 
     @Override
-    public Book findBook(Long id) {
-        return bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id.toString()));
+    public Book findBook(Long id) throws BookException {
+        return bookRepository.findById(id).orElseThrow(BookException::notFound);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class BookServiceImplementation implements BookService {  //TODO zabezpie
     }
 
     @Override
-    public void removeBook(Long id) {
+    public void removeBook(Long id) throws BookException {
 
         bookRepository.delete(findBook(id));
     }
