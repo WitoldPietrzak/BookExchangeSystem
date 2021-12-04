@@ -10,7 +10,7 @@ import org.bs.bookshare.mok.dto.request.PasswordChangeRequestDTO;
 import org.bs.bookshare.mok.dto.response.UserListResponseDTO;
 import org.bs.bookshare.mok.dto.response.UserResponseDTO;
 import org.bs.bookshare.mok.service.AppUserService;
-import org.bs.bookshare.mok.dto.request.AddRoleToUserRequestDTO;
+import org.bs.bookshare.mok.dto.request.RoleToUserRequestDTO;
 import org.bs.bookshare.utils.converter.UserConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,19 +67,26 @@ public class AppUserController {
 
     }
 
-    @PostMapping("/role")
+    @PostMapping("/role/add")
     @RolesAllowed({Roles.ROLE_ADMIN})
-    public ResponseEntity<AddRoleToUserRequestDTO> addRoleToUser(@RequestBody AddRoleToUserRequestDTO role) throws AppUserException {
+    public ResponseEntity<RoleToUserRequestDTO> addRoleToUser(@RequestBody RoleToUserRequestDTO role) throws AppUserException {
         userService.addRoleToUser(role.getUserId(), role.getRoleName());
         return ResponseEntity.ok().build();
 
+    }
+
+    @PostMapping("/role/revoke")
+    @RolesAllowed({Roles.ROLE_ADMIN})
+    public ResponseEntity<?> revokeRoleFromUser(@RequestBody RoleToUserRequestDTO role, Principal principal) throws AppUserException {
+        userService.revokeRoleFromUser(role.getUserId(), role.getRoleName(), principal.getName());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/password")
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR, Roles.ROLE_ADMIN})
     public ResponseEntity changePassword(Principal principal, @RequestBody PasswordChangeRequestDTO dto) throws AppUserException {
         String login = principal.getName();
-        userService.changePassword(login,dto.getOldPassword(),dto.getNewPassword(), dto.getNewPasswordMatch());
+        userService.changePassword(login, dto.getOldPassword(), dto.getNewPassword(), dto.getNewPasswordMatch());
         return ResponseEntity.ok().build();
     }
 

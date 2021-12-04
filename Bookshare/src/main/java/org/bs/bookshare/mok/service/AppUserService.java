@@ -11,6 +11,8 @@ public interface AppUserService {
 
     void addRoleToUser(Long id, String roleName) throws AppUserException;
 
+    void revokeRoleFromUser(Long id,String roleName, String caller) throws AppUserException;
+
     AppUser getUser(Long id);
 
     AppUser getUser(String login);

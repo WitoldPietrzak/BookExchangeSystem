@@ -39,4 +39,12 @@ public class AppUserException extends AppBaseException {
     public static AppUserException roleExists() {
         return new AppUserException("ROLE_EXIST");
     }
+
+    public static AppUserException roleDoesntExists() {
+        return new AppUserException("ROLE_NOT_EXIST");
+    }
+
+    public static AppUserException roleNotFound() {
+        return new AppUserException("ROLE_NOT_FOUND");
+    }
 }

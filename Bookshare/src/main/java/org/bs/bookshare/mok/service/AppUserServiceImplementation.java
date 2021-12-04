@@ -49,13 +49,29 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
 
     @Override
     public void addRoleToUser(Long id, String roleName) throws AppUserException {
-        AppUser user = appUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id.toString()));  //TODO Wyjątki
+        AppUser user = appUserRepository.findById(id).orElseThrow(AppUserException::userNotFound);  //TODO Wyjątki
         AppRole role = appRoleRepository.findByName(roleName);
-        if(user.getAppRoles().contains(role)){
+        if (role == null) {
+            throw AppUserException.roleNotFound();
+        }
+        if (user.getAppRoles().contains(role)) {
             throw AppUserException.roleExists();
         }
         user.getAppRoles().add(role);
 
+    }
+
+    @Override
+    public void revokeRoleFromUser(Long id, String roleName, String caller) throws AppUserException {
+        AppUser user = appUserRepository.findById(id).orElseThrow(AppUserException::userNotFound);  //TODO Wyjątki
+        AppRole role = appRoleRepository.findByName(roleName);
+        if (role == null) {
+            throw AppUserException.roleNotFound();
+        }
+        if (!user.getAppRoles().contains(role)) {
+            throw AppUserException.roleDoesntExists();
+        }
+        user.getAppRoles().remove(role);
     }
 
     @Override
