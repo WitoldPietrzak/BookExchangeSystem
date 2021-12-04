@@ -5,10 +5,13 @@ import org.bs.bookshare.exceptions.GenreException;
 import org.bs.bookshare.model.Book;
 import org.bs.bookshare.model.Genre;
 import org.bs.bookshare.model.Roles;
+import org.bs.bookshare.mok.dto.response.SimpleRoleResponseDTO;
 import org.bs.bookshare.moks.dto.request.AddBookRequestDTO;
+import org.bs.bookshare.moks.dto.response.SimpleBookResponseDTO;
 import org.bs.bookshare.moks.service.BookService;
 import org.bs.bookshare.moks.service.GenreService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +40,14 @@ public class BookController {
         }
         bookService.createBook(new Book(dto.getTitle(), dto.getAuthor(), genres, dto.getReleaseDate()));
         return ResponseEntity.ok().build();
+    }
+
+    @RolesAllowed({Roles.ROLE_USER})
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllBooks() {
+
+        return ResponseEntity.ok().body(bookService.getAllBooks().stream().map(book -> {
+            return new SimpleBookResponseDTO(book.getId(), book.getTitle(), book.getAuthor(), book.getReleaseDate());
+        }).collect(Collectors.toList()));
     }
 }
