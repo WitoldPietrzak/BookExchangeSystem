@@ -35,7 +35,7 @@ CREATE TABLE user_table
     FOREIGN KEY (created_by) REFERENCES user_table (id),
     creation_date_time         TIMESTAMPTZ        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by_ip              VARCHAR(256),
-
+    language                   CHAR(2),
     version                    BIGINT
 );
 
@@ -67,7 +67,8 @@ CREATE TABLE user_table_app_roles
         CONSTRAINT ref_role REFERENCES role_table
 );
 
-ALTER TABLE user_table_app_roles ADD CONSTRAINT user_role_unique_comb UNIQUE (app_user_id,app_roles_id);
+ALTER TABLE user_table_app_roles
+    ADD CONSTRAINT user_role_unique_comb UNIQUE (app_user_id, app_roles_id);
 
 CREATE TABLE genre_table
 (
@@ -121,10 +122,10 @@ CREATE TABLE book_copy_table
 );
 CREATE TABLE book_table_genres
 (
-    book_id  BIGINT NOT NULL
-        CONSTRAINT ref_genre REFERENCES book_table(id),
+    book_id   BIGINT NOT NULL
+        CONSTRAINT ref_genre REFERENCES book_table (id),
     genres_id BIGINT NOT NULL
-        CONSTRAINT ref_role REFERENCES genre_table(id)
+        CONSTRAINT ref_role REFERENCES genre_table (id)
 );
 
 CREATE TABLE book_review_table
