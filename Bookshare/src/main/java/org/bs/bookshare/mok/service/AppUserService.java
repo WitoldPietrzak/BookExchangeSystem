@@ -1,7 +1,6 @@
 package org.bs.bookshare.mok.service;
 
 import org.bs.bookshare.exceptions.AppUserException;
-import org.bs.bookshare.model.AppRole;
 import org.bs.bookshare.model.AppUser;
 
 import java.util.List;
@@ -13,11 +12,17 @@ public interface AppUserService {
 
     void revokeRoleFromUser(Long id,String roleName, String caller) throws AppUserException;
 
-    AppUser getUser(Long id);
+    AppUser getUser(Long id) throws AppUserException;
 
-    AppUser getUser(String login);
+    AppUser getUser(String login) throws AppUserException;
 
     List<AppUser> getAllUsers();
 
     void changePassword(String login, String oldPassword, String newPassword, String newPasswordMatch) throws AppUserException;
+
+    void disableUser(Long id, String name) throws AppUserException;
+
+    void enableUser(Long id, String name) throws AppUserException;
+
+    void changeLanguage(String login, String language) throws AppUserException;
 }

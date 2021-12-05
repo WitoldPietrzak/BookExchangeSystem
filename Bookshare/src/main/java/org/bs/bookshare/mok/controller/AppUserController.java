@@ -5,6 +5,7 @@ import org.bs.bookshare.exceptions.AppUserException;
 import org.bs.bookshare.model.AppUser;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.mok.dto.request.CreateUserRequestDTO;
+import org.bs.bookshare.mok.dto.request.LanguageChangeRequestDTO;
 import org.bs.bookshare.mok.dto.response.MessageResponseDTO;
 import org.bs.bookshare.mok.dto.request.PasswordChangeRequestDTO;
 import org.bs.bookshare.mok.dto.response.UserListResponseDTO;
@@ -43,16 +44,14 @@ public class AppUserController {
 
     @RolesAllowed({Roles.ROLE_ADMIN})
     @GetMapping("/info/{id}")
-    public ResponseEntity<UserResponseDTO> getUser(@NotNull @PathVariable("id") Long id) {
-        //TODO
+    public ResponseEntity<UserResponseDTO> getUser(@NotNull @PathVariable("id") Long id) throws AppUserException {
         AppUser user = userService.getUser(id);
         return ResponseEntity.ok().body(UserConverter.userAdminResponseDTOFromUser(user));
     }
 
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_ADMIN, Roles.ROLE_MODERATOR})
     @GetMapping("/info")
-    public ResponseEntity<UserResponseDTO> getUser(Principal principal) {
-        //TODO
+    public ResponseEntity<UserResponseDTO> getUser(Principal principal) throws AppUserException {
         String login = principal.getName();
         AppUser user = userService.getUser(login);
         return ResponseEntity.ok().body(UserConverter.userResponseDTOFromUser(user));
@@ -63,7 +62,7 @@ public class AppUserController {
     public ResponseEntity<MessageResponseDTO> saveUser(@RequestBody CreateUserRequestDTO user) throws AppUserException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/account/register").toUriString());
         userService.createUser(UserConverter.userFromCreateUserRequestDTO(user));
-        return ResponseEntity.created(uri).body(new MessageResponseDTO("Konto utworzone pomyślnie"));  //TODO
+        return ResponseEntity.created(uri).body(new MessageResponseDTO("Konto utworzone pomyślnie"));  //TODO do stałej
 
     }
 
@@ -88,6 +87,27 @@ public class AppUserController {
         String login = principal.getName();
         userService.changePassword(login, dto.getOldPassword(), dto.getNewPassword(), dto.getNewPasswordMatch());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/disable/{id}")
+    @RolesAllowed({Roles.ROLE_ADMIN})
+    public ResponseEntity<?> disableUser(Principal principal, @PathVariable Long id) throws AppUserException {
+        userService.disableUser(id, principal.getName());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/enable/{id}")
+    @RolesAllowed({Roles.ROLE_ADMIN})
+    public ResponseEntity<?> enableUser(Principal principal, @PathVariable Long id) throws AppUserException {
+        userService.enableUser(id, principal.getName());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/language")
+    @RolesAllowed({Roles.ROLE_USER,Roles.ROLE_ADMIN,Roles.ROLE_MODERATOR})
+    public ResponseEntity<?> changeLanguage(Principal principal, @RequestBody LanguageChangeRequestDTO dto) throws AppUserException {
+        userService.changeLanguage(principal.getName(), dto.getLanguage());
+        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
     }
 
 

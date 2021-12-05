@@ -10,8 +10,8 @@ public class UserAdminResponseDTO extends UserResponseDTO {
     private boolean disabled;
     private List<SimpleRoleResponseDTO> roles;
 
-    public UserAdminResponseDTO(Long id, String login, String email, boolean activated, boolean disabled, Long version, List<AppRole> roles) {
-        super(id, login, email, version);
+    public UserAdminResponseDTO(Long id, String login, String email, boolean activated, boolean disabled, Long version, List<AppRole> roles, String language) {
+        super(id, login, email, version, language);
         this.activated = activated;
         this.disabled = disabled;
         this.roles = roles.stream().map(role -> {

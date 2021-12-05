@@ -42,11 +42,12 @@ public class AppUser extends AbstractEntity {
 //    List<BookCopy> possessedBooks;
     @ManyToMany(fetch = FetchType.LAZY)
     private List<AppRole> appRoles = new LinkedList<>();
-
-    public AppUser(String login, String email, String password) {
+    private String language;
+    public AppUser(String login, String email, String password, String language) {
         super();
         this.login = login;
         this.email = email;
         this.password = password;
+        this.language = language;
     }
 }

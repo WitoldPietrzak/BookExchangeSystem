@@ -12,6 +12,7 @@ public class UserResponseDTO {
     private String login;
     private String email;
     private Long version;
+    private String language;
 
 
     //TODO dodać książki ?

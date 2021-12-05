@@ -8,7 +8,7 @@ import org.bs.bookshare.mok.dto.response.UserResponseDTO;
 
 public class UserConverter {
     public static AppUser userFromCreateUserRequestDTO(CreateUserRequestDTO dto) {
-        return new AppUser(dto.getLogin(), dto.getEmail(), dto.getPassword());
+        return new AppUser(dto.getLogin(), dto.getEmail(), dto.getPassword(), dto.getLanguage().toLowerCase());
     }
 
     public static UserListResponseDTO userListResponseDTOFromUser(AppUser user) {
@@ -16,10 +16,10 @@ public class UserConverter {
     }
 
     public static UserResponseDTO userResponseDTOFromUser(AppUser user) {
-        return new UserResponseDTO(user.getId(), user.getLogin(), user.getEmail(), user.getVersion());
+        return new UserResponseDTO(user.getId(), user.getLogin(), user.getEmail(), user.getVersion(), user.getLanguage());
     }
 
     public static UserAdminResponseDTO userAdminResponseDTOFromUser(AppUser user) {
-        return new UserAdminResponseDTO(user.getId(),user.getLogin(),user.getEmail(),user.getActivated(),user.getDisabled(), user.getVersion(), user.getAppRoles());
+        return new UserAdminResponseDTO(user.getId(), user.getLogin(), user.getEmail(), user.getActivated(), user.getDisabled(), user.getVersion(), user.getAppRoles(), user.getLanguage());
     }
 }
