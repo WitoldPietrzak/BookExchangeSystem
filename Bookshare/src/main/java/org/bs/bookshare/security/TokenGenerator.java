@@ -19,7 +19,7 @@ public class TokenGenerator {
                 .withSubject(username)
                 .withExpiresAt(expiresAt)
                 .withIssuer(issuer)
-                .withClaim("roles", Collections.singletonList(claims))
+                .withClaim("roles", claims)
                 .sign(algorithm);
     }
 
