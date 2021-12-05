@@ -77,8 +77,8 @@ public class AppUserController {
 
     @PostMapping("/role/revoke")
     @RolesAllowed({Roles.ROLE_ADMIN})
-    public ResponseEntity<?> revokeRoleFromUser(@RequestBody RoleToUserRequestDTO role, Principal principal) throws AppUserException {
-        userService.revokeRoleFromUser(role.getUserId(), role.getRoleName(), principal.getName());
+    public ResponseEntity<?> revokeRoleFromUser(@RequestBody RoleToUserRequestDTO role) throws AppUserException {
+        userService.revokeRoleFromUser(role.getUserId(), role.getRoleName());
         return ResponseEntity.ok().build();
     }
 
@@ -129,6 +129,13 @@ public class AppUserController {
     @PermitAll
     public ResponseEntity<?> requestPasswordReset(@PathVariable String loginOrEmail) throws AppUserException {
         userService.sendResetPasswordRequest(loginOrEmail);
+        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+    }
+
+    @GetMapping("/enable/token/{token}")
+    @PermitAll
+    public ResponseEntity<?> enableUserByToken(@PathVariable String token) throws AppUserException {
+        userService.enableUserByToken(token);
         return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
     }
 

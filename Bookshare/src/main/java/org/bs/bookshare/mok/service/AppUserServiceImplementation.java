@@ -11,6 +11,7 @@ import org.bs.bookshare.mok.repositories.AppUserRepository;
 import org.bs.bookshare.security.TokenGenerator;
 import org.bs.bookshare.utils.mail.MailProvider;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -77,14 +79,18 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
     }
 
     @Override
-    public void revokeRoleFromUser(Long id, String roleName, String caller) throws AppUserException {
+    public void revokeRoleFromUser(Long id, String roleName) throws AppUserException {  //TODO Dodaćzabezpieczenie przed zabraniem sobie amdina
         AppUser user = appUserRepository.findById(id).orElseThrow(AppUserException::userNotFound);
         AppRole role = appRoleRepository.findByName(roleName);
+        String caller = SecurityContextHolder.getContext().getAuthentication().getName();
         if (role == null) {
             throw AppUserException.roleNotFound();
         }
         if (!user.getAppRoles().contains(role)) {
             throw AppUserException.roleDoesntExists();
+        }
+        if (user.getLogin().equals(caller) && Roles.ROLE_ADMIN.equals(roleName)) {
+            throw AppUserException.actionNotAllowed();
         }
         user.getAppRoles().remove(role);
     }
@@ -218,21 +224,55 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         try {
 
 
-        if(loginOrEmail.contains("@")){
-            user = appUserRepository.findByEmail(loginOrEmail);
-        }
-        else {
-            user = appUserRepository.findByLogin(loginOrEmail);
-        }
-        }catch (Exception e){
+            if (loginOrEmail.contains("@")) {
+                user = appUserRepository.findByEmail(loginOrEmail);
+            } else {
+                user = appUserRepository.findByLogin(loginOrEmail);
+            }
+        } catch (Exception e) {
             return;
         }
-        if(!user.getActivated()){
-                return;
-            }
-            String token = TokenGenerator.generatePasswordChangeToken(user.getLogin(),user.getPassword(),new Date(System.currentTimeMillis()+ (60*60* 1000))); //TODO okres waznosci do property
-            mailProvider.sendPasswordResetMail(user.getEmail(),token,user.getLanguage());
+        if (!user.getActivated()) {
+            return;
         }
+        String token = TokenGenerator.generatePasswordChangeToken(user.getLogin(), user.getPassword(), new Date(System.currentTimeMillis() + (60 * 60 * 1000))); //TODO okres waznosci do property
+        mailProvider.sendPasswordResetMail(user.getEmail(), token, user.getLanguage());
+    }
+
+    @Override
+    public void registerLoginAttempt(Long id, Boolean success) throws AppUserException {
+        AppUser user;
+        user = appUserRepository.findById(id).orElseThrow(AppUserException::userNotFound);
+        if (success) {
+            user.setLastSuccessfulLogin(LocalDateTime.now());
+            user.setLoginAttempts(0);
+        } else {
+            user.setLastUnsuccessfulLogin(LocalDateTime.now());
+            user.setLoginAttempts(user.getLoginAttempts() + 1);
+            if (user.getLoginAttempts() == 3) {  //TODO do properties
+                user.setDisabled(true);
+                String token = TokenGenerator.generateActivationToken(user.getLogin(), new Date(System.currentTimeMillis() + (7 * 24 * 60 * 60 * 1000)));   //TODO do properties
+                mailProvider.sendAccountEnableMail(user.getEmail(), token, user.getLanguage());
+            }
+        }
+
+    }
+
+    @Override
+    public void enableUserByToken(String token) throws AppUserException {
+        DecodedJWT jwt = TokenGenerator.verifyToken(token);
+        String login = jwt.getSubject();
+        AppUser user;
+        try {
+            user = appUserRepository.findByLogin(login);
+        } catch (Exception e) {
+            throw AppUserException.userNotFound();
+        }
+        if (!user.getDisabled()) {
+            throw AppUserException.userNotDisabled();
+        }
+        user.setDisabled(false);
+    }
 
 
     @Override

@@ -16,6 +16,7 @@ public class Codes {
     public static final String GENRE_EXIST = "genre_exist";
     public static final String GENRE_NOT_EXIST = "genre_not_exist";
     public static final String UNKNOWN_LANGUAGE = "unknown_language";
+    public static final String USER_NOT_ACTIVE = "user_not_active";
     public static final String USER_DISABLED = "user_disabled";
     public static final String USER_NOT_DISABLED = "user_not_disabled";
     public static final String ACTION_NOT_ALLOWED = "action_not_allowed";
@@ -27,6 +28,9 @@ public class Codes {
     public static final String ACTIVATION_MAIL_TEXT = "activation_mail_text";
     public static final String PASSWORD_RESET_MAIL_SUBJECT = "password_reset_mail_subject";
     public static final String PASSWORD_RESET_MAIL_TEXT = "password_reset_mail_text";
+    public static final String ACCOUNT_ENABLE_MAIL_SUBJECT = "account_enable_mail_subject";
+    public static final String ACCOUNT_ENABLE_MAIL_TEXT = "account_enable_mail_text";
+
 
     public static final String[] LANGUAGE = {"pl", "en"};
 }
