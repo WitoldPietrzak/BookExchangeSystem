@@ -7,11 +7,13 @@ import static org.bs.bookshare.common.Codes.LANGUAGE_ALREADY_IN_USE;
 import static org.bs.bookshare.common.Codes.LOGIN_EXIST;
 import static org.bs.bookshare.common.Codes.MAIL_EXIST;
 import static org.bs.bookshare.common.Codes.PASSWORDS_NOT_MATCH;
+import static org.bs.bookshare.common.Codes.PASSWORD_ALREADY_RESET;
 import static org.bs.bookshare.common.Codes.PASSWORD_IN_USE;
 import static org.bs.bookshare.common.Codes.ROLE_EXIST;
 import static org.bs.bookshare.common.Codes.ROLE_NOT_EXIST;
 import static org.bs.bookshare.common.Codes.ROLE_NOT_FOUND;
 import static org.bs.bookshare.common.Codes.UNKNOWN_LANGUAGE;
+import static org.bs.bookshare.common.Codes.USER_ALREADY_ACTIVATED;
 import static org.bs.bookshare.common.Codes.USER_DISABLED;
 import static org.bs.bookshare.common.Codes.USER_NOT_DISABLED;
 import static org.bs.bookshare.common.Codes.USER_NOT_FOUND;
@@ -84,5 +86,13 @@ public class AppUserException extends AppBaseException {
 
     public static AppUserException languageAlreadyInUse() {
         return new AppUserException(LANGUAGE_ALREADY_IN_USE);
+    }
+
+    public static AppUserException alreadyActivated() {
+        return new AppUserException(USER_ALREADY_ACTIVATED);
+    }
+
+    public static AppUserException alreadyReset() {
+        return new AppUserException(PASSWORD_ALREADY_RESET);
     }
 }

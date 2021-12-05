@@ -6,6 +6,7 @@ import org.bs.bookshare.model.AppUser;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.mok.dto.request.CreateUserRequestDTO;
 import org.bs.bookshare.mok.dto.request.LanguageChangeRequestDTO;
+import org.bs.bookshare.mok.dto.request.PasswordResetRequestDTO;
 import org.bs.bookshare.mok.dto.response.MessageResponseDTO;
 import org.bs.bookshare.mok.dto.request.PasswordChangeRequestDTO;
 import org.bs.bookshare.mok.dto.response.UserListResponseDTO;
@@ -104,9 +105,30 @@ public class AppUserController {
     }
 
     @PostMapping("/language")
-    @RolesAllowed({Roles.ROLE_USER,Roles.ROLE_ADMIN,Roles.ROLE_MODERATOR})
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_ADMIN, Roles.ROLE_MODERATOR})
     public ResponseEntity<?> changeLanguage(Principal principal, @RequestBody LanguageChangeRequestDTO dto) throws AppUserException {
         userService.changeLanguage(principal.getName(), dto.getLanguage());
+        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+    }
+
+    @GetMapping("/activate/{token}")
+    @PermitAll
+    public ResponseEntity<?> activateUser(@PathVariable String token) throws AppUserException {
+        userService.activateUser(token);
+        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+    }
+
+    @PostMapping("/password/{token}")
+    @PermitAll
+    public ResponseEntity<?> resetPassword(@PathVariable String token, @RequestBody PasswordResetRequestDTO dto) throws AppUserException {
+        userService.resetPassword(token, dto.getNewPassword(), dto.getNewPasswordConfirm());
+        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+    }
+
+    @GetMapping("/password/reset/{loginOrEmail}")
+    @PermitAll
+    public ResponseEntity<?> requestPasswordReset(@PathVariable String loginOrEmail) throws AppUserException {
+        userService.sendResetPasswordRequest(loginOrEmail);
         return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
     }
 

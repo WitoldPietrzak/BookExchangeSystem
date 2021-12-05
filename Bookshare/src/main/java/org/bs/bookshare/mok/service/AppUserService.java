@@ -10,7 +10,7 @@ public interface AppUserService {
 
     void addRoleToUser(Long id, String roleName) throws AppUserException;
 
-    void revokeRoleFromUser(Long id,String roleName, String caller) throws AppUserException;
+    void revokeRoleFromUser(Long id, String roleName, String caller) throws AppUserException;
 
     AppUser getUser(Long id) throws AppUserException;
 
@@ -25,4 +25,10 @@ public interface AppUserService {
     void enableUser(Long id, String name) throws AppUserException;
 
     void changeLanguage(String login, String language) throws AppUserException;
+
+    void activateUser(String token) throws AppUserException;
+
+    void resetPassword(String token, String newPassword, String newPasswordMatch) throws AppUserException;
+
+    void sendResetPasswordRequest(String loginOrEmail);
 }

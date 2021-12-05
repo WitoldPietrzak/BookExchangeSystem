@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface AppUserRepository extends JpaRepository<AppUser,Long> {
     AppUser findByLogin(String login);
+    AppUser findByEmail(String email);
 
     @Query("SELECT u FROM AppUser  u JOIN FETCH u.appRoles WHERE u.login = (:login)")
     AppUser findByLoginAndFetchRolesEagerly(@Param("login") String login);

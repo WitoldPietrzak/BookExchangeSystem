@@ -1,5 +1,6 @@
 package org.bs.bookshare.mok.service;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.AppUserException;
 import org.bs.bookshare.model.AppRole;
@@ -7,6 +8,7 @@ import org.bs.bookshare.model.AppUser;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.mok.repositories.AppRoleRepository;
 import org.bs.bookshare.mok.repositories.AppUserRepository;
+import org.bs.bookshare.security.TokenGenerator;
 import org.bs.bookshare.utils.mail.MailProvider;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -20,6 +22,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import static org.bs.bookshare.common.Codes.LANGUAGE;
@@ -53,7 +56,8 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         user.getAppRoles().add(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         appUserRepository.save(user);
-        mailProvider.sendActivationMail(user.getEmail(), "zaslepka", user.getLanguage());  //TODO token aktywacyjny
+        String token = TokenGenerator.generateActivationToken(user.getLogin(), new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000));
+        mailProvider.sendActivationMail(user.getEmail(), token, user.getLanguage());
         return user;
     }
 
@@ -160,12 +164,76 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         })) {
             throw AppUserException.unknownLanguage();
         }
-        if(user.getLanguage().equals(language)){
+        if (user.getLanguage().equals(language)) {
             throw AppUserException.languageAlreadyInUse();
         }
         user.setLanguage(language.toLowerCase());
 
     }
+
+    @Override
+    public void activateUser(String token) throws AppUserException {
+
+        DecodedJWT jwt = TokenGenerator.verifyToken(token);
+        String login = jwt.getSubject();
+        AppUser user;
+        try {
+            user = appUserRepository.findByLogin(login);
+        } catch (Exception e) {
+            throw AppUserException.userNotFound();
+        }
+        if (user.getActivated()) {
+            throw AppUserException.alreadyActivated();
+        }
+        user.setActivated(true);
+    }
+
+    @Override
+    public void resetPassword(String token, String newPassword, String newPasswordMatch) throws AppUserException {
+        DecodedJWT jwt = TokenGenerator.verifyToken(token);
+        String login = jwt.getSubject();
+        String oldPassword = jwt.getClaim("password").asString();
+        AppUser user;
+        try {
+            user = appUserRepository.findByLogin(login);
+        } catch (Exception e) {
+            throw AppUserException.userNotFound();
+        }
+        if (!oldPassword.equals(user.getPassword())) {
+            throw AppUserException.alreadyReset();
+        }
+        if (!newPassword.equals(newPasswordMatch)) {
+            throw AppUserException.passwordsDontMatch();
+        }
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw AppUserException.passwordUsed();
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+    }
+
+    @Override
+    public void sendResetPasswordRequest(String loginOrEmail) {
+        AppUser user;
+
+        try {
+
+
+        if(loginOrEmail.contains("@")){
+            user = appUserRepository.findByEmail(loginOrEmail);
+        }
+        else {
+            user = appUserRepository.findByLogin(loginOrEmail);
+        }
+        }catch (Exception e){
+            return;
+        }
+        if(!user.getActivated()){
+                return;
+            }
+            String token = TokenGenerator.generatePasswordChangeToken(user.getLogin(),user.getPassword(),new Date(System.currentTimeMillis()+ (60*60* 1000))); //TODO okres waznosci do property
+            mailProvider.sendPasswordResetMail(user.getEmail(),token,user.getLanguage());
+        }
+
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {

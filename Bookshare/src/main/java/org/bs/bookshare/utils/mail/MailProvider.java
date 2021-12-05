@@ -16,6 +16,8 @@ import java.util.ResourceBundle;
 
 import static org.bs.bookshare.common.Codes.ACTIVATION_MAIL_SUBJECT;
 import static org.bs.bookshare.common.Codes.ACTIVATION_MAIL_TEXT;
+import static org.bs.bookshare.common.Codes.PASSWORD_RESET_MAIL_SUBJECT;
+import static org.bs.bookshare.common.Codes.PASSWORD_RESET_MAIL_TEXT;
 
 
 @Component
@@ -35,4 +37,12 @@ public class MailProvider {
         emailService.sendMail(to,subject,from,message);
     }
 
+    public void sendPasswordResetMail(String to, String token, String lang) {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LanguageRes", locale);
+        String subject = langBundle.getString(PASSWORD_RESET_MAIL_SUBJECT);
+        String from =environment.getProperty("spring.mail.username");
+        String message = String.format(langBundle.getString(PASSWORD_RESET_MAIL_TEXT), token);
+        emailService.sendMail(to,subject,from,message);
+    }
 }
