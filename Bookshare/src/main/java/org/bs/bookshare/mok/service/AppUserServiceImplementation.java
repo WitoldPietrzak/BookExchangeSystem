@@ -9,6 +9,7 @@ import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.mok.repositories.AppRoleRepository;
 import org.bs.bookshare.mok.repositories.AppUserRepository;
 import org.bs.bookshare.security.TokenGenerator;
+import org.bs.bookshare.utils.IpAddressRetriever;
 import org.bs.bookshare.utils.mail.MailProvider;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
     private final AppRoleRepository appRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailProvider mailProvider;
+    private final HttpServletRequest request;
 
     @Override
     public AppUser createUser(AppUser user) throws AppUserException {
@@ -245,9 +248,11 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         user = appUserRepository.findById(id).orElseThrow(AppUserException::userNotFound);
         if (success) {
             user.setLastSuccessfulLogin(LocalDateTime.now());
+            user.setLastSuccessfulLoginIp(IpAddressRetriever.getClientIpAddressFromHttpServletRequest(request));
             user.setLoginAttempts(0);
         } else {
             user.setLastUnsuccessfulLogin(LocalDateTime.now());
+            user.setLastUnsuccessfulLoginIp(IpAddressRetriever.getClientIpAddressFromHttpServletRequest(request));
             user.setLoginAttempts(user.getLoginAttempts() + 1);
             if (user.getLoginAttempts() == 3) {  //TODO do properties
                 user.setDisabled(true);
