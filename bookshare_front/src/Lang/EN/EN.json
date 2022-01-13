@@ -1,3 +1,27 @@
 {
-
+  "Site.name": "BookCross",
+  "Form.email": "Email address",
+  "Form.login": "Login",
+  "Form.password": "Password",
+  "Form.passwordConfirm": "Confirm password",
+  "Form.loginButton": "Log in",
+  "Form.registerButton": "Create account",
+  "Login.forgotPasswordButton": "Forgot Password",
+  "Navbar.login": "Log In",
+  "Navbar.register": "Register",
+  "Navbar.accounts": "Accounts List",
+  "Navbar.account": "Account",
+  "Navbar.logout": "Log out",
+  "Navbar.logs": "Logs",
+  "Navbar.bookshelves": "Bookshelves",
+  "Navbar.books": "Books",
+  "ROLE_USER": "User",
+  "ROLE_ADMIN": "Admin",
+  "ROLE_MODERATOR": "Moderator",
+  "ROLE_GUEST": "Guest",
+  "user_not_found": "User not found",
+  "incorrect_password": "Incorrect password",
+  "user_disabled": "User has been disabled for safety reasons. Please check your email for more info.",
+  "mail_exist": "Mail address already in use",
+  "login_exist": " Login already in use"
 }

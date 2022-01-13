@@ -1,3 +1,27 @@
 {
-
+  "Site.name": "BookCross",
+  "Form.email": "Adres email",
+  "Form.login": "Login",
+  "Form.password": "Hasło",
+  "Form.passwordConfirm": "Potwierdź hasło",
+  "Form.loginButton": "Zaloguj",
+  "Form.registerButton": "Stwórz konto",
+  "Login.forgotPasswordButton": "Zapomniałem hasła",
+  "Navbar.login": "Zaloguj",
+  "Navbar.register": "Zarejestruj",
+  "Navbar.accounts": "Lista kont",
+  "Navbar.account": "Konto",
+  "Navbar.logout": "Wyloguj",
+  "Navbar.logs": "Logi",
+  "Navbar.bookshelves": "Półki",
+  "Navbar.books": "Książki",
+  "ROLE_USER": "Użytkownik",
+  "ROLE_ADMIN": "Administrator",
+  "ROLE_MODERATOR": "Moderator",
+  "ROLE_GUEST": "Gość",
+  "user_not_found": "Nie znaleziono użytkownika",
+  "incorrect_password": "Niepoprawne hasło",
+  "user_disabled": "Konto zostało zablokowane. Na adres email przypisany do konta została wysłana wiadomość ze szczegółowymi informacjami .",
+  "mail_exist": "Adres email jest już używany",
+  "login_exist": " Login jest już używany"
 }
