@@ -1,0 +1,8 @@
+#navbarDiv {
+    width: 100%;
+    border: 1px solid;
+    border-radius: 15px 15px 0px 0px;
+    background: #f3edd4
+    /*background: rgb(195,71,34);*/
+    /*background: linear-gradient(0deg, rgba(195,71,34,1) 0%, rgba(253,187,45,1) 100%);*/
+}
