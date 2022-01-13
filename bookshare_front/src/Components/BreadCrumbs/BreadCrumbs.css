@@ -1,0 +1,8 @@
+.BreadCrumbs{
+    border: 1px solid #000000;
+    border-top: 0px solid #000000;
+    /*border-radius: 6px;*/
+    /*background: rgb(195,71,34);*/
+    /*background: radial-gradient(circle, rgba(195,71,34,1) 0%, rgba(253,187,45,1) 100%);*/
+    background: #f3edd4
+}

@@ -1,11 +1,11 @@
 import React from "react";
 import {useLocation, useNavigate, Link} from "react-router-dom";
 import {Breadcrumbs} from "@material-ui/core";
-
+import './BreadCrumbs.css';
 
 function BreadCrumbs() {
     return (
-        <Breadcrumbs aria-label="breadcrumb" className="text-muted">
+        <Breadcrumbs aria-label="breadcrumb" className="BreadCrumbs text-muted mb-3">
             <HeaderView/>
         </Breadcrumbs>
     )

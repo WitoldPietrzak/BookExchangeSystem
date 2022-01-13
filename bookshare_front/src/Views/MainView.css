@@ -1,23 +1,12 @@
-#body1{
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-}
+
 
 #footer {
     max-height: 80px;
     flex: 1;
+    border: 1px solid;
+    border-radius: 0px 0px 15px 15px;
+    background: #f3edd4
+    /*background: rgb(195,71,34);*/
+    /*background: linear-gradient(180deg, rgba(195,71,34,1) 0%, rgba(253,187,45,1) 100%);*/
 }
 
-#flag {
-    margin-left: 10px;
-    max-width: 30px;
-}
-
-#navbarDiv {
-    width: 100%;
-}
-
-body > #root > div {
-    height: 100vh;
-}
