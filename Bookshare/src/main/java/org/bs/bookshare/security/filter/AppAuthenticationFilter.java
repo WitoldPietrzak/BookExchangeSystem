@@ -2,6 +2,10 @@ package org.bs.bookshare.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.bs.bookshare.exceptions.AppUserException;
+import org.bs.bookshare.model.AppUser;
+import org.bs.bookshare.mok.service.AppUserService;
+import org.bs.bookshare.mok.service.AppUserServiceImplementation;
 import org.bs.bookshare.security.TokenGenerator;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +34,8 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final Environment environment;
 
+    private final AppUserService appUserService;
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String login = request.getParameter("login");
@@ -44,8 +50,16 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User user = (User) authResult.getPrincipal();
         String accessToken = TokenGenerator.generateAuthenticationToken(user.getUsername(), new Date(System.currentTimeMillis() + (long) Integer.parseInt(Objects.requireNonNull(environment.getProperty("access_token.valid_time_in_minutes"))) * 60 * 1000), request.getRequestURL().toString(), user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 
-        Map<String, String> responseToken = new HashMap<>();
+        Map<String, Object> responseToken = new HashMap<>();
         responseToken.put("access_token", accessToken);
+        responseToken.put("access_levels", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        AppUser appUser = null;
+        try {
+            appUser = appUserService.getUser(user.getUsername());
+            responseToken.put("language", appUser.getLanguage());
+        } catch (AppUserException e) {
+            e.printStackTrace();
+        }
         response.setContentType("application/json");
         new ObjectMapper().writeValue(response.getOutputStream(), responseToken);
 
@@ -53,7 +67,6 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-
 
 
         Map<String, String> responseMap = new HashMap<>();
