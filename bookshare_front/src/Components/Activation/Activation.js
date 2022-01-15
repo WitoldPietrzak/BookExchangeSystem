@@ -1,13 +1,13 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
 import {Alert} from "react-bootstrap";
-import {Button} from "@material-ui/core";
 import {makeActivateUserRequest} from "../../Requests/mok/ActivateUserRequest";
+import {useParams} from "react-router-dom";
 
 class ActivationNoTr extends React.Component {
     constructor(props) {
         super(props);
-        this.token = this.props.token;
+        this.token = this.props.params.token;
         this.state = {
             response: '',
             errorCode: '',
@@ -18,7 +18,7 @@ class ActivationNoTr extends React.Component {
     }
 
     sendActivationRequest() {
-        makeActivateUserRequest(this.state.token, this);
+        makeActivateUserRequest(this.token, this);
 
     }
 
@@ -32,12 +32,6 @@ class ActivationNoTr extends React.Component {
                     <br/>
                     {t(this.state.response)}
                 </Alert>
-                {/*<div className={this.state.requestCompleted ? 'visually-hidden' : ''}>{t('Activation.prompt')} </div>*/}
-                {/*<Button type='button' variant='outlined' className='m-3'*/}
-                {/*        onClick={this.sendActivationRequest.bind(this)}>*/}
-                {/*    Button*/}
-                {/*</Button>*/}
-
             </Fragment>
         )
     }
@@ -46,7 +40,8 @@ class ActivationNoTr extends React.Component {
 const ActivationTr = withTranslation()(ActivationNoTr);
 
 export default function Activation() {
+    const params = useParams();
     return (
-        <ActivationTr/>
+        <ActivationTr params={params}/>
     )
 }
