@@ -23,6 +23,10 @@ public class Codes {
     public static final String LANGUAGE_ALREADY_IN_USE = "language_already_in_use";
     public static final String USER_ALREADY_ACTIVATED = "user_already_activated";
     public static final String PASSWORD_ALREADY_RESET = "password_already_reset";
+    public static final String ACTIVATION_TOKEN_INVALID = "activation_token_invalid";
+    public static final String ACTIVATION_TOKEN_EXPIRED = "activation_token_expired";
+    public static final String AUTH_TOKEN_INVALID = "token_invalid";
+    public static final String AUTH_TOKEN_EXPIRED = "token_expired";
 
     public static final String ACTIVATION_MAIL_SUBJECT = "activation_mail_subject";
     public static final String ACTIVATION_MAIL_TEXT = "activation_mail_text";

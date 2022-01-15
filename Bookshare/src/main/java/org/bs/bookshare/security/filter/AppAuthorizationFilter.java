@@ -3,8 +3,11 @@ package org.bs.bookshare.security.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bs.bookshare.exceptions.AppUserException;
 import org.bs.bookshare.security.TokenGenerator;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,11 +47,24 @@ public class AppAuthorizationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
-            } catch (Exception e) {
+            }catch (JWTDecodeException e){
                 response.setHeader("error", e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 Map<String, String> response_message = new HashMap<>();
-                response_message.put("error", e.getMessage());
+                response_message.put("message", AppUserException.authTokenInvalid().getMessage());
+                response.setContentType("application/json");
+            }catch (JWTVerificationException e){
+                response.setHeader("error", e.getMessage());
+                response.setStatus(FORBIDDEN.value());
+                Map<String, String> response_message = new HashMap<>();
+                response_message.put("message", AppUserException.authTokenExpired().getMessage());
+                response.setContentType("application/json");
+                new ObjectMapper().writeValue(response.getOutputStream(), response_message);
+            }catch (Exception e) {
+                response.setHeader("error", e.getMessage());
+                response.setStatus(FORBIDDEN.value());
+                Map<String, String> response_message = new HashMap<>();
+                response_message.put("message", e.getMessage());
                 response.setContentType("application/json");
                 new ObjectMapper().writeValue(response.getOutputStream(), response_message);
 

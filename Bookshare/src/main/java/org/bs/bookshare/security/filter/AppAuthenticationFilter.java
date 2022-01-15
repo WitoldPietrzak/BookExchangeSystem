@@ -71,8 +71,6 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         Map<String, String> responseMap = new HashMap<>();
         response.setStatus(401);
-        responseMap.put("status", String.valueOf(response.getStatus()));
-        responseMap.put("error", failed.getMessage());
         responseMap.put("message", failed.getMessage());
         response.setContentType("application/json");
         new ObjectMapper().writeValue(response.getOutputStream(), responseMap);

@@ -1,6 +1,8 @@
 package org.bs.bookshare.exceptions;
 
 import static org.bs.bookshare.common.Codes.ACTION_NOT_ALLOWED;
+import static org.bs.bookshare.common.Codes.AUTH_TOKEN_EXPIRED;
+import static org.bs.bookshare.common.Codes.AUTH_TOKEN_INVALID;
 import static org.bs.bookshare.common.Codes.INCORRECT_PASSWORD;
 import static org.bs.bookshare.common.Codes.INVALID_MAIL;
 import static org.bs.bookshare.common.Codes.LANGUAGE_ALREADY_IN_USE;
@@ -12,6 +14,8 @@ import static org.bs.bookshare.common.Codes.PASSWORD_IN_USE;
 import static org.bs.bookshare.common.Codes.ROLE_EXIST;
 import static org.bs.bookshare.common.Codes.ROLE_NOT_EXIST;
 import static org.bs.bookshare.common.Codes.ROLE_NOT_FOUND;
+import static org.bs.bookshare.common.Codes.ACTIVATION_TOKEN_EXPIRED;
+import static org.bs.bookshare.common.Codes.ACTIVATION_TOKEN_INVALID;
 import static org.bs.bookshare.common.Codes.UNKNOWN_LANGUAGE;
 import static org.bs.bookshare.common.Codes.USER_ALREADY_ACTIVATED;
 import static org.bs.bookshare.common.Codes.USER_DISABLED;
@@ -95,4 +99,15 @@ public class AppUserException extends AppBaseException {
     public static AppUserException alreadyReset() {
         return new AppUserException(PASSWORD_ALREADY_RESET);
     }
+
+    public static AppUserException tokenExpired() {
+        return new AppUserException(ACTIVATION_TOKEN_EXPIRED);
+    }
+
+    public static AppUserException tokenInvalid() {
+        return new AppUserException(ACTIVATION_TOKEN_INVALID);
+    }
+
+    public static AppUserException authTokenExpired(){return new AppUserException(AUTH_TOKEN_EXPIRED);}
+    public static AppUserException authTokenInvalid(){return new AppUserException(AUTH_TOKEN_INVALID);}
 }
