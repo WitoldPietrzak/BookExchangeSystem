@@ -1,5 +1,7 @@
 package org.bs.bookshare.mok.service;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.AppUserException;
@@ -126,6 +128,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         } catch (Exception e) {
             throw AppUserException.userNotFound();
         }
+        if(user == null){
+            throw AppUserException.userNotFound();
+        }
         if (!newPassword.equals(newPasswordMatch)) {
             throw AppUserException.passwordsDontMatch();
         }
@@ -168,6 +173,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         } catch (Exception e) {
             throw AppUserException.userNotFound();
         }
+        if(user == null){
+            throw AppUserException.userNotFound();
+        }
         if (Arrays.stream(LANGUAGE).noneMatch(lang -> {
             return lang.equals(language.toLowerCase());
         })) {
@@ -182,13 +190,25 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
 
     @Override
     public void activateUser(String token) throws AppUserException {
+        DecodedJWT jwt;
+        String login;
+        try {
+            jwt = TokenGenerator.verifyToken(token);
+            login = jwt.getSubject();
+        } catch (JWTDecodeException e) {
+            throw AppUserException.tokenInvalid();
 
-        DecodedJWT jwt = TokenGenerator.verifyToken(token);
-        String login = jwt.getSubject();
+        } catch (JWTVerificationException e) {
+            throw AppUserException.tokenExpired();
+        }
+
         AppUser user;
         try {
             user = appUserRepository.findByLogin(login);
         } catch (Exception e) {
+            throw AppUserException.userNotFound();
+        }
+        if(user == null){
             throw AppUserException.userNotFound();
         }
         if (user.getActivated()) {
@@ -206,6 +226,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         try {
             user = appUserRepository.findByLogin(login);
         } catch (Exception e) {
+            throw AppUserException.userNotFound();
+        }
+        if(user == null){
             throw AppUserException.userNotFound();
         }
         if (!oldPassword.equals(user.getPassword())) {
@@ -233,6 +256,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
                 user = appUserRepository.findByLogin(loginOrEmail);
             }
         } catch (Exception e) {
+            return;
+        }
+        if (user == null) {
             return;
         }
         if (!user.getActivated()) {
@@ -271,6 +297,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         try {
             user = appUserRepository.findByLogin(login);
         } catch (Exception e) {
+            throw AppUserException.userNotFound();
+        }
+        if(user == null){
             throw AppUserException.userNotFound();
         }
         if (!user.getDisabled()) {
