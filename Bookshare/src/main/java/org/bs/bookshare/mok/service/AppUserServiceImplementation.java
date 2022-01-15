@@ -128,7 +128,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         } catch (Exception e) {
             throw AppUserException.userNotFound();
         }
-        if(user == null){
+        if (user == null) {
             throw AppUserException.userNotFound();
         }
         if (!newPassword.equals(newPasswordMatch)) {
@@ -173,7 +173,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         } catch (Exception e) {
             throw AppUserException.userNotFound();
         }
-        if(user == null){
+        if (user == null) {
             throw AppUserException.userNotFound();
         }
         if (Arrays.stream(LANGUAGE).noneMatch(lang -> {
@@ -196,10 +196,10 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             jwt = TokenGenerator.verifyToken(token);
             login = jwt.getSubject();
         } catch (JWTDecodeException e) {
-            throw AppUserException.tokenInvalid();
+            throw AppUserException.activationTokenInvalid();
 
         } catch (JWTVerificationException e) {
-            throw AppUserException.tokenExpired();
+            throw AppUserException.activationTokenExpired();
         }
 
         AppUser user;
@@ -208,7 +208,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         } catch (Exception e) {
             throw AppUserException.userNotFound();
         }
-        if(user == null){
+        if (user == null) {
             throw AppUserException.userNotFound();
         }
         if (user.getActivated()) {
@@ -219,16 +219,27 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
 
     @Override
     public void resetPassword(String token, String newPassword, String newPasswordMatch) throws AppUserException {
-        DecodedJWT jwt = TokenGenerator.verifyToken(token);
-        String login = jwt.getSubject();
-        String oldPassword = jwt.getClaim("password").asString();
+        DecodedJWT jwt;
+        String login;
+        String oldPassword;
+        try {
+            jwt = TokenGenerator.verifyToken(token);
+            login = jwt.getSubject();
+            oldPassword = jwt.getClaim("password").asString();
+        } catch (JWTDecodeException e) {
+            throw AppUserException.resetTokenInvalid();
+
+        } catch (JWTVerificationException e) {
+            throw AppUserException.resetTokenExpired();
+        }
+
         AppUser user;
         try {
             user = appUserRepository.findByLogin(login);
         } catch (Exception e) {
             throw AppUserException.userNotFound();
         }
-        if(user == null){
+        if (user == null) {
             throw AppUserException.userNotFound();
         }
         if (!oldPassword.equals(user.getPassword())) {
@@ -241,6 +252,35 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             throw AppUserException.passwordUsed();
         }
         user.setPassword(passwordEncoder.encode(newPassword));
+    }
+
+    @Override
+    public void verifyPasswordResetToken(String token) throws AppUserException {
+        DecodedJWT jwt;
+        String login;
+        String oldPassword;
+        try {
+            jwt = TokenGenerator.verifyToken(token);
+            login = jwt.getSubject();
+            oldPassword = jwt.getClaim("password").asString();
+        } catch (JWTDecodeException e) {
+            throw AppUserException.resetTokenInvalid();
+
+        } catch (JWTVerificationException e) {
+            throw AppUserException.resetTokenExpired();
+        }
+        AppUser user;
+        try {
+            user = appUserRepository.findByLogin(login);
+        } catch (Exception e) {
+            throw AppUserException.userNotFound();
+        }
+        if (user == null) {
+            throw AppUserException.userNotFound();
+        }
+        if (!oldPassword.equals(user.getPassword())) {
+            throw AppUserException.alreadyReset();
+        }
     }
 
     @Override
@@ -299,7 +339,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         } catch (Exception e) {
             throw AppUserException.userNotFound();
         }
-        if(user == null){
+        if (user == null) {
             throw AppUserException.userNotFound();
         }
         if (!user.getDisabled()) {

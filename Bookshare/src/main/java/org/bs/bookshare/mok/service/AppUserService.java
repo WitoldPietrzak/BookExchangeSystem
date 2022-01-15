@@ -30,6 +30,8 @@ public interface AppUserService {
 
     void resetPassword(String token, String newPassword, String newPasswordMatch) throws AppUserException;
 
+    public void verifyPasswordResetToken(String token) throws AppUserException;
+
     void sendResetPasswordRequest(String loginOrEmail);
 
     void registerLoginAttempt(Long id, Boolean success) throws AppUserException;

@@ -25,8 +25,10 @@ public class Codes {
     public static final String PASSWORD_ALREADY_RESET = "password_already_reset";
     public static final String ACTIVATION_TOKEN_INVALID = "activation_token_invalid";
     public static final String ACTIVATION_TOKEN_EXPIRED = "activation_token_expired";
-    public static final String AUTH_TOKEN_INVALID = "token_invalid";
-    public static final String AUTH_TOKEN_EXPIRED = "token_expired";
+    public static final String AUTH_TOKEN_INVALID = "auth_token_invalid";
+    public static final String AUTH_TOKEN_EXPIRED = "auth_token_expired";
+    public static final String RESET_TOKEN_INVALID = "reset_token_invalid";
+    public static final String RESET_TOKEN_EXPIRED = "reset_token_expired";
 
     public static final String ACTIVATION_MAIL_SUBJECT = "activation_mail_subject";
     public static final String ACTIVATION_MAIL_TEXT = "activation_mail_text";

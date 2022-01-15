@@ -125,6 +125,13 @@ public class AppUserController {
         return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
     }
 
+    @GetMapping("/password/{token}")
+    @PermitAll
+    public ResponseEntity<?> verifyPasswordToken(@PathVariable String token) throws AppUserException {
+        userService.verifyPasswordResetToken(token);
+        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+    }
+
     @GetMapping("/password/reset/{loginOrEmail}")
     @PermitAll
     public ResponseEntity<?> requestPasswordReset(@PathVariable String loginOrEmail) throws AppUserException {
