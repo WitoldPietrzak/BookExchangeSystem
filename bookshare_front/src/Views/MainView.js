@@ -2,12 +2,8 @@ import React, {Fragment} from "react";
 import Cookies from "js-cookie";
 import {withTranslation} from "react-i18next";
 import {MDBContainer, MDBFooter} from "mdbreact";
-import {Col, Container, Row} from "react-bootstrap";
-import {Link} from "react-router-dom";
 import BreadCrumbs from "../Components/BreadCrumbs/BreadCrumbs";
 import './MainView.css';
-import Login from "../Components/Login/Login";
-import Navbar from "react-bootstrap/Navbar";
 import {default as SiteNavbar} from "../Components/Navbar/Navbar"
 import Router from "../Routes/Router";
 import i18n from "i18next";
@@ -43,7 +39,9 @@ class MainViewNoTr extends React.Component {
             <div className="App container py-3 ">
                 <SiteNavbar/>
                 <BreadCrumbs/>
+                <div className='View'>
                 <Router/>
+                </div>
                 {/*<div>*/}
                 {/*    {this.state.location} <br />*/}
                 {/*</div>*/}

@@ -1,11 +1,9 @@
-import {Button, Dropdown, DropdownButton, NavDropdown} from "react-bootstrap";
-import Nav from "react-bootstrap/Nav";
+import {Button, Dropdown, DropdownButton, Nav, NavDropdown} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import React, {Fragment} from "react";
-import {useTranslation, withTranslation} from "react-i18next";
+import {withTranslation} from "react-i18next";
 import Cookies from "js-cookie";
 import {jwtCookieExpirationTime} from "../../../Views/MainView";
-import Navbar from "../Navbar";
 
 
 function updateAccessLevel(access_level) {
@@ -46,7 +44,7 @@ class LoggedInNavbarNoTr extends React.Component {
         window.location.reload();
     }
 
-    generateRoleButton() {
+    generateRoleButton() { //TODO
         const {t} = this.props;
         const accessLevels = JSON.parse(Cookies.get(process.env.REACT_APP_FRONT_ROLES_COOKIE_NAME));
         if (accessLevels.length > 1) {

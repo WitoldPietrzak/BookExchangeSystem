@@ -2,9 +2,6 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 import {jwtCookieExpirationTime} from '../../Views/MainView';
 import findDefaultRole from "../../Utils/DefaultRoleFinder";
-import {render} from "react-dom";
-import {Modal, Button} from "react-bootstrap";
-import {useState} from "react";
 
 export function makeLoginRequest(login, password, that) {
 

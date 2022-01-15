@@ -2,7 +2,6 @@ import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {Link} from "react-router-dom";
 import './Register.css';
 import {Alert, Spinner} from "react-bootstrap";
 import {makeRegisterRequest} from "../../Requests/mok/RegisterAccountRequest";

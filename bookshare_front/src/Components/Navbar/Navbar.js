@@ -4,8 +4,7 @@ import {isAdmin, isLogged, isModerator, isUser} from "../../Routes/Router";
 import GuestNavbar from "./Guest/GuestNavbar";
 import LoggedInNavbar from "./LoggedIn/LoggedInNavbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Col, Container, DropdownButton, NavDropdown, Row} from "react-bootstrap";
-import './Navbar.css'
+import {Container, NavDropdown} from "react-bootstrap";
 import {default as OrgNavbar} from "react-bootstrap/Navbar";
 import {Link} from "react-router-dom";
 import UserNavbar from "./User/UserNavbar";
@@ -13,6 +12,7 @@ import AdminNavbar from "./Admin/AdminNavbar";
 import ModeratorNavbar from "./Moderator/ModeratorNavbar";
 import Nav from "react-bootstrap/Nav";
 import Cookies from "js-cookie";
+import './Navbar.css'
 
 class NavbarNoTr extends React.Component {
     constructor(props) {
