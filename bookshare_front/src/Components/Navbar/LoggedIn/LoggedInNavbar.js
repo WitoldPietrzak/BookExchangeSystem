@@ -80,10 +80,7 @@ class LoggedInNavbarNoTr extends React.Component {
                     <Nav.Link onClick={this.logOut} style={{color: "rgb(127, 127, 127)"}}
                               className="navStyle">{t("Navbar.logout")}</Nav.Link>
                 </NavDropdown>
-                <DropdownButton variant="secondary btn-sm" style={{marginTop: "5px", marginRight:"10px"}}
-                                title={t(Cookies.get(`${process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME}_${Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}`))}>
-                    {this.generateAvailableRoles()}
-                </DropdownButton>
+                {this.generateRoleButton()}
                 <Nav.Item>
                      {Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}
                 </Nav.Item>
