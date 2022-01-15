@@ -3,10 +3,10 @@ import {withTranslation} from "react-i18next";
 import Form from "react-bootstrap/Form";
 import './PasswordReset.css';
 import Button from "react-bootstrap/Button";
-import {makeSendChangePasswoerMailRequest} from "../../../Requests/mok/SendChangePasswordMailRequest";
+import {makeSendChangePasswordMailRequest} from "../../../Requests/mok/SendChangePasswordMailRequest";
 import {Alert, Spinner} from "react-bootstrap";
 
-class PasswordResetNoTr extends React.Component {
+class PasswordResetRequestNoTr extends React.Component {
 
     constructor(props) {
         super(props);
@@ -49,7 +49,7 @@ class PasswordResetNoTr extends React.Component {
             />
         })
 
-        makeSendChangePasswoerMailRequest(this.state.loginOrMail, this);
+        makeSendChangePasswordMailRequest(this.state.loginOrMail, this);
 
     }
 
@@ -95,10 +95,10 @@ class PasswordResetNoTr extends React.Component {
 
 }
 
-const PasswordResetTr = withTranslation()(PasswordResetNoTr);
+const PasswordResetRequestTr = withTranslation()(PasswordResetRequestNoTr);
 
-export default function PasswordReset() {
+export default function PasswordResetRequest() {
     return (
-        <PasswordResetTr/>
+        <PasswordResetRequestTr/>
     )
 }
