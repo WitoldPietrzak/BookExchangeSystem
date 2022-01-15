@@ -116,7 +116,7 @@ class LoginNoTr extends React.Component {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Link size="md" to="/reset-password">
-                            {t("Login.forgotPasswordButton")}
+                            {t("Form.forgotPasswordButton")}
                         </Link>
                         <Button variant='outline-dark' size="md" type="submit" className='m-3' disabled={false}>
                             {this.state.button}
