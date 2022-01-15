@@ -27,7 +27,8 @@ function HeaderView() {
             <span key = {str[i]}>
                 {" "} / {" "}
                 <Link to={joined_str} href="#" onClick={handleOnClick}>
-                    {str[i]}
+                    {/*{str[i-1]=='reset-password' || str[i-1]=='activate' ? 'token':str[i]}*/}
+                    {str[i].length >60 ? str[i].substring(0, 30)+'...':str[i]}
                 </Link>
             </span>
         )
