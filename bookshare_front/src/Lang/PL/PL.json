@@ -2,6 +2,7 @@
   "Site.name": "BookCross",
   "Form.email": "Adres email",
   "Form.login": "Login",
+  "Form.loginOrMail": "Login lub adres email",
   "Form.password": "Hasło",
   "Form.passwordConfirm": "Potwierdź hasło",
   "Form.loginButton": "Zaloguj",
