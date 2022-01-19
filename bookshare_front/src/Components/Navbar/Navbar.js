@@ -4,7 +4,7 @@ import {isAdmin, isLogged, isModerator, isUser} from "../../Routes/Router";
 import GuestNavbar from "./Guest/GuestNavbar";
 import LoggedInNavbar from "./LoggedIn/LoggedInNavbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container, NavDropdown} from "react-bootstrap";
+import {ButtonGroup, Container, Dropdown, NavDropdown, ToggleButton} from "react-bootstrap";
 import {default as OrgNavbar} from "react-bootstrap/Navbar";
 import {Link} from "react-router-dom";
 import UserNavbar from "./User/UserNavbar";
@@ -13,6 +13,7 @@ import ModeratorNavbar from "./Moderator/ModeratorNavbar";
 import Nav from "react-bootstrap/Nav";
 import Cookies from "js-cookie";
 import './Navbar.css'
+import Language from "./Language/Language";
 
 class NavbarNoTr extends React.Component {
     constructor(props) {
@@ -20,21 +21,6 @@ class NavbarNoTr extends React.Component {
         this.setState({
             language: Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE_NAME)
         })
-    }
-
-    languageSwitch() {
-        const {t} = this.props;
-        return (
-            <Fragment>
-                <NavDropdown title={this.state.language}>
-                    <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}} as={Link}
-                              to="/account">{t("Edit My Account")}</Nav.Link>
-                    <NavDropdown.Divider/>
-                    <Nav.Link onClick={this.logOut} style={{color: "rgb(127, 127, 127)"}}
-                              className="navStyle">{t("Navbar.logout")}</Nav.Link>
-                </NavDropdown>
-            </Fragment>
-        )
     }
 
     render() {
@@ -46,6 +32,7 @@ class NavbarNoTr extends React.Component {
                     <OrgNavbar.Toggle aria-controls="basic-navbar-nav"/>
                     <OrgNavbar.Collapse className="justify-content-end">
                         {createNavbar()}
+                        <Language/>
                     </OrgNavbar.Collapse>
                 </Container>
             </OrgNavbar>
