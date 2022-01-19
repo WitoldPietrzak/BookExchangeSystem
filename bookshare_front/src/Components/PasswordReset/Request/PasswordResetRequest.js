@@ -83,7 +83,7 @@ class PasswordResetRequestNoTr extends React.Component {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Button variant='outline-dark' size="md" type="submit" className='m-3' disabled={false}>
-                            {this.state.button}
+                            {typeof this.state.button === "string" ? t(this.state.button) : this.state.button}
                         </Button>
 
                     </Form>

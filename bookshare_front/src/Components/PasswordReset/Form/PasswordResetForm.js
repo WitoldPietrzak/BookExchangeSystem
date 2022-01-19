@@ -16,7 +16,7 @@ class PasswordResetFormNoTr extends React.Component {
         this.state = ({
             password: '',
             passwordConfirm: '',
-            button: t('Form.ChangePasswordButton'),
+            button: 'Form.ChangePasswordButton',
             errors: {},
             initialRequestFailed: false,
             requestFailed: false,
@@ -27,19 +27,18 @@ class PasswordResetFormNoTr extends React.Component {
     }
 
     handleSubmit() {
-        const {t} = this.props;
         const errors = {};
         if (this.state.password.length < 8) {
-            errors.password = t('Form.PasswordTooShortError');
+            errors.password = 'Form.PasswordTooShortError';
         }
         if (this.state.password.length < 1) {
-            errors.password = t('Form.EmptyFieldError');
+            errors.password = 'Form.EmptyFieldError';
         }
         if (this.state.passwordConfirm.length < 1) {
-            errors.passwordConfirm = t('Form.EmptyFieldError');
+            errors.passwordConfirm = 'Form.EmptyFieldError';
         }
         if (this.state.password !== this.state.passwordConfirm) {
-            errors.passwordConfirm = t('Form.PasswordsDontMatchError');
+            errors.passwordConfirm = 'Form.PasswordsDontMatchError';
         }
 
         this.setState({
@@ -114,7 +113,7 @@ class PasswordResetFormNoTr extends React.Component {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Button variant='outline-dark' size="md" type="submit" className='m-3' disabled={false}>
-                            {this.state.button}
+                            {typeof this.state.button === "string" ? t(this.state.button) : this.state.button}
                         </Button>
 
                     </Form>
