@@ -19,6 +19,8 @@ public class UserConverter {
     }
 
     public static UserResponseDTO userResponseDTOFromUser(AppUser user) {
-        return new UserResponseDTO(user.getId(), user.getLogin(), user.getEmail(), user.getVersion(), user.getLanguage(),user.getActivated(),user.getDisabled(),user.getAppRoles().stream().map(AppRole::getName).collect(Collectors.toList()),user.getLastSuccessfulLogin().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),user.getCreationDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        return new UserResponseDTO(user.getId(), user.getLogin(), user.getEmail(), user.getVersion(), user.getLanguage(), user.getActivated(), user.getDisabled(), user.getAppRoles().stream().map(AppRole::getName).collect(Collectors.toList()),
+                user.getLastSuccessfulLogin() != null ? user.getLastSuccessfulLogin().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null,
+                user.getCreationDateTime() != null ? user.getCreationDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")): null);
     }
 }
