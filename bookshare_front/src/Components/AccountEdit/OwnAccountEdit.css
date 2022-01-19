@@ -1,0 +1,58 @@
+.Password{
+}
+
+.Password form {
+    margin: 0 auto;
+    padding: 10px;
+    max-width: 500px;
+    border-radius: 6px;
+    background: #eee6c7;
+}
+
+.Info {
+    margin: auto;
+    padding: 20px;
+    max-width: 500px;
+    border-radius: 6px;
+    background: #eee6c7;
+}
+.InfoRow{
+    background: #F5F3EA;
+    margin: 10px;
+}
+.InfoLeftColumn{
+    text-align: start;
+}
+.InfoRightColumn{
+    text-align: end;
+}
+
+.PasswordAccordion{
+    background: #F5F3EA;
+    max-width: 500px;
+    border-radius: 20px;
+
+}
+.AccessLevelChange{
+    background: #eee6c7;
+    border-radius: 6px;
+    padding: 5px;
+    margin: auto;
+    max-width: 1160px;
+
+}
+.AccessLevelChange .col{
+    background: #F5F3EA;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+.Title *{
+    background: #eee6c7 !important;
+}
+
+.Refresh{
+    text-align: end;
+    padding-right: 20px;
+}
