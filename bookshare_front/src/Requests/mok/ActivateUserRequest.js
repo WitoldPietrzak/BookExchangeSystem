@@ -8,7 +8,7 @@ export function makeActivateUserRequest(token, that) {
         }
     }).then((response) => {
         that.setState({
-            response:that.props.t(response.data.message),
+            response:response.data.message,
             requestCompleted:true
         })
     }).catch((response) => {
@@ -16,7 +16,7 @@ export function makeActivateUserRequest(token, that) {
             if (response.response) {
                 that.setState({
                     errorCode:response.response.status.toString(10),
-                    response:that.props.t(response.response.data.message),
+                    response:response.response.data.message,
                     requestFailed:true
                 })
             }

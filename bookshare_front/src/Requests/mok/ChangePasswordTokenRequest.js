@@ -14,17 +14,17 @@ export function makeChangePasswordRequest(token, newPassword, newPasswordConfirm
         }
     }).then((response) => {
         that.setState({
-            button: that.props.t('Form.ChangePasswordButton'),
-            response: that.props.t(response.response.data.message),
+            button:'Form.ChangePasswordButton',
+            response: response.response.data.message,
             requestCompleted:true
         })
     }).catch((response) => {
         if (response.response) {
             if (response.response) {
                 that.setState({
-                    button: that.props.t('Form.ChangePasswordButton'),
+                    button:'Form.ChangePasswordButton',
                     errorCode: response.response.status.toString(10),
-                    response: that.props.t(response.response.data.message),
+                    response: response.response.data.message,
                     requestFailed: true
                 })
             }
@@ -46,7 +46,7 @@ export function makeVerifyPasswordTokenRequest(token, that) {
             if (response.response) {
                 that.setState({
                     errorCode: response.response.status.toString(10),
-                    response: that.props.t(response.response.data.message),
+                    response: response.response.data.message,
                     initialRequestFailed: true
                 })
             }

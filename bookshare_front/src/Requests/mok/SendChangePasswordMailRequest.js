@@ -9,14 +9,14 @@ export function makeSendChangePasswordMailRequest(loginOrEmail, that) {
     }).then((response) => {
         that.setState({
             requestCompleted:true,
-            button: that.props.t('Form.SendPasswordResetButton')
+            button:'Form.SendPasswordResetButton'
         })
     }).catch((response) => {
         if (response.response) {
             if (response.response) {
                 that.setState({
                     requestFailed:true,
-                    button: that.props.t('Form.SendPasswordResetButton')
+                    button:'Form.SendPasswordResetButton'
                 })
             }
         }

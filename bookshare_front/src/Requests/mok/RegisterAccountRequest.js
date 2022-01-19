@@ -1,7 +1,5 @@
 import axios from "axios";
 import Cookies from 'js-cookie';
-import {jwtCookieExpirationTime} from '../../Views/MainView';
-import findDefaultRole from "../../Utils/DefaultRoleFinder";
 
 export function makeRegisterRequest(login, password, email, that) {
 
@@ -21,9 +19,9 @@ export function makeRegisterRequest(login, password, email, that) {
         if (response.response) {
             if (response.response) {
                 that.setState({
-                    button: that.props.t('Form.registerButton'),
+                    button:'Form.registerButton',
                     errorCode:response.response.status.toString(10),
-                    response:that.props.t(response.response.data.message),
+                    response:response.response.data.message,
                     requestFailed:true
                 })
             }
