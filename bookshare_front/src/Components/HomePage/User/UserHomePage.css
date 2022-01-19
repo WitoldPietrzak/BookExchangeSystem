@@ -1,0 +1,35 @@
+.View{
+    /*border: initial;*/
+    /*background: initial;*/
+    padding-top: 30px;
+    padding-bottom:30px;
+
+}
+.Tabs{
+    /*max-width: 1200px;*/
+    margin: auto;
+
+}
+
+.Map {
+    padding: 60px;
+    max-width: 1000px;
+    border: 1px solid silver;
+
+    border-radius: 6px;
+    background: whitesmoke;
+    /*background: radial-gradient(circle, rgba(195,71,34,1) 0%, rgba(253,187,45,1) 100%);*/
+
+
+}
+
+ul.nav.nav-tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: auto;
+
+
+}
