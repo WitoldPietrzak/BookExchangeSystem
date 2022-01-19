@@ -64,5 +64,6 @@
   "mail_exist": "Adres email jest już używany",
   "login_exist": " Login jest już używany",
   "password_in_use": "Hasło już w użyciu",
-  "action_not_allowed": "Akcja niedozwolona"
+  "action_not_allowed": "Akcja niedozwolona",
+  "at_least_one_role": "Użytkownik musi posiadać przynajmniej jedną rolę"
 }

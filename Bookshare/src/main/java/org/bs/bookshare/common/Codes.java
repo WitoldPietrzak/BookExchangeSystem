@@ -11,6 +11,7 @@ public class Codes {
     public static final String ROLE_EXIST = "role_exist";
     public static final String ROLE_NOT_EXIST = "role_not_exist";
     public static final String ROLE_NOT_FOUND = "role_not_found";
+    public static final String AT_LEAST_ONE_ROLE = "at_least_one_role";
     public static final String VERSION_MISMATCH = "version_mismatch";
     public static final String BOOK_NOT_FOUND = "book_not_found";
     public static final String GENRE_EXIST = "genre_exist";

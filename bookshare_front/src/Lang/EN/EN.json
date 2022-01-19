@@ -64,5 +64,6 @@
   "mail_exist": "Mail address already in use",
   "login_exist": " Login already in use",
   "password_in_use": "Password already in use",
-  "action_not_allowed": "Action not allowed"
+  "action_not_allowed": "Action not allowed",
+  "at_least_one_role": "User must have at least one role"
 }

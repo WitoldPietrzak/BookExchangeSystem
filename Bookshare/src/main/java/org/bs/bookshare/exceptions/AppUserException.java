@@ -1,6 +1,7 @@
 package org.bs.bookshare.exceptions;
 
 import static org.bs.bookshare.common.Codes.ACTION_NOT_ALLOWED;
+import static org.bs.bookshare.common.Codes.AT_LEAST_ONE_ROLE;
 import static org.bs.bookshare.common.Codes.AUTH_TOKEN_EXPIRED;
 import static org.bs.bookshare.common.Codes.AUTH_TOKEN_INVALID;
 import static org.bs.bookshare.common.Codes.INCORRECT_PASSWORD;
@@ -82,6 +83,7 @@ public class AppUserException extends AppBaseException {
     public static AppUserException userDisabled() {
         return new AppUserException(USER_DISABLED);
     }
+
     public static AppUserException userAlreadyDisabled() {
         return new AppUserException(USER_ALREADY_DISABLED);
     }
@@ -128,5 +130,9 @@ public class AppUserException extends AppBaseException {
 
     public static AppUserException resetTokenExpired() {
         return new AppUserException(RESET_TOKEN_EXPIRED);
+    }
+
+    public static AppUserException atLeastOneRole() {
+        return new AppUserException(AT_LEAST_ONE_ROLE);
     }
 }

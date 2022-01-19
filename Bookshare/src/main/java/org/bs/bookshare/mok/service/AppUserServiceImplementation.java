@@ -105,6 +105,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         if (user.getLogin().equals(caller) && Roles.ROLE_ADMIN.equals(roleName)) {
             throw AppUserException.actionNotAllowed();
         }
+        if(user.getAppRoles().size() == 1){
+            throw AppUserException.atLeastOneRole();
+        }
         user.getAppRoles().remove(role);
     }
 
