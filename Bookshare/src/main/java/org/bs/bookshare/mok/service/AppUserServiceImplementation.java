@@ -13,6 +13,8 @@ import org.bs.bookshare.mok.repositories.AppUserRepository;
 import org.bs.bookshare.security.TokenGenerator;
 import org.bs.bookshare.utils.IpAddressRetriever;
 import org.bs.bookshare.utils.mail.MailProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -29,7 +31,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.bs.bookshare.common.Codes.LANGUAGE;
 import static org.bs.bookshare.common.Codes.USER_NOT_FOUND;
@@ -44,6 +50,8 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
     private final PasswordEncoder passwordEncoder;
     private final MailProvider mailProvider;
     private final HttpServletRequest request;
+    @Autowired
+    private Environment environment;
 
     @Override
     public AppUser createUser(AppUser user) throws AppUserException {
@@ -193,7 +201,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         DecodedJWT jwt;
         String login;
         try {
-            jwt = TokenGenerator.verifyToken(token);
+            jwt = TokenGenerator.verifyMailToken(token);
             login = jwt.getSubject();
         } catch (JWTDecodeException e) {
             throw AppUserException.activationTokenInvalid();
@@ -223,7 +231,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         String login;
         String oldPassword;
         try {
-            jwt = TokenGenerator.verifyToken(token);
+            jwt = TokenGenerator.verifyMailToken(token);
             login = jwt.getSubject();
             oldPassword = jwt.getClaim("password").asString();
         } catch (JWTDecodeException e) {
@@ -260,7 +268,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         String login;
         String oldPassword;
         try {
-            jwt = TokenGenerator.verifyToken(token);
+            jwt = TokenGenerator.verifyMailToken(token);
             login = jwt.getSubject();
             oldPassword = jwt.getClaim("password").asString();
         } catch (JWTDecodeException e) {
@@ -331,7 +339,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
 
     @Override
     public void enableUserByToken(String token) throws AppUserException {
-        DecodedJWT jwt = TokenGenerator.verifyToken(token);
+        DecodedJWT jwt = TokenGenerator.verifyMailToken(token);
         String login = jwt.getSubject();
         AppUser user;
         try {
@@ -346,6 +354,29 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             throw AppUserException.userNotDisabled();
         }
         user.setDisabled(false);
+    }
+
+    @Override
+    public Map<String, Object> refreshToken(String token) throws AppUserException {
+        DecodedJWT jwt = TokenGenerator.verifyRefreshToken(token);
+        AppUser user;
+        try {
+            user = appUserRepository.findByLogin(jwt.getSubject());
+        } catch (Exception e) {
+            throw AppUserException.userNotFound();
+        }
+        if (user == null) {
+            throw AppUserException.userNotFound();
+        }
+        List<String> authorities = user.getAppRoles().stream().map(AppRole::getName).collect(Collectors.toCollection(ArrayList::new));
+        String refreshToken = TokenGenerator.generateRefreshToken(jwt.getSubject(), new Date(System.currentTimeMillis() + ((long) Integer.parseInt(Objects.requireNonNull(environment.getProperty("refresh_token_valid_time_in_days"))) * 7 * 60 * 60 * 1000)), jwt.getIssuer());
+        String accessToken = TokenGenerator.generateAuthenticationToken(jwt.getSubject(), new Date(System.currentTimeMillis() + ((long) Integer.parseInt(Objects.requireNonNull(environment.getProperty("access_token.valid_time_in_minutes"))) * 60 * 1000)), jwt.getIssuer(), authorities);
+        Map<String, Object> tokens = new HashMap<>();
+        tokens.put("accessToken", accessToken);
+        tokens.put("refreshToken", refreshToken);
+        tokens.put("roles",authorities);
+        return tokens;
+
     }
 
 

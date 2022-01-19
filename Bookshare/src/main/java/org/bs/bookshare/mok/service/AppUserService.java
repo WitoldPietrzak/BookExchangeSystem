@@ -4,6 +4,7 @@ import org.bs.bookshare.exceptions.AppUserException;
 import org.bs.bookshare.model.AppUser;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AppUserService {
     AppUser createUser(AppUser user) throws AppUserException;
@@ -37,4 +38,6 @@ public interface AppUserService {
     void registerLoginAttempt(Long id, Boolean success) throws AppUserException;
 
     void enableUserByToken(String token) throws AppUserException;
+
+    Map<String, Object> refreshToken(String jwt) throws AppUserException;
 }
