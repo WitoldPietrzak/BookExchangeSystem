@@ -7,8 +7,10 @@ import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.mok.dto.request.CreateUserRequestDTO;
 import org.bs.bookshare.mok.dto.request.LanguageChangeRequestDTO;
 import org.bs.bookshare.mok.dto.request.PasswordResetRequestDTO;
+import org.bs.bookshare.mok.dto.request.RefreshTokenRequestDTO;
 import org.bs.bookshare.mok.dto.response.MessageResponseDTO;
 import org.bs.bookshare.mok.dto.request.PasswordChangeRequestDTO;
+import org.bs.bookshare.mok.dto.response.RefreshResponseDTO;
 import org.bs.bookshare.mok.dto.response.UserListResponseDTO;
 import org.bs.bookshare.mok.dto.response.UserResponseDTO;
 import org.bs.bookshare.mok.service.AppUserService;
@@ -19,9 +21,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import static org.bs.bookshare.common.Codes.ACCOUNT_CREATED_MESSAGE;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -29,6 +35,7 @@ import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -47,7 +54,7 @@ public class AppUserController {
     @GetMapping("/info/{id}")
     public ResponseEntity<UserResponseDTO> getUser(@NotNull @PathVariable("id") Long id) throws AppUserException {
         AppUser user = userService.getUser(id);
-        return ResponseEntity.ok().body(UserConverter.userAdminResponseDTOFromUser(user));
+        return ResponseEntity.ok().body(UserConverter.userResponseDTOFromUser(user));
     }
 
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_ADMIN, Roles.ROLE_MODERATOR})
@@ -60,16 +67,16 @@ public class AppUserController {
 
     @PermitAll
     @PostMapping("/register")
-    public ResponseEntity<MessageResponseDTO> saveUser(@RequestBody CreateUserRequestDTO user) throws AppUserException {
+    public ResponseEntity<?> saveUser(@RequestBody CreateUserRequestDTO user) throws AppUserException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/account/register").toUriString());
         userService.createUser(UserConverter.userFromCreateUserRequestDTO(user));
-        return ResponseEntity.created(uri).body(new MessageResponseDTO("Konto utworzone pomyślnie"));  //TODO do stałej
+        return ResponseEntity.created(uri).body(new MessageResponseDTO(ACCOUNT_CREATED_MESSAGE));
 
     }
 
     @PostMapping("/role/add")
     @RolesAllowed({Roles.ROLE_ADMIN})
-    public ResponseEntity<RoleToUserRequestDTO> addRoleToUser(@RequestBody RoleToUserRequestDTO role) throws AppUserException {
+    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserRequestDTO role) throws AppUserException {
         userService.addRoleToUser(role.getUserId(), role.getRoleName());
         return ResponseEntity.ok().build();
 
@@ -84,7 +91,7 @@ public class AppUserController {
 
     @PostMapping("/password")
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR, Roles.ROLE_ADMIN})
-    public ResponseEntity changePassword(Principal principal, @RequestBody PasswordChangeRequestDTO dto) throws AppUserException {
+    public ResponseEntity<?> changePassword(Principal principal, @RequestBody PasswordChangeRequestDTO dto) throws AppUserException {
         String login = principal.getName();
         userService.changePassword(login, dto.getOldPassword(), dto.getNewPassword(), dto.getNewPasswordMatch());
         return ResponseEntity.ok().build();
@@ -144,6 +151,19 @@ public class AppUserController {
     public ResponseEntity<?> enableUserByToken(@PathVariable String token) throws AppUserException {
         userService.enableUserByToken(token);
         return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+    }
+
+    @PostMapping("/refresh")
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_ADMIN, Roles.ROLE_MODERATOR})
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequestDTO jwt) throws AppUserException {
+        Map<String, Object> tokens = userService.refreshToken(jwt.getToken());
+        return ResponseEntity.ok().body(new RefreshResponseDTO((String) tokens.get("refreshToken"), (String) tokens.get("accessToken"), (List<String>) tokens.get("roles")));
+    }
+
+    @GetMapping("/ready")
+    @PermitAll
+    public ResponseEntity<?> readinessCheck(){
+        return ResponseEntity.ok().build();
     }
 
 
