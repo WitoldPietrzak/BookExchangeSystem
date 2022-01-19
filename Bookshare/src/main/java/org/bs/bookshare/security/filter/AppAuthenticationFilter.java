@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+
 @RequiredArgsConstructor
 public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -49,16 +51,22 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         User user = (User) authResult.getPrincipal();
         String accessToken = TokenGenerator.generateAuthenticationToken(user.getUsername(), new Date(System.currentTimeMillis() + (long) Integer.parseInt(Objects.requireNonNull(environment.getProperty("access_token.valid_time_in_minutes"))) * 60 * 1000), request.getRequestURL().toString(), user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        String refreshToken = TokenGenerator.generateRefreshToken(user.getUsername(), new Date(System.currentTimeMillis() + ((long) Integer.parseInt(Objects.requireNonNull(environment.getProperty("refresh_token_valid_time_in_days"))) * 7 * 60 * 60 * 1000)), request.getRequestURL().toString());
 
         Map<String, Object> responseToken = new HashMap<>();
         responseToken.put("access_token", accessToken);
+        responseToken.put("refresh_token", refreshToken);
         responseToken.put("access_levels", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
         AppUser appUser = null;
         try {
             appUser = appUserService.getUser(user.getUsername());
             responseToken.put("language", appUser.getLanguage());
         } catch (AppUserException e) {
-            e.printStackTrace();
+            response.setStatus(FORBIDDEN.value());
+            Map<String, String> response_message = new HashMap<>();
+            response_message.put("message", e.getMessage());
+            response.setContentType("application/json");
+            new ObjectMapper().writeValue(response.getOutputStream(), response_message);
         }
         response.setContentType("application/json");
         new ObjectMapper().writeValue(response.getOutputStream(), responseToken);

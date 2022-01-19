@@ -1,16 +1,15 @@
 package org.bs.bookshare.security.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.AppUserException;
+import org.bs.bookshare.model.AppUser;
+import org.bs.bookshare.mok.service.AppUserService;
 import org.bs.bookshare.security.TokenGenerator;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -29,7 +28,11 @@ import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
+@RequiredArgsConstructor
 public class AppAuthorizationFilter extends OncePerRequestFilter {
+
+    private final AppUserService appUserService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -37,13 +40,30 @@ public class AppAuthorizationFilter extends OncePerRequestFilter {
         if (!request.getServletPath().equals("/login") && authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String token = authorizationHeader.substring("Bearer ".length());
-                DecodedJWT decodedJWT = TokenGenerator.verifyToken(token);
+                DecodedJWT decodedJWT = TokenGenerator.verifyAccessToken(token);
                 String username = decodedJWT.getSubject();
                 String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                 Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
                 stream(roles).forEach(role -> {
                     authorities.add(new SimpleGrantedAuthority(role));
                 });
+                try {
+                    AppUser appUser = appUserService.getUser(username);
+                    if(appUser == null){
+                        throw AppUserException.userNotFound();
+                    }
+                    if(appUser.getDisabled()){
+                        throw AppUserException.userDisabled();
+                    }
+                } catch (AppUserException e) {
+                    response.setHeader("error", e.getMessage());
+                    response.setStatus(FORBIDDEN.value());
+                    Map<String, String> response_message = new HashMap<>();
+                    response_message.put("message", e.getMessage());
+                    response.setContentType("application/json");
+                    new ObjectMapper().writeValue(response.getOutputStream(), response_message);
+                }
+
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
