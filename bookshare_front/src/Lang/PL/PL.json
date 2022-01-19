@@ -8,6 +8,8 @@
   "Account.PasswordChangeAccordion": "Zmień hasło",
   "Account.ChangeAccessLevels": "Poziomy dostpu",
   "Accounts.FilterButton": "Filtruj",
+  "Account.Disable": "Zablokuj konto",
+  "Account.Enable": "Odblokuj konto",
   "Filter.Title":"Filtr",
   "Filter.ActiveFilters": "Aktywne filtry",
   "Form.Filter": "Filtruj",
@@ -21,6 +23,7 @@
   "Form.Book": "Książka",
   "Form.Bookshelf": "Półka",
   "Form.passwordConfirm": "Potwierdź hasło",
+  "Form.sortBy": "Sortuj po",
   "Form.loginButton": "Zaloguj",
   "Form.registerButton": "Stwórz konto",
   "Form.forgotPasswordButton": "Zapomniałem hasła",
@@ -56,7 +59,10 @@
   "user_not_found": "Nie znaleziono użytkownika",
   "incorrect_password": "Niepoprawne hasło",
   "user_disabled": "Konto zostało zablokowane. Na adres email przypisany do konta została wysłana wiadomość ze szczegółowymi informacjami .",
+  "user_not_disabled": "Użytkownik nie jest zablokowany",
+  "user_already_disabled": "Użytkownik jest już zablokowany",
   "mail_exist": "Adres email jest już używany",
   "login_exist": " Login jest już używany",
-  "password_in_use": "Hasło już w użyciu"
+  "password_in_use": "Hasło już w użyciu",
+  "action_not_allowed": "Akcja niedozwolona"
 }
