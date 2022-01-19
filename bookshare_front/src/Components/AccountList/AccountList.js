@@ -7,7 +7,6 @@ import './AccountList.css';
 import RefreshIcon from '../../Resources/refresh.png';
 import {TextField} from "@material-ui/core";
 import Form from "react-bootstrap/Form";
-import {Link} from "react-router-dom";
 
 class AccountListNoTr extends React.Component {
     constructor(props) {
@@ -21,7 +20,8 @@ class AccountListNoTr extends React.Component {
             filterEmail: '',
             doFilter: false,
             filterErrors: {},
-            button: 'Form.Filter'
+            button: 'Form.Filter',
+            sortBy: 'login'
 
         };
     }
@@ -63,7 +63,20 @@ class AccountListNoTr extends React.Component {
     }
 
     renderRows() {
-        console.log(this.state.accounts)
+        const rows = this.state.accounts;
+        if (this.state.sortBy === "login") {
+            rows.sort((a, b) => {
+                return a.login.toUpperCase() > b.login.toUpperCase() ? 1 : (b.login.toUpperCase() > a.login.toUpperCase() ? -1 : 0)
+
+            });
+        }
+        if (this.state.sortBy === "email") {
+            rows.sort((a, b) => {
+                return a.email.toUpperCase() > b.email.toUpperCase() ? 1 : (b.email.toUpperCase() > a.email.toUpperCase() ? -1 : 0)
+
+            });
+        }
+
         return this.state.accounts.map(row => this.renderRow(row));
 
     }
@@ -85,8 +98,10 @@ class AccountListNoTr extends React.Component {
         return (<Fragment>
             <div>{t('Filter.ActiveFilters')}:</div>
             <div className={'activeFilters mt-0 mb-0 m-5'}>
-                {this.state.filterLogin ? <Button variant={'outline-dark'}>{t('Form.login')}={this.state.filterLogin}</Button> : ''}
-                {this.state.filterEmail ? <Button variant={'outline-dark'}>{t('Form.email')}={this.state.filterEmail}</Button> : ''}
+                {this.state.filterLogin ?
+                    <Button variant={'outline-dark'}>{t('Form.login')}={this.state.filterLogin}</Button> : ''}
+                {this.state.filterEmail ?
+                    <Button variant={'outline-dark'}>{t('Form.email')}={this.state.filterEmail}</Button> : ''}
             </div>
         </Fragment>);
     }
@@ -99,6 +114,18 @@ class AccountListNoTr extends React.Component {
                        className={' mt-0 mb-3 m-5'}>{t(this.state.message)}</Alert>
                 {this.state.doFilter ? this.displayFilterInfo() : ''}
                 <div className={'usersButtons'}>
+                    <div className={'m-3 sortDiv'}>
+                        <Form.Label>{t('Form.sortBy')}</Form.Label>
+                        <Form.Select defaultValue={this.state.sortBy} onChange={(e) => {
+                            this.setState({
+                                sortBy: e.target.value
+                            });
+                        }}>
+                            <option value={'login'}>{t('Form.login')}</option>
+                            <option value={'email'}>{t('Form.email')}</option>
+
+                        </Form.Select>
+                    </div>
                     <Button className={'m-1'} variant={'outline-dark'} size={'md'}
                             onClick={this.reloadTable.bind(this)}>
                         <img src={RefreshIcon} width={20} height={20}/>

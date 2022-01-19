@@ -27,3 +27,7 @@
     text-align: start;
     padding: 8px;
 }
+
+.sortDiv{
+    display: inline-block;
+}
