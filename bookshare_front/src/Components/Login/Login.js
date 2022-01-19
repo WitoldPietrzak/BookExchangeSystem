@@ -18,7 +18,7 @@ class LoginNoTr extends React.Component {
             password: '',
             email: '',
             errors: {},
-            button: t('Form.loginButton'),
+            button: 'Form.loginButton',
             response: '',
             errorCode: '',
             requestFailed: false
@@ -31,15 +31,15 @@ class LoginNoTr extends React.Component {
         const errors = {}
 
         if (!loginRegex.test(this.state.login)) {
-            errors.login = "Login format error";
+            errors.login = "Form.FormatError";
         }
 
         if (this.state.login.length < 1) {
-            errors.login = "Field cannot be left empty";
+            errors.login = "Form.EmptyFieldError";
         }
 
         if (this.state.password.length < 1) {
-            errors.password = "Field cannot be left empty";
+            errors.password = "Form.EmptyFieldError";
 
         }
         return errors;
@@ -119,7 +119,7 @@ class LoginNoTr extends React.Component {
                             {t("Form.forgotPasswordButton")}
                         </Link>
                         <Button variant='outline-dark' size="md" type="submit" className='m-3' disabled={false}>
-                            {this.state.button}
+                            {typeof this.state.button === "string" ? t(this.state.button) : this.state.button}
                         </Button>
 
                     </Form>

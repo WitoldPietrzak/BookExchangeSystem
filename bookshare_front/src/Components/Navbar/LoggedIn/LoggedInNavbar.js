@@ -12,7 +12,7 @@ function updateAccessLevel(access_level) {
         secure: true,
         sameSite: 'none'
     });
-    window.location.hash = "#/home";
+    // window.location.hash = "#/home";
     window.location.reload();
 }
 
@@ -40,6 +40,7 @@ class LoggedInNavbarNoTr extends React.Component {
         Cookies.remove(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         Cookies.remove(process.env.REACT_APP_FRONT_ROLES_COOKIE_NAME);
         Cookies.remove(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME);
+        Cookies.remove(process.env.REACT_APP_FRONT_REFRESH_TOKEN_COOKIE_NAME);
         window.location.hash = "#/home";
         window.location.reload();
     }
@@ -75,14 +76,14 @@ class LoggedInNavbarNoTr extends React.Component {
             <Fragment>
                 <NavDropdown title={t("Navbar.account")} id="navbarScrollingDropdown">
                     <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}} as={Link}
-                              to="/account">{t("Edit My Account")}</Nav.Link>
+                              to="/account">{t("Navbar.AccountEdit")}</Nav.Link>
                     <NavDropdown.Divider/>
                     <Nav.Link onClick={this.logOut} style={{color: "rgb(127, 127, 127)"}}
                               className="navStyle">{t("Navbar.logout")}</Nav.Link>
                 </NavDropdown>
                 {this.generateRoleButton()}
                 <Nav.Item>
-                     {Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}
+                    <div className={'m-3 mb-0 mt-0'}>{Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}</div>
                 </Nav.Item>
             </Fragment>
         )
