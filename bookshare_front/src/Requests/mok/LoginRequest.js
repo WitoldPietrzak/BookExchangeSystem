@@ -29,7 +29,12 @@ export function makeLoginRequest(login, password, that) {
             secure: true,
             sameSite: 'none'
         });
-        Cookies.set(process.env.REACT_APP_APP_LANGUAGE_COOKIE_NAME, response.language, {
+        Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE_NAME, response.data.language.toUpperCase(), {
+            expires: jwtCookieExpirationTime,
+            secure: true,
+            sameSite: 'none'
+        });
+        Cookies.set(process.env.REACT_APP_FRONT_REFRESH_TOKEN_COOKIE_NAME, response.data.refresh_token, {
             expires: jwtCookieExpirationTime,
             secure: true,
             sameSite: 'none'
@@ -52,9 +57,9 @@ export function makeLoginRequest(login, password, that) {
         .catch((response) => {
         if (response.response) {
             that.setState({
-                button: that.props.t('Form.loginButton'),
+                button: 'Form.loginButton',
                 errorCode:response.response.status.toString(10),
-                response:that.props.t(response.response.data.message),
+                response:response.response.data.message,
                 requestFailed:true
             })
         }
