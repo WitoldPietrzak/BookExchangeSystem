@@ -14,6 +14,9 @@ class ActivationNoTr extends React.Component {
             requestCompleted: false,
             requestFailed: false
         }
+    }
+
+    componentDidMount() {
         this.sendActivationRequest();
     }
 
