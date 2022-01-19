@@ -8,9 +8,11 @@ import org.bs.bookshare.mok.dto.request.CreateUserRequestDTO;
 import org.bs.bookshare.mok.dto.request.LanguageChangeRequestDTO;
 import org.bs.bookshare.mok.dto.request.PasswordResetRequestDTO;
 import org.bs.bookshare.mok.dto.request.RefreshTokenRequestDTO;
+import org.bs.bookshare.mok.dto.request.UsersFilterRequestDTO;
 import org.bs.bookshare.mok.dto.response.MessageResponseDTO;
 import org.bs.bookshare.mok.dto.request.PasswordChangeRequestDTO;
 import org.bs.bookshare.mok.dto.response.RefreshResponseDTO;
+import org.bs.bookshare.mok.dto.response.UserListElementResponseDTO;
 import org.bs.bookshare.mok.dto.response.UserListResponseDTO;
 import org.bs.bookshare.mok.dto.response.UserResponseDTO;
 import org.bs.bookshare.mok.service.AppUserService;
@@ -21,13 +23,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import static org.bs.bookshare.common.Codes.ACCOUNT_CREATED_MESSAGE;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -46,8 +46,14 @@ public class AppUserController {
 
     @RolesAllowed({Roles.ROLE_ADMIN})
     @GetMapping("/all")
-    public ResponseEntity<List<UserListResponseDTO>> getUsers() {
-        return ResponseEntity.ok().body(userService.getAllUsers().stream().map(UserConverter::userListResponseDTOFromUser).collect(Collectors.toList()));
+    public ResponseEntity<?> getUsers() {
+        return ResponseEntity.ok().body(new UserListResponseDTO(userService.getAllUsers().stream().map(UserConverter::userListResponseDTOFromUser).collect(Collectors.toList())));
+    }
+
+    @RolesAllowed({Roles.ROLE_ADMIN})
+    @PostMapping("/all")
+    public ResponseEntity<?> getFilteredUsers(@RequestBody UsersFilterRequestDTO filterRequestDTO) {
+        return ResponseEntity.ok().body(new UserListResponseDTO(userService.getFilteredUsers(filterRequestDTO.getLogin(), filterRequestDTO.getEmail()).stream().map(UserConverter::userListResponseDTOFromUser).collect(Collectors.toList())));
     }
 
     @RolesAllowed({Roles.ROLE_ADMIN})
@@ -162,7 +168,7 @@ public class AppUserController {
 
     @GetMapping("/ready")
     @PermitAll
-    public ResponseEntity<?> readinessCheck(){
+    public ResponseEntity<?> readinessCheck() {
         return ResponseEntity.ok().build();
     }
 

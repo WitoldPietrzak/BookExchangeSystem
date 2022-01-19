@@ -128,6 +128,11 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
     }
 
     @Override
+    public List<AppUser> getFilteredUsers(String login, String email) {
+        return appUserRepository.findAllFilterByLoginAndEmail(login, email);
+    }
+
+    @Override
     public void changePassword(String login, String oldPassword, String newPassword, String newPasswordMatch) throws AppUserException {
 
         AppUser user;
@@ -374,7 +379,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         Map<String, Object> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
         tokens.put("refreshToken", refreshToken);
-        tokens.put("roles",authorities);
+        tokens.put("roles", authorities);
         return tokens;
 
     }

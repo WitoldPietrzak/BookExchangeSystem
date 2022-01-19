@@ -19,6 +19,8 @@ public interface AppUserService {
 
     List<AppUser> getAllUsers();
 
+    public List<AppUser> getFilteredUsers(String login, String email);
+
     void changePassword(String login, String oldPassword, String newPassword, String newPasswordMatch) throws AppUserException;
 
     void disableUser(Long id, String name) throws AppUserException;

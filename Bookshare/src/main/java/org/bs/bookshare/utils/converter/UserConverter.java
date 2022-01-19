@@ -3,8 +3,7 @@ package org.bs.bookshare.utils.converter;
 import org.bs.bookshare.model.AppRole;
 import org.bs.bookshare.model.AppUser;
 import org.bs.bookshare.mok.dto.request.CreateUserRequestDTO;
-import org.bs.bookshare.mok.dto.response.SimpleRoleResponseDTO;
-import org.bs.bookshare.mok.dto.response.UserListResponseDTO;
+import org.bs.bookshare.mok.dto.response.UserListElementResponseDTO;
 import org.bs.bookshare.mok.dto.response.UserResponseDTO;
 
 import java.time.format.DateTimeFormatter;
@@ -15,8 +14,8 @@ public class UserConverter {
         return new AppUser(dto.getLogin(), dto.getEmail(), dto.getPassword(), dto.getLanguage().toLowerCase());
     }
 
-    public static UserListResponseDTO userListResponseDTOFromUser(AppUser user) {
-        return new UserListResponseDTO(user.getId(), user.getLogin(), user.getEmail());
+    public static UserListElementResponseDTO userListResponseDTOFromUser(AppUser user) {
+        return new UserListElementResponseDTO(user.getId(), user.getLogin(), user.getEmail());
     }
 
     public static UserResponseDTO userResponseDTOFromUser(AppUser user) {
