@@ -8,6 +8,7 @@ import PasswordResetRequest from "../Components/PasswordReset/Request/PasswordRe
 import PasswordResetForm from "../Components/PasswordReset/Form/PasswordResetForm";
 import OwnAccountEdit from "../Components/AccountEdit/OwnAccountEdit";
 import Enable from "../Components/Enable/Enable";
+import AccountList from "../Components/AccountList/AccountList";
 
 let token = Cookies !== undefined ? Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME) : undefined;
 const role = token ? Cookies.get(`${process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME}_${Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}`) : undefined;
@@ -41,6 +42,7 @@ export default function Router() {
             <Route exact path='/reset-password' element={!isLogged() ? <PasswordResetRequest/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/reset-password/:token' element={!isLogged() ? <PasswordResetForm/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/account' element={isLogged() ? <OwnAccountEdit/> : <Navigate replace to='/home'/>}/>
+            <Route exact path='/accounts' element={isLogged() ? <AccountList/> : <Navigate replace to='/home'/>}/>
             <Route path='*' element={<Navigate replace to={'/home'}/>}/>
         </Routes>
     )
