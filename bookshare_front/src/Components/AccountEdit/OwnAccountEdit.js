@@ -14,7 +14,6 @@ class OwnAccountEditNoTr extends React.Component {
     constructor(props) {
         super(props);
         const {t} = this.props;
-        this.bearerToken = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         this.state = {
             id: '',
             login: '',
