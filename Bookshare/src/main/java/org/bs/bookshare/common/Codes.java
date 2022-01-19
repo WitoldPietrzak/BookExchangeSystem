@@ -37,6 +37,8 @@ public class Codes {
     public static final String ACCOUNT_ENABLE_MAIL_SUBJECT = "account_enable_mail_subject";
     public static final String ACCOUNT_ENABLE_MAIL_TEXT = "account_enable_mail_text";
 
+    public static final String ACCOUNT_CREATED_MESSAGE = "account_created";
+
 
     public static final String[] LANGUAGE = {"pl", "en"};
 }
