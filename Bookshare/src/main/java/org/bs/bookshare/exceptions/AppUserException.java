@@ -20,6 +20,7 @@ import static org.bs.bookshare.common.Codes.ACTIVATION_TOKEN_EXPIRED;
 import static org.bs.bookshare.common.Codes.ACTIVATION_TOKEN_INVALID;
 import static org.bs.bookshare.common.Codes.UNKNOWN_LANGUAGE;
 import static org.bs.bookshare.common.Codes.USER_ALREADY_ACTIVATED;
+import static org.bs.bookshare.common.Codes.USER_ALREADY_DISABLED;
 import static org.bs.bookshare.common.Codes.USER_DISABLED;
 import static org.bs.bookshare.common.Codes.USER_NOT_DISABLED;
 import static org.bs.bookshare.common.Codes.USER_NOT_FOUND;
@@ -80,6 +81,9 @@ public class AppUserException extends AppBaseException {
 
     public static AppUserException userDisabled() {
         return new AppUserException(USER_DISABLED);
+    }
+    public static AppUserException userAlreadyDisabled() {
+        return new AppUserException(USER_ALREADY_DISABLED);
     }
 
     public static AppUserException userNotDisabled() {

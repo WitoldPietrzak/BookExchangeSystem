@@ -160,7 +160,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
     public void disableUser(Long id, String name) throws AppUserException {
         AppUser user = appUserRepository.findById(id).orElseThrow(AppUserException::userNotFound);
         if (user.getDisabled()) {
-            throw AppUserException.userDisabled();
+            throw AppUserException.userAlreadyDisabled();
         }
         if (user.getLogin().equals(name)) {
             throw AppUserException.actionNotAllowed();

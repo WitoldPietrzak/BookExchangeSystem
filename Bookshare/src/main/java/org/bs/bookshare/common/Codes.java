@@ -18,6 +18,7 @@ public class Codes {
     public static final String UNKNOWN_LANGUAGE = "unknown_language";
     public static final String USER_NOT_ACTIVE = "user_not_active";
     public static final String USER_DISABLED = "user_disabled";
+    public static final String USER_ALREADY_DISABLED = "user_already_disabled";
     public static final String USER_NOT_DISABLED = "user_not_disabled";
     public static final String ACTION_NOT_ALLOWED = "action_not_allowed";
     public static final String LANGUAGE_ALREADY_IN_USE = "language_already_in_use";
