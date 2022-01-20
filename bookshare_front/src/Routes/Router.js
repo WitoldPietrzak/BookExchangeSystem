@@ -10,6 +10,7 @@ import OwnAccountEdit from "../Components/AccountEdit/OwnAccountEdit";
 import Enable from "../Components/Enable/Enable";
 import AccountList from "../Components/AccountList/AccountList";
 import AdminAccountEdit from "../Components/AccountEdit/AdminAccountEdit";
+import Logs from "../Components/Logs/Logs";
 
 let token = Cookies !== undefined ? Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME) : undefined;
 const role = token ? Cookies.get(`${process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME}_${Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}`) : undefined;
@@ -37,6 +38,7 @@ export default function Router() {
             <Route exact path='/home' element={<HomePage/>}/>
             <Route exact path='/' element={<Navigate replace to='/home'/>}/>
             <Route exact path='/login' element={!isLogged() ? <Login/> : <Navigate replace to='/home'/>}/>
+            <Route exact path='/logs' element={isAdmin() ? <Logs/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/register' element={!isLogged() ? <Register/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/activate/:token' element={!isLogged() ? <Activation/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/enable/:token' element={!isLogged() ? <Enable/> : <Navigate replace to='/home'/>}/>
