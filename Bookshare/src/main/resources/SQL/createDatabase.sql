@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS book_table;
 DROP TABLE IF EXISTS book_copy_table;
 DROP TABLE IF EXISTS book_table_genres;
 DROP TABLE IF EXISTS book_review_table;
+DROP TABLE IF EXISTS logs;
 
 
 DROP SEQUENCE IF EXISTS user_seq;
@@ -145,3 +146,13 @@ CREATE TABLE book_review_table
 
     version                BIGINT
 );
+
+CREATE TABLE logs
+(
+    id BIGSERIAL PRIMARY KEY,
+    eventdate TIMESTAMPTZ  DEFAULT NULL,
+    logger VARCHAR(100),
+    level VARCHAR(100),
+    message VARCHAR(100),
+    exception VARCHAR(100)
+)
