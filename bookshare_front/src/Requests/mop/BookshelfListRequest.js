@@ -26,7 +26,8 @@ export function makeFilteredBookshelfListRequest(token, longitude, latitude,dist
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/shelf/all`, {
         longitude:longitude,
         latitude:latitude,
-        distance:distance
+        distance:distance,
+        bookCount:bookCount
     }, {
         headers: {
             "Content-Type": "application/json",

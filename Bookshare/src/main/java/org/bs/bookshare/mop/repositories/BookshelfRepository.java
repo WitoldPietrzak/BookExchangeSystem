@@ -12,9 +12,9 @@ public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
     String DISTANCE_FORMULA = "(6371 * acos(cos(radians(:lat)) * cos(radians(bs.locationLat)) *" +
             " cos(radians(bs.locationLong) - radians(:lon)) + sin(radians(:lat)) * sin(radians(bs.locationLat))))";
 
-    @Query("SELECT bs FROM Bookshelf bs WHERE " +
-            "(:lat is null OR :lon is null OR :distance is null) " +
-            "OR ( (bs.locationLat is not null AND bs.locationLong is not null ) AND " + DISTANCE_FORMULA + " < :distance ) ")
+    String LOCATION_DISTANCE_QUERY = "";
+
+    @Query("SELECT bs FROM Bookshelf bs WHERE ((:lat is null OR :lon is null OR :distance is null) OR ( (bs.locationLat is not null AND bs.locationLong is not null ) AND " + DISTANCE_FORMULA + " < :distance )) AND ( (:bookCount is null ) OR (size(bs.booksOnShelf) >= :bookCount) )")
 //            "ORDER BY " + DISTANCE_FORMULA + " DESC")
-    List<Bookshelf> findAllInDistance(@Param("lat") Double lat, @Param("lon") Double lon, @Param("distance") Double distance);
+    List<Bookshelf> findAllInDistance(@Param("lat") Double lat, @Param("lon") Double lon, @Param("distance") Double distance,@Param("bookCount") Integer bookCount);
 }

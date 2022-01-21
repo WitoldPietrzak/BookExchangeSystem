@@ -48,7 +48,7 @@ public class BookshelfController {
     @PostMapping("/all")
     public ResponseEntity<?> getShelvesFiltered(@RequestBody BookFilteredListRequestDTO dto) throws BookshelfException {
         return ResponseEntity.ok().body(new BookshelfListResponseDTO(
-                bookshelfService.getAllBookshelvesFiltered(dto.getLatitude(), dto.getLongitude(), dto.getDistance())
+                bookshelfService.getAllBookshelvesFiltered(dto.getLatitude(), dto.getLongitude(), dto.getDistance(), dto.getBookCount())
                 .stream()
                 .map(bookshelf -> new BookshelfResponseDTO(
                         bookshelf.getId(),

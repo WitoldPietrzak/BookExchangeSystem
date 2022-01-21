@@ -1,6 +1,6 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
-import {Alert, Button, Offcanvas, Table} from "react-bootstrap";
+import {Alert, Button, Modal, Offcanvas, Table} from "react-bootstrap";
 import Cookies from "js-cookie";
 import './BookshelfList.css';
 import RefreshIcon from '../../Resources/refresh.png';
@@ -8,6 +8,7 @@ import Form from "react-bootstrap/Form";
 import {makeBookshelfListRequest, makeFilteredBookshelfListRequest} from "../../Requests/mop/BookshelfListRequest";
 import Icon from '../../Resources/pin.svg';
 import Map from '../../Resources/map.png';
+import MapPicker from 'react-google-map-picker'
 
 class BookshelfListNoTr extends React.Component {
     constructor(props) {
@@ -22,9 +23,10 @@ class BookshelfListNoTr extends React.Component {
             doFilter: false,
             filterErrors: {},
             button: 'Form.Filter',
-            sortBy: 'bookCount',
-            location: {lat: undefined, lng: undefined},
-            locationAvailable: false
+            sortBy: 'bookCountUp',
+            location: '',
+            locationAvailable: false,
+            showModal: false
 
         };
     }
@@ -58,6 +60,12 @@ class BookshelfListNoTr extends React.Component {
             });
         }
     }
+     getLocationFromMap (lat, lng){
+        this.setState({
+            location:{lat:lat, lng:lng},
+            showModal:false
+        });
+    }
 
     showFilter() {
         this.setState({
@@ -68,6 +76,18 @@ class BookshelfListNoTr extends React.Component {
     hideFilter() {
         this.setState({
             showFilter: false
+        });
+    }
+
+    showModal() {
+        this.setState({
+            showModal: true
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            showModal: false
         });
     }
 
@@ -115,13 +135,13 @@ class BookshelfListNoTr extends React.Component {
         }
         if (this.state.sortBy === "distanceDown") {
             rows.sort((a, b) => {
-                return a.distance === undefined ? (b.distance === undefined ? 0 : 1) : (b.distance === undefined ? -1 : (a.distance < b.distance ? 1 : (b.distance < a.distance ? 1 : 0)))
+                return a.distance === undefined ? (b.distance === undefined ? 0 : -1) : (b.distance === undefined ? 1 : (a.distance < b.distance ? -1 : (b.distance < a.distance ? 1 : 0)))
 
             });
         }
 
 
-        return this.state.shelves.map(row => this.renderRow(row));
+        return rows.map(row => this.renderRow(row));
 
     }
 
@@ -226,13 +246,19 @@ class BookshelfListNoTr extends React.Component {
                                         type="text"
                                         value={`${this.state.location.lng ? this.state.location.lng.toString().substring(0, 5) : ''} ${this.state.location.lat ? this.state.location.lat.toString().substring(0, 5) : ''}`}
                                     />
-                                    <Button className={'mt-3 mb-0 m-1'} disabled={!this.state.locationAvailable}
-                                            onClick={this.getLocationFromBrowser.bind(this)} variant={'outline-dark'}>{
+                                    <Button className={'mt-3 mb-0 m-1'}
+                                            disabled={!this.state.locationAvailable}
+                                            onClick={this.getLocationFromBrowser.bind(this)}
+                                            variant={'outline-dark'}>{
                                         <img className={'mt-0 mb-0 m-1'} src={Icon} height={25}
-                                             width={25}/>}{t('Form.LocationButton')}</Button>
-                                    <Button className={'mt-3 mb-0 m-1'} variant={'outline-dark'}>{<img
-                                        className={'mt-0 mb-0 m-1'} src={Map} height={25}
-                                        width={25}/>}{t('Form.FromMapButton')}</Button>
+                                             width={25}/>}{t('Form.LocationButton')}
+                                    </Button>
+                                    <Button className={'mt-3 mb-0 m-1'}
+                                            onClick={this.showModal.bind(this)}
+                                            variant={'outline-dark'}>{
+                                                <img className={'mt-0 mb-0 m-1'} src={Map} height={25}
+                                        width={25}/>}{t('Form.FromMapButton')}
+                                    </Button>
                                 </div>
                             </Form.Group>
                             <Form.Group size="lg" controlId="distance">
@@ -270,7 +296,7 @@ class BookshelfListNoTr extends React.Component {
                                 this.setState({
                                     filterDistance: '',
                                     filterBookCount: '',
-                                    location: {lat: undefined, lng: undefined},
+                                    location: '',
                                     doFilter: false
                                 });
                                 makeBookshelfListRequest(token, this);
@@ -282,6 +308,18 @@ class BookshelfListNoTr extends React.Component {
                         </Form>
                     </Offcanvas.Body>
                 </Offcanvas>
+                <Modal show={this.state.showModal} onHide={this.hideModal.bind(this)}>
+                    <Modal.Header>
+                        <Modal.Title>{t('Modal.PickLocation')}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <MapPicker apiKey={process.env.REACT_APP_GOOGLE_API_KEY}
+                                   defaultLocation={{lat: 51.71, lng: 19.44}}
+                                   zoom={10}
+                                   onChangeLocation={this.getLocationFromMap.bind(this)}
+                        />
+                    </Modal.Body>
+                </Modal>
             </Fragment>
         );
     }

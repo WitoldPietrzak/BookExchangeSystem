@@ -11,4 +11,5 @@ public class BookFilteredListRequestDTO {
     private Float latitude;
     private Float longitude;
     private Double distance;
+    private Integer bookCount;
 }
