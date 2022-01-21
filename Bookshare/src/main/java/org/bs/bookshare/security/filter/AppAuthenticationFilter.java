@@ -82,5 +82,5 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         responseMap.put("message", failed.getMessage());
         response.setContentType("application/json");
         new ObjectMapper().writeValue(response.getOutputStream(), responseMap);
-    }  //TODO
+    }
 }

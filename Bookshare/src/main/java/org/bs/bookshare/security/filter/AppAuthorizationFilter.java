@@ -88,7 +88,7 @@ public class AppAuthorizationFilter extends OncePerRequestFilter {
                 response.setContentType("application/json");
                 new ObjectMapper().writeValue(response.getOutputStream(), response_message);
 
-            }  //TODO wyjątki i ich obsługa
+            }
         } else {
             try {
                 filterChain.doFilter(request, response);

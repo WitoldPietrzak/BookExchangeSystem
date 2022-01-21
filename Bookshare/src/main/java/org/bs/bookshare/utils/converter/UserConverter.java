@@ -10,9 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 public class UserConverter {
-    public static AppUser userFromCreateUserRequestDTO(CreateUserRequestDTO dto) {
-        return new AppUser(dto.getLogin(), dto.getEmail(), dto.getPassword(), dto.getLanguage().toLowerCase());
-    }
 
     public static UserListElementResponseDTO userListResponseDTOFromUser(AppUser user) {
         return new UserListElementResponseDTO(user.getId(), user.getLogin(), user.getEmail());
