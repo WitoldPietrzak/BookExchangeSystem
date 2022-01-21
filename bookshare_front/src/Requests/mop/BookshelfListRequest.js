@@ -22,6 +22,9 @@ export function makeBookshelfListRequest(token, that) {
 }
 
 export function makeFilteredBookshelfListRequest(token, longitude, latitude,distance,bookCount, that) {
+    if (distance === ''){
+        distance = undefined;
+    }
 
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/shelf/all`, {
         longitude:longitude,
