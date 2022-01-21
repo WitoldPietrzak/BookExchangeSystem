@@ -8,10 +8,12 @@ import static org.bs.bookshare.common.Codes.INCORRECT_PASSWORD;
 import static org.bs.bookshare.common.Codes.INVALID_MAIL;
 import static org.bs.bookshare.common.Codes.LANGUAGE_ALREADY_IN_USE;
 import static org.bs.bookshare.common.Codes.LOGIN_EXIST;
+import static org.bs.bookshare.common.Codes.LOGIN_TOO_SHORT;
 import static org.bs.bookshare.common.Codes.MAIL_EXIST;
 import static org.bs.bookshare.common.Codes.PASSWORDS_NOT_MATCH;
 import static org.bs.bookshare.common.Codes.PASSWORD_ALREADY_RESET;
 import static org.bs.bookshare.common.Codes.PASSWORD_IN_USE;
+import static org.bs.bookshare.common.Codes.PASSWORD_TOO_SHORT;
 import static org.bs.bookshare.common.Codes.RESET_TOKEN_EXPIRED;
 import static org.bs.bookshare.common.Codes.RESET_TOKEN_INVALID;
 import static org.bs.bookshare.common.Codes.ROLE_EXIST;
@@ -134,5 +136,13 @@ public class AppUserException extends AppBaseException {
 
     public static AppUserException atLeastOneRole() {
         return new AppUserException(AT_LEAST_ONE_ROLE);
+    }
+
+    public static AppUserException LoginTooShort() {
+        return new AppUserException(LOGIN_TOO_SHORT);
+    }
+
+    public static AppUserException passwordTooShort() {
+        return new AppUserException(PASSWORD_TOO_SHORT);
     }
 }

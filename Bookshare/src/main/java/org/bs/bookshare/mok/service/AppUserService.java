@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface AppUserService {
-    AppUser createUser(AppUser user) throws AppUserException;
+    AppUser createUser(String login, String email, String password, String language) throws AppUserException;
 
     void addRoleToUser(Long id, String roleName) throws AppUserException;
 

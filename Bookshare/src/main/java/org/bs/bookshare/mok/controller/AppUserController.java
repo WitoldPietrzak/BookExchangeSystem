@@ -73,9 +73,9 @@ public class AppUserController {
 
     @PermitAll
     @PostMapping("/register")
-    public ResponseEntity<?> saveUser(@RequestBody CreateUserRequestDTO user) throws AppUserException {
+    public ResponseEntity<?> saveUser(@RequestBody CreateUserRequestDTO dto) throws AppUserException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/account/register").toUriString());
-        userService.createUser(UserConverter.userFromCreateUserRequestDTO(user));
+        userService.createUser(dto.getLogin(), dto.getEmail(), dto.getPassword(), dto.getLanguage());
         return ResponseEntity.created(uri).body(new MessageResponseDTO(ACCOUNT_CREATED_MESSAGE));
 
     }

@@ -51,22 +51,32 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
     private final MailProvider mailProvider;
     private final HttpServletRequest request;
     @Autowired
-    private Environment environment;
+    private final Environment environment;
 
     @Override
-    public AppUser createUser(AppUser user) throws AppUserException {
-        List<AppUser> users = appUserRepository.findAll(); //TODO dodać wyjątki
-        if (users.stream().anyMatch(u -> (u.getEmail().equals(user.getEmail())))) {
+    public AppUser createUser(String login, String email, String password, String language) throws AppUserException {
+        List<AppUser> users = appUserRepository.findAll();
+
+        if (login == null || login.length() < 3) {
+            throw AppUserException.LoginTooShort();
+        }
+        if (password == null || password.length() < 8) {
+            throw AppUserException.passwordTooShort();
+        }
+        if (email == null) { //TODO email walidacja
+            throw AppUserException.emailInvalid();
+        }
+        if (users.stream().anyMatch(u -> (u.getEmail().equals(email)))) {
             throw AppUserException.emailExists();
         }
-        if (users.stream().anyMatch(u -> (u.getLogin().equals(user.getLogin())))) {
+        if (users.stream().anyMatch(u -> (u.getLogin().equals(login)))) {
             throw AppUserException.loginExists();
         }
-        if (!Arrays.stream(LANGUAGE).anyMatch(lang -> {
-            return lang.equals(user.getLanguage().toLowerCase());
-        })) {
+        if (!Arrays.stream(LANGUAGE).anyMatch(lang -> lang.equals(language.toLowerCase()))) {
             throw AppUserException.unknownLanguage();
         }
+        AppUser user = new AppUser(login, email, password, language);
+        user.setCreatedBy(user);
         AppRole role = appRoleRepository.findByName(Roles.ROLE_USER);
         user.getAppRoles().add(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -92,7 +102,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
     }
 
     @Override
-    public void revokeRoleFromUser(Long id, String roleName) throws AppUserException {  //TODO Dodaćzabezpieczenie przed zabraniem sobie amdina
+    public void revokeRoleFromUser(Long id, String roleName) throws AppUserException {
         AppUser user = appUserRepository.findById(id).orElseThrow(AppUserException::userNotFound);
         AppRole role = appRoleRepository.findByName(roleName);
         String caller = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -105,7 +115,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         if (user.getLogin().equals(caller) && Roles.ROLE_ADMIN.equals(roleName)) {
             throw AppUserException.actionNotAllowed();
         }
-        if(user.getAppRoles().size() == 1){
+        if (user.getAppRoles().size() == 1) {
             throw AppUserException.atLeastOneRole();
         }
         user.getAppRoles().remove(role);
