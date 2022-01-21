@@ -26,7 +26,10 @@ public class BookCopy extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "book", referencedColumnName = "id")
     Book book;
-    Boolean reserved;
-    CoverType coverType;
-    String state;
+    @ManyToOne
+    @JoinColumn(name="bookshelf")
+    Bookshelf bookshelf;
+//    Boolean reserved;
+//    CoverType coverType;
+//    String state;
 }
