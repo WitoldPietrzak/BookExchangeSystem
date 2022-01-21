@@ -3,6 +3,7 @@ package org.bs.bookshare.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bs.bookshare.utils.IpAddressRetriever;
 
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -33,11 +34,15 @@ public class AbstractEntity {
 
     @PrePersist
     private void init() {
+
         creationDateTime = LocalDateTime.now();
+        createdByIp = IpAddressRetriever.getClientIpAddressFromHttpServletRequest();
+
     }
 
     @PreUpdate
     private void initUpdate() {
         modificationDateTime = LocalDateTime.now();
+        modifiedByIp = IpAddressRetriever.getClientIpAddressFromHttpServletRequest();
     }
 }
