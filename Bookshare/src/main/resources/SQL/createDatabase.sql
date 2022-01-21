@@ -155,8 +155,8 @@ CREATE TABLE book_table_genres
 CREATE TABLE bookshelf_table
 (
     id                     BIGINT PRIMARY KEY,
-    location_lat           DECIMAL(8, 6),
-    location_long          DECIMAL(9, 6),
+    location_lat           DECIMAL(8, 6) NOT NULL,
+    location_long          DECIMAL(9, 6) NOT NULL,
     modified_by            BIGINT,
     FOREIGN KEY (modified_by) REFERENCES user_table (id),
     modification_date_time TIMESTAMPTZ,
