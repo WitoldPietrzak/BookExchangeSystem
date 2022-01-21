@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS book_table;
 DROP TABLE IF EXISTS book_copy_table;
 DROP TABLE IF EXISTS book_table_genres;
 DROP TABLE IF EXISTS book_review_table;
+DROP TABLE IF EXISTS bookshelf_table;
 DROP TABLE IF EXISTS logs;
 
 
@@ -71,6 +72,26 @@ CREATE TABLE user_table_app_roles
 ALTER TABLE user_table_app_roles
     ADD CONSTRAINT user_role_unique_comb UNIQUE (app_user_id, app_roles_id);
 
+
+CREATE TABLE book_review_table
+(
+    id                     BIGINT PRIMARY KEY,
+    anonymous              BOOL,
+    review                 VARCHAR(1000),
+    rating                 BIGINT,
+    modified_by            BIGINT,
+    FOREIGN KEY (modified_by) REFERENCES user_table (id),
+    modification_date_time TIMESTAMPTZ,
+    modified_by_ip         VARCHAR(256),
+    created_by             BIGINT,
+    FOREIGN KEY (created_by) REFERENCES user_table (id),
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by_ip          VARCHAR(256),
+
+    version                BIGINT
+);
+
+
 CREATE TABLE genre_table
 (
     id                     BIGINT PRIMARY KEY,
@@ -109,7 +130,9 @@ CREATE TABLE book_copy_table
 (
     id                     BIGINT PRIMARY KEY,
     book                   BIGINT      NOT NULL,
-    FOREIGN KEY (book) REFERENCES book_copy_table (id),
+    FOREIGN KEY (book) REFERENCES book_table (id),
+    bookshelf                   BIGINT      NOT NULL,
+    FOREIGN KEY (book) REFERENCES book_review_table (id),
     modified_by            BIGINT,
     FOREIGN KEY (modified_by) REFERENCES user_table (id),
     modification_date_time TIMESTAMPTZ,
@@ -129,12 +152,11 @@ CREATE TABLE book_table_genres
         CONSTRAINT ref_role REFERENCES genre_table (id)
 );
 
-CREATE TABLE book_review_table
+CREATE TABLE bookshelf_table
 (
     id                     BIGINT PRIMARY KEY,
-    anonymous              BOOL,
-    review                 VARCHAR(1000),
-    rating                 BIGINT,
+    location_lat           DECIMAL(8, 6),
+    location_long          DECIMAL(9, 6),
     modified_by            BIGINT,
     FOREIGN KEY (modified_by) REFERENCES user_table (id),
     modification_date_time TIMESTAMPTZ,
@@ -149,10 +171,10 @@ CREATE TABLE book_review_table
 
 CREATE TABLE logs
 (
-    id BIGSERIAL PRIMARY KEY,
-    eventdate TIMESTAMPTZ  DEFAULT NULL,
-    logger VARCHAR(100),
-    level VARCHAR(100),
-    message VARCHAR(100),
+    id        BIGSERIAL PRIMARY KEY,
+    eventdate TIMESTAMPTZ DEFAULT NULL,
+    logger    VARCHAR(100),
+    level     VARCHAR(100),
+    message   VARCHAR(100),
     exception VARCHAR(100)
 )
