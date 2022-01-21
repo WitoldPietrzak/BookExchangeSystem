@@ -9,6 +9,6 @@ public interface BookshelfService {
 
     Bookshelf createBookshelf(Float latitude,Float longitude);
     List<Bookshelf> getAllBookshelves();
-    List<Bookshelf>getAllBookshelvesFiltered(Float latitude, Float longitude, Double distance, Integer bookCount) throws BookshelfException;
+    List<Bookshelf>getAllBookshelvesFiltered(Double latitude, Double longitude, Double distance, Integer bookCount) throws BookshelfException;
     Bookshelf getBookshelf(Long id) throws BookshelfException;
 }

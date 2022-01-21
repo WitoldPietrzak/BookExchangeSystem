@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookFilteredListRequestDTO {
-    private Float latitude;
-    private Float longitude;
+    private Double latitude;
+    private Double longitude;
     private Double distance;
     private Integer bookCount;
 }

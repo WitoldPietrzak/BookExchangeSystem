@@ -29,10 +29,14 @@ public class BookshelfServiceImplementation implements BookshelfService {
     }
 
     @Override
-    public List<Bookshelf> getAllBookshelvesFiltered(Float latitude, Float longitude, Double distance, Integer bookCount) throws BookshelfException {
+    public List<Bookshelf> getAllBookshelvesFiltered(Double latitude, Double longitude, Double distance, Integer bookCount) throws BookshelfException {
         try {
-            return bookshelfRepository.findAllInDistance(latitude.doubleValue(), longitude.doubleValue(), distance, bookCount);
-        }catch (Exception e){
+            if (longitude == null || latitude == null) {
+                return bookshelfRepository.findAllNoDistance(bookCount);
+            }
+            return bookshelfRepository.findAllInDistance(latitude, longitude, distance, bookCount);
+        } catch (Exception e) {
+            e.printStackTrace();
             throw BookshelfException.queryError();
         }
 
