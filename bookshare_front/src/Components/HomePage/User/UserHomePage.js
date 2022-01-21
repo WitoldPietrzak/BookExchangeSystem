@@ -32,13 +32,6 @@ class UserHomePageNoTr extends React.Component {
                         </Tab>
                         <Tab title={t('Home.NearbyTab')} eventKey={'trzy'}>
                             <div className='Map m-auto mt-5 mb-5'>
-                                {/*<iframe*/}
-                                {/*    width="800"*/}
-                                {/*    height="450"*/}
-                                {/*    loading="lazy"*/}
-                                {/*    allowFullScreen*/}
-                                {/*    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA7TpSBdp1X6FwTJGovDXhJHNflaq6_9og&q=Space+Needle,Seattle+WA">*/}
-                                {/*</iframe>*/}
                                 <NearbyMap/>
                             </div>
                         </Tab>
