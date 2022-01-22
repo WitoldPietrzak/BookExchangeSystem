@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
@@ -39,7 +40,8 @@ public class AppUser extends AbstractEntity {
     private LocalDateTime lastUnsuccessfulLogin;
     private String lastUnsuccessfulLoginIp;
     private Integer loginAttempts = 0;
-//    List<BookCopy> possessedBooks;
+    @OneToMany(mappedBy = "owner")
+    List<BookCopy> possessedBooks;
     @ManyToMany(fetch = FetchType.LAZY)
     private List<AppRole> appRoles = new LinkedList<>();
     private String language;

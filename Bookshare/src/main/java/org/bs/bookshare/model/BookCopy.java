@@ -27,9 +27,17 @@ public class BookCopy extends AbstractEntity {
     @JoinColumn(name = "book", referencedColumnName = "id")
     Book book;
     @ManyToOne
+    @JoinColumn(name="owner")
+    AppUser owner;
+
+    @ManyToOne
     @JoinColumn(name="bookshelf")
     Bookshelf bookshelf;
-//    Boolean reserved;
+    Boolean reserved;
 //    CoverType coverType;
 //    String state;
+
+    public boolean isAvailable(){
+        return bookshelf != null && !reserved;
+    }
 }
