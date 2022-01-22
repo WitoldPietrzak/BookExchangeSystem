@@ -90,7 +90,6 @@ class NearbyMapNoTr extends React.Component {
                     name={'My location'}
                     position={{lat: this.state.location.lat, lng: this.state.location.lng}}
                     onClick={this.onMarkerClick}
-                    color={'blue'}
                     icon={{
                         url: Icon,
                         anchor: new google.maps.Point(15,20),

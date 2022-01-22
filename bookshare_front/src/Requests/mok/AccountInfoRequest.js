@@ -51,7 +51,11 @@ export function makeAnyAccountInfoRequest(token, id, that) {
             disabled: response.data.disabled,
             roles:response.data.roles,
             lastSuccessfulLoginAttemptDateTime: response.data.lastSuccessfulLoginAttemptDateTime,
-            creationDateTime: response.data.creationDateTime
+            creationDateTime: response.data.creationDateTime,
+            modificationDateTime:response.data.modificationDateTime,
+            lastSuccessfulLoginIp:response.data.lastSuccessfulLoginIp,
+            lastUnsuccessfulLoginAttemptDateTime:response.data.lastUnsuccessfulLoginAttemptDateTime,
+            lastUnsuccessfulLoginIp:response.data.lastUnsuccessfulLoginIp
 
         });
     }).catch((response) => {
