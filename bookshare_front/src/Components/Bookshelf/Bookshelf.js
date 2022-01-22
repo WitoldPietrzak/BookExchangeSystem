@@ -1,12 +1,13 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
 import Cookies from "js-cookie";
-import { Button, Col, Row} from "react-bootstrap";
+import {Alert, Button, Col, Row} from "react-bootstrap";
 import './Bookshelf.css'
 import RefreshIcon from '../../Resources/refresh.png';
 import {useParams} from "react-router-dom";
 import {makeBookshelfInfoRequest} from "../../Requests/mop/BookshelfInfoRequest";
 import {GoogleApiWrapper, Map, Marker} from "google-maps-react";
+import BookshelfList from "../BookshelfList/BookshelfList";
 
 class BookshelfNoTr extends React.Component {
     constructor(props) {
@@ -14,14 +15,14 @@ class BookshelfNoTr extends React.Component {
         this.id = this.props.params.id;
         this.state = {
             id: '',
-            location:'',
-            bookshelfLocation:{},
+            location: '',
+            bookshelfLocation: {},
             creationDateTime: '',
-            books:[],
+            books: [],
             version: '',
             response: '',
             requestFailed: false,
-            locationGeocode:''
+            locationGeocode: ''
         }
     }
 
@@ -48,7 +49,8 @@ class BookshelfNoTr extends React.Component {
                     <Col>{t('UserInfo.Header')} </Col></Row>
                 <Row className={'InfoRow'}>
                     <Col className={'InfoLeftColumn'}>{t('Form.location')}:</Col>
-                    <Col className={'InfoRightColumn'}>{(this.state.locationGeocode && this.state.locationGeocode.results && this.state.locationGeocode.results.length >=1)?this.state.locationGeocode.results[0].formatted_address:''}</Col>
+                    <Col
+                        className={'InfoRightColumn'}>{(this.state.locationGeocode && this.state.locationGeocode.results && this.state.locationGeocode.results.length >= 1) ? this.state.locationGeocode.results[0].formatted_address : ''}</Col>
                 </Row>
                 <Row className={'InfoRow'}>
                     <Col className={'InfoLeftColumn'}>{t('Form.creationDate')}:</Col>
@@ -71,10 +73,11 @@ class BookshelfNoTr extends React.Component {
                         {this.renderUserInfo()}
                     </Col>
                     <Col>
-                        <div className={'d-grid gap-2 mt-0 mb-0 m-5'}>
-                            <Map onClick={this.onMapClicked} google={this.props.google} zoom={17} center={this.state.bookshelfLocation}
+                        <div className={'d-grid gap-2 mt-0 mb-0 m-5 Map InfoFrame'}>
+                            <Map onClick={this.onMapClicked} google={this.props.google} zoom={17}
+                                 center={this.state.bookshelfLocation}
                                  className='GoogleMap'
-                                 style={{width: 'auto', height: '600px', position: 'relative'}}>
+                                 style={{width: 'auto', height: '200px', position: 'relative'}}>
                                 <Marker
                                     position={this.state.bookshelfLocation}
                                 />
@@ -82,6 +85,26 @@ class BookshelfNoTr extends React.Component {
                         </div>
 
                     </Col>
+                </Row>
+                <Row>
+
+                    <Col>
+                        <div className={'BookshelfBookListFrame'}><BookshelfList/></div>  //TODO zamienic na liste egzemplarzy na polce
+                    </Col>
+                    <Col>
+                        <Alert show={this.state.requestFailed}
+                               className={'mt-0 m-3'}
+                               variant={'danger'}>{t(this.state.response)}</Alert>
+                        <div className={'d-grid gap-2 mt-4 mb-0 m-5'}>
+                            <Button disabled={this.state.disabled} variant={'outline-dark'} size={'md'}
+                                    >{t('Bookshelf.AddBookCopy')}</Button>
+                            <Button disabled={!this.state.disabled} variant={'outline-dark'} size={'md'}
+                                    >{t('Bookshelf.Move')}</Button>
+                            <Button disabled={!this.state.disabled} variant={'outline-dark'} size={'md'}
+                            >{t('Bookshelf.Remove')}</Button>
+                        </div>
+                    </Col>
+
                 </Row>
             </Fragment>
         );
