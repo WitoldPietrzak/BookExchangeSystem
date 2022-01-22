@@ -2,13 +2,12 @@ package org.bs.bookshare.moks.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.Map;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class SimpleGenreResponseDTO {
+@NoArgsConstructor
+public class BookCopyInnerResponseDTO {
     private Long id;
-    private String nameCode;
-    private Map<String,String> name;
+    private boolean isAvailable;
 }

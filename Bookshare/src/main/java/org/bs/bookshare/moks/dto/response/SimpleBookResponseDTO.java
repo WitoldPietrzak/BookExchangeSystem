@@ -10,6 +10,7 @@ import java.util.List;
 public class SimpleBookResponseDTO {
     Long id;
     String title;
-    String author;
-    int releaseDate;
+    AuthorInnerResponseDTO author;
+    List<SimpleGenreResponseDTO> genres;
+    Integer releaseDate;
 }
