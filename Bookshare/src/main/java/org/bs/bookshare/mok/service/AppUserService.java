@@ -15,6 +15,8 @@ public interface AppUserService {
 
     AppUser getUser(Long id) throws AppUserException;
 
+    AppUser getUserWithRoles(String login) throws AppUserException;
+
     AppUser getUser(String login) throws AppUserException;
 
     List<AppUser> getAllUsers();

@@ -3,6 +3,7 @@ package org.bs.bookshare.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -19,7 +20,9 @@ public class TokenGenerator {
 
     private static Algorithm accessAlgorithm;
     private static Algorithm refreshAlgorithm;
-    private static Algorithm mailAlgorithm;
+    private static Algorithm activationAlgorithm;
+    private static Algorithm enablingAlgorithm;
+    private static Algorithm passwordResetAlgorithm;
 
 
 
@@ -27,7 +30,9 @@ public class TokenGenerator {
     public TokenGenerator(Environment environment) {
         accessAlgorithm =Algorithm.HMAC256(Objects.requireNonNull(environment.getProperty("jwt_secret_access")));
         refreshAlgorithm =Algorithm.HMAC256(Objects.requireNonNull(environment.getProperty("jwt_secret_refresh")));
-        mailAlgorithm =Algorithm.HMAC256(Objects.requireNonNull(environment.getProperty("jwt_secret_mail")));
+        activationAlgorithm =Algorithm.HMAC256(Objects.requireNonNull(environment.getProperty("jwt_secret_activate")));
+        enablingAlgorithm =Algorithm.HMAC256(Objects.requireNonNull(environment.getProperty("jwt_secret_enable")));
+        passwordResetAlgorithm =Algorithm.HMAC256(Objects.requireNonNull(environment.getProperty("jwt_secret_password")));
     }
 
 
@@ -52,7 +57,14 @@ public class TokenGenerator {
         return JWT.create()
                 .withSubject(username)
                 .withExpiresAt(expiresAt)
-                .sign(mailAlgorithm);
+                .sign(activationAlgorithm);
+    }
+
+    public static String generateEnablingToken(String username, Date expiresAt) {
+        return JWT.create()
+                .withSubject(username)
+                .withExpiresAt(expiresAt)
+                .sign(enablingAlgorithm);
     }
 
     public static String generatePasswordChangeToken(String username, String oldPassword, Date expiresAt) {
@@ -61,7 +73,7 @@ public class TokenGenerator {
         return JWT.create()
                 .withSubject(username).withPayload(map)
                 .withExpiresAt(expiresAt)
-                .sign(mailAlgorithm);
+                .sign(passwordResetAlgorithm);
     }
 
     public static DecodedJWT verifyAccessToken(String token) {
@@ -74,8 +86,18 @@ public class TokenGenerator {
         return verifier.verify(token);
 
     }
-    public static DecodedJWT verifyMailToken(String token) {
-        JWTVerifier verifier = JWT.require(mailAlgorithm).build();
+    public static DecodedJWT verifyActivationToken(String token) {
+        JWTVerifier verifier = JWT.require(activationAlgorithm).build();
+        return verifier.verify(token);
+
+    }
+    public static DecodedJWT verifyEnablingToken(String token) {
+        JWTVerifier verifier = JWT.require(enablingAlgorithm).build();
+        return verifier.verify(token);
+
+    }
+    public static DecodedJWT verifyPasswordResetToken(String token) {
+        JWTVerifier verifier = JWT.require(passwordResetAlgorithm).build();
         return verifier.verify(token);
 
     }

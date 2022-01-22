@@ -136,6 +136,15 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
     }
 
     @Override
+    public AppUser getUserWithRoles(String login) throws AppUserException {
+        AppUser user = appUserRepository.findByLoginAndFetchRolesEagerly(login);
+        if (user == null) {
+            throw AppUserException.userNotFound();
+        }
+        return user;
+    }
+
+    @Override
     public List<AppUser> getAllUsers() {
         return appUserRepository.findAll();
     }
@@ -219,7 +228,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         DecodedJWT jwt;
         String login;
         try {
-            jwt = TokenGenerator.verifyMailToken(token);
+            jwt = TokenGenerator.verifyActivationToken(token);
             login = jwt.getSubject();
         } catch (JWTDecodeException e) {
             throw AppUserException.activationTokenInvalid();
@@ -249,7 +258,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         String login;
         String oldPassword;
         try {
-            jwt = TokenGenerator.verifyMailToken(token);
+            jwt = TokenGenerator.verifyPasswordResetToken(token);
             login = jwt.getSubject();
             oldPassword = jwt.getClaim("password").asString();
         } catch (JWTDecodeException e) {
@@ -286,7 +295,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         String login;
         String oldPassword;
         try {
-            jwt = TokenGenerator.verifyMailToken(token);
+            jwt = TokenGenerator.verifyPasswordResetToken(token);
             login = jwt.getSubject();
             oldPassword = jwt.getClaim("password").asString();
         } catch (JWTDecodeException e) {
@@ -330,7 +339,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         if (!user.getActivated()) {
             return;
         }
-        String token = TokenGenerator.generatePasswordChangeToken(user.getLogin(), user.getPassword(), new Date(System.currentTimeMillis() + (60 * 60 * 1000))); //TODO okres waznosci do property
+        String token = TokenGenerator.generatePasswordChangeToken(user.getLogin(), user.getPassword(), new Date(System.currentTimeMillis() + (Long.parseLong(Objects.requireNonNull(environment.getProperty("reset_password_token_valid_time_in_hours"))) * 60 * 60 * 1000)));
         mailProvider.sendPasswordResetMail(user.getEmail(), token, user.getLanguage());
     }
 
@@ -346,9 +355,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             user.setLastUnsuccessfulLogin(LocalDateTime.now());
             user.setLastUnsuccessfulLoginIp(IpAddressRetriever.getClientIpAddressFromHttpServletRequest(request));
             user.setLoginAttempts(user.getLoginAttempts() + 1);
-            if (user.getLoginAttempts() == 3) {  //TODO do properties
+            if (user.getLoginAttempts() == Integer.parseInt(Objects.requireNonNull(environment.getProperty("max_login_attempts_before_disable")))) {
                 user.setDisabled(true);
-                String token = TokenGenerator.generateActivationToken(user.getLogin(), new Date(System.currentTimeMillis() + (7 * 24 * 60 * 60 * 1000)));   //TODO do properties
+                String token = TokenGenerator.generateEnablingToken(user.getLogin(), new Date(System.currentTimeMillis() + (Long.parseLong(Objects.requireNonNull(environment.getProperty("enable_account_token_valid_time_in_days"))) * 24 * 60 * 60 * 1000)));
                 mailProvider.sendAccountEnableMail(user.getEmail(), token, user.getLanguage());
             }
         }
@@ -357,7 +366,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
 
     @Override
     public void enableUserByToken(String token) throws AppUserException {
-        DecodedJWT jwt = TokenGenerator.verifyMailToken(token);
+        DecodedJWT jwt = TokenGenerator.verifyEnablingToken(token);
         String login = jwt.getSubject();
         AppUser user;
         try {

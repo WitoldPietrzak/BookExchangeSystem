@@ -3,7 +3,9 @@ package org.bs.bookshare.auth;
 import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.AppUserException;
 import org.bs.bookshare.model.AppUser;
+import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.mok.service.AppUserService;
+import org.bs.bookshare.utils.IpAddressRetriever;
 import org.bs.bookshare.utils.mail.MailProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -51,12 +53,16 @@ public class CustomAuthenticationManager implements AuthenticationManager {
             throw new BadCredentialsException(USER_NOT_FOUND);
         }
         try {
-            user = userService.getUser(login);
+            user = userService.getUserWithRoles(login);
         } catch (AppUserException e) {
             throw new BadCredentialsException(USER_NOT_FOUND);
         }
 
         try {
+            if (user.getAppRoles().stream().anyMatch(role -> Roles.ROLE_ADMIN.equals(role.getName()))) {
+                mailProvider.sendAdminLoginAttemptMail(user.getEmail(), IpAddressRetriever.getClientIpAddressFromHttpServletRequest(), user.getLanguage());
+
+            }
 
             if (!passwordEncoder.matches((String) authentication.getCredentials(), user.getPassword())) {
                 throw new BadCredentialsException(INCORRECT_PASSWORD);
