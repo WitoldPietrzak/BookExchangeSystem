@@ -2,16 +2,42 @@ DROP TABLE IF EXISTS user_table_app_roles;
 DROP TABLE IF EXISTS user_table;
 DROP TABLE IF EXISTS role_table;
 DROP TABLE IF EXISTS user_table_app_roles;
-DROP TABLE IF EXISTS genre_table;
-DROP TABLE IF EXISTS book_table;
-DROP TABLE IF EXISTS book_copy_table;
 DROP TABLE IF EXISTS book_table_genres;
+DROP TABLE IF EXISTS genre_translations_table;
+DROP TABLE IF EXISTS genre_table;
+DROP TABLE IF EXISTS book_copy_table;
+DROP TABLE IF EXISTS book_table;
 DROP TABLE IF EXISTS book_review_table;
 DROP TABLE IF EXISTS bookshelf_table;
 DROP TABLE IF EXISTS logs;
-
+DROP TABLE IF EXISTS cover_type_table;
+DROP TABLE IF EXISTS author_table;
 
 DROP SEQUENCE IF EXISTS user_seq;
+
+CREATE TABLE logs
+(
+    id        BIGSERIAL PRIMARY KEY,
+    eventdate TIMESTAMPTZ DEFAULT NULL,
+    logger    VARCHAR(100),
+    level     VARCHAR(100),
+    message   TEXT,
+    exception VARCHAR(100)
+);
+
+CREATE TABLE role_table
+(
+    id        BIGINT PRIMARY KEY,
+    role_name VARCHAR(32) NOT NULL
+        CONSTRAINT role_check CHECK ( role_name in ('ROLE_USER', 'ROLE_ADMIN', 'ROLE_MODERATOR') ) UNIQUE
+);
+
+CREATE TABLE cover_type_table
+(
+    id   BIGINT PRIMARY KEY,
+    name VARCHAR(32) NOT NULL
+        CONSTRAINT cover_type_check CHECK ( name in ('HARD', 'SOFT', 'CUSTOM') ) UNIQUE
+);
 
 CREATE TABLE user_table
 (
@@ -47,19 +73,6 @@ CREATE SEQUENCE user_seq
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
-CREATE TABLE role_table
-(
-    id        BIGINT PRIMARY KEY,
-    role_name VARCHAR(32) NOT NULL
-        CONSTRAINT role_check CHECK ( role_name in ('ROLE_USER', 'ROLE_ADMIN', 'ROLE_MODERATOR') ) UNIQUE
-);
-
-INSERT INTO role_table(id, role_name)
-VALUES (1, 'ROLE_USER');
-INSERT INTO role_table(id, role_name)
-VALUES (2, 'ROLE_ADMIN');
-INSERT INTO role_table(id, role_name)
-VALUES (3, 'ROLE_MODERATOR');
 
 CREATE TABLE user_table_app_roles
 (
@@ -73,29 +86,11 @@ ALTER TABLE user_table_app_roles
     ADD CONSTRAINT user_role_unique_comb UNIQUE (app_user_id, app_roles_id);
 
 
-CREATE TABLE book_review_table
-(
-    id                     BIGINT PRIMARY KEY,
-    anonymous              BOOL,
-    review                 VARCHAR(1000),
-    rating                 BIGINT,
-    modified_by            BIGINT,
-    FOREIGN KEY (modified_by) REFERENCES user_table (id),
-    modification_date_time TIMESTAMPTZ,
-    modified_by_ip         VARCHAR(256),
-    created_by             BIGINT,
-    FOREIGN KEY (created_by) REFERENCES user_table (id),
-    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by_ip          VARCHAR(256),
-
-    version                BIGINT
-);
-
 
 CREATE TABLE genre_table
 (
     id                     BIGINT PRIMARY KEY,
-    name                   VARCHAR(200) UNIQUE NOT NULL,
+    name_code                   VARCHAR(200) UNIQUE NOT NULL,
     modified_by            BIGINT,
     FOREIGN KEY (modified_by) REFERENCES user_table (id),
     modification_date_time TIMESTAMPTZ,
@@ -108,11 +103,39 @@ CREATE TABLE genre_table
     version                BIGINT
 );
 
+CREATE TABLE genre_translations_table
+(
+    genre       BIGINT      NOT NULL,
+    FOREIGN KEY (genre) REFERENCES genre_table (id),
+    language    CHAR(2)     NOT NULL,
+    translation VARCHAR(64) NOT NULL
+);
+ALTER TABLE genre_translations_table
+    ADD CONSTRAINT genre_lang_unique_comb UNIQUE (genre, language);
+
+CREATE TABLE author_table
+(
+    id                     BIGINT PRIMARY KEY,
+    name                   VARCHAR(50) NOT NULL,
+    surname                VARCHAR(50) NOT NULL,
+    modified_by            BIGINT,
+    FOREIGN KEY (modified_by) REFERENCES user_table (id),
+    modification_date_time TIMESTAMPTZ,
+    modified_by_ip         VARCHAR(256),
+    created_by             BIGINT,
+    FOREIGN KEY (created_by) REFERENCES user_table (id),
+    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by_ip          VARCHAR(256),
+
+    version                BIGINT
+);
+
 CREATE TABLE book_table
 (
     id                     BIGINT PRIMARY KEY,
     title                  VARCHAR(200) NOT NULL,
-    author                 VARCHAR(100),
+    author                 BIGINT,
+    FOREIGN KEY (author) REFERENCES author_table (id),
     release_date           INT,
     modified_by            BIGINT,
     FOREIGN KEY (modified_by) REFERENCES user_table (id),
@@ -131,8 +154,11 @@ CREATE TABLE book_copy_table
     id                     BIGINT PRIMARY KEY,
     book                   BIGINT      NOT NULL,
     FOREIGN KEY (book) REFERENCES book_table (id),
-    bookshelf                   BIGINT      NOT NULL,
+    bookshelf              BIGINT,
     FOREIGN KEY (book) REFERENCES book_review_table (id),
+    owner                  BIGINT,
+    FOREIGN KEY (owner) REFERENCES user_table (id),
+    reserved               BOOL        NOT NULL DEFAULT FALSE,
     modified_by            BIGINT,
     FOREIGN KEY (modified_by) REFERENCES user_table (id),
     modification_date_time TIMESTAMPTZ,
@@ -163,18 +189,42 @@ CREATE TABLE bookshelf_table
     modified_by_ip         VARCHAR(256),
     created_by             BIGINT,
     FOREIGN KEY (created_by) REFERENCES user_table (id),
+    creation_date_time     TIMESTAMPTZ   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by_ip          VARCHAR(256),
+
+    version                BIGINT
+);
+
+CREATE TABLE book_review_table
+(
+    id                     BIGINT PRIMARY KEY,
+    anonymous              BOOL,
+    review                 VARCHAR(1000),
+    rating                 BIGINT,
+    modified_by            BIGINT,
+    FOREIGN KEY (modified_by) REFERENCES user_table (id),
+    modification_date_time TIMESTAMPTZ,
+    modified_by_ip         VARCHAR(256),
+    created_by             BIGINT,
+    FOREIGN KEY (created_by) REFERENCES user_table (id),
     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by_ip          VARCHAR(256),
 
     version                BIGINT
 );
 
-CREATE TABLE logs
-(
-    id        BIGSERIAL PRIMARY KEY,
-    eventdate TIMESTAMPTZ DEFAULT NULL,
-    logger    VARCHAR(100),
-    level     VARCHAR(100),
-    message   TEXT,
-    exception VARCHAR(100)
-)
+
+
+INSERT INTO role_table(id, role_name)
+VALUES (1, 'ROLE_USER');
+INSERT INTO role_table(id, role_name)
+VALUES (2, 'ROLE_ADMIN');
+INSERT INTO role_table(id, role_name)
+VALUES (3, 'ROLE_MODERATOR');
+
+INSERT INTO cover_type_table(id, name)
+VALUES (1, 'HARD');
+INSERT INTO cover_type_table(id, name)
+VALUES (2, 'SOFT');
+INSERT INTO cover_type_table(id, name)
+VALUES (3, 'CUSTOM');
