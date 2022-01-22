@@ -7,7 +7,6 @@ import {isAdmin} from "../../Routes/Router";
 import {Checkbox, Radio} from "@material-ui/core";
 import {makeAnyAccountInfoRequest} from "../../Requests/mok/AccountInfoRequest";
 import RefreshIcon from '../../Resources/refresh.png';
-import {makeChangePasswordRequest} from "../../Requests/mok/ChangePasswordRequest";
 import {addAccessLevel, revokeAccessLevel} from "../../Requests/mok/ChangeAccessLevelRequest";
 import {useParams} from "react-router-dom";
 import {makeDisableAccountRequest, makeEnableAccountRequest} from "../../Requests/mok/EnableDisableUserRequest";
@@ -32,8 +31,8 @@ class AdminAccountEditNoTr extends React.Component {
             passwordButton: t('Form.ChangePasswordButton'),
             roleRequestFailed: false,
             roleResponse: '',
-            response:'',
-            requestFailed:false
+            response: '',
+            requestFailed: false
         }
     }
 
@@ -57,12 +56,14 @@ class AdminAccountEditNoTr extends React.Component {
 
 
     }
-    enableUser(){
+
+    enableUser() {
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         makeEnableAccountRequest(token, this.id, this);
         this.reloadUserInfo();
     }
-    disableUser(){
+
+    disableUser() {
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         makeDisableAccountRequest(token, this.id, this);
         this.reloadUserInfo();
@@ -139,8 +140,24 @@ class AdminAccountEditNoTr extends React.Component {
                     <Col className={'InfoRightColumn'}>{this.state.lastSuccessfulLoginAttemptDateTime}</Col>
                 </Row>
                 <Row className={'InfoRow'}>
+                    <Col className={'InfoLeftColumn'}>{t('Form.lastSuccessfulLoginIp')}:</Col>
+                    <Col className={'InfoRightColumn'}>{this.state.lastSuccessfulLoginIp}</Col>
+                </Row>
+                <Row className={'InfoRow'}>
+                    <Col className={'InfoLeftColumn'}>{t('Form.lastUnsuccessfulLoginAttempt')}:</Col>
+                    <Col className={'InfoRightColumn'}>{this.state.lastUnsuccessfulLoginAttemptDateTime}</Col>
+                </Row>
+                <Row className={'InfoRow'}>
+                    <Col className={'InfoLeftColumn'}>{t('Form.lastUnsuccessfulLoginIp')}:</Col>
+                    <Col className={'InfoRightColumn'}>{this.state.lastUnsuccessfulLoginIp}</Col>
+                </Row>
+                <Row className={'InfoRow'}>
                     <Col className={'InfoLeftColumn'}>{t('Form.creationDate')}:</Col>
                     <Col className={'InfoRightColumn'}>{this.state.creationDateTime}</Col>
+                </Row>
+                <Row className={'InfoRow'}>
+                    <Col className={'InfoLeftColumn'}>{t('Form.modificationDate')}:</Col>
+                    <Col className={'InfoRightColumn'}>{this.state.modificationDateTime}</Col>
                 </Row>
             </div>
         )
@@ -159,13 +176,15 @@ class AdminAccountEditNoTr extends React.Component {
                                className={'mt-0 m-3'}
                                variant={'danger'}>{t(this.state.response)}</Alert>
                         <div className={'d-grid gap-2 mt-0 mb-0 m-5'}>
-                            <Button disabled={this.state.disabled} variant={'outline-dark'} size={'md'} onClick={this.disableUser.bind(this)}>{t('Account.Disable')}</Button>
-                            <Button disabled={!this.state.disabled} variant={'outline-dark'} size={'md'} onClick={this.enableUser.bind(this)}>{t('Account.Enable')}</Button>
+                            <Button disabled={this.state.disabled} variant={'outline-dark'} size={'md'}
+                                    onClick={this.disableUser.bind(this)}>{t('Account.Disable')}</Button>
+                            <Button disabled={!this.state.disabled} variant={'outline-dark'} size={'md'}
+                                    onClick={this.enableUser.bind(this)}>{t('Account.Enable')}</Button>
                         </div>
 
                     </Col>
                 </Row>
-                {isAdmin() ? this.accessLevelChange() : ''}
+                {this.accessLevelChange()}
             </Fragment>
         );
     }
