@@ -90,7 +90,7 @@ ALTER TABLE user_table_app_roles
 CREATE TABLE genre_table
 (
     id                     BIGINT PRIMARY KEY,
-    name_code                   VARCHAR(200) UNIQUE NOT NULL,
+    name_code              VARCHAR(200) UNIQUE NOT NULL,
     modified_by            BIGINT,
     FOREIGN KEY (modified_by) REFERENCES user_table (id),
     modification_date_time TIMESTAMPTZ,
@@ -159,6 +159,7 @@ CREATE TABLE book_copy_table
     owner                  BIGINT,
     FOREIGN KEY (owner) REFERENCES user_table (id),
     reserved               BOOL        NOT NULL DEFAULT FALSE,
+    cover                  VARCHAR(8)  NOT NULL CONSTRAINT cover_heck CHECK ( cover in ('HARD', 'SOFT', 'CUSTOM') ),
     modified_by            BIGINT,
     FOREIGN KEY (modified_by) REFERENCES user_table (id),
     modification_date_time TIMESTAMPTZ,
