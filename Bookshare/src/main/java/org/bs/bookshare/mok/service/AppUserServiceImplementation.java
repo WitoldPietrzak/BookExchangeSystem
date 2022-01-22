@@ -103,6 +103,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             throw AppUserException.roleExists();
         }
         user.getAppRoles().add(role);
+        String editorName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser editor = appUserRepository.findByLogin(editorName);
+        user.setModifiedBy(editor);
 
     }
 
@@ -124,6 +127,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             throw AppUserException.atLeastOneRole();
         }
         user.getAppRoles().remove(role);
+        String editorName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser editor = appUserRepository.findByLogin(editorName);
+        user.setModifiedBy(editor);
     }
 
     @Override
@@ -181,6 +187,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             throw AppUserException.passwordUsed();
         }
         user.setPassword(passwordEncoder.encode(newPassword));
+        String editorName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser editor = appUserRepository.findByLogin(editorName);
+        user.setModifiedBy(editor);
     }
 
     @Override
@@ -193,6 +202,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             throw AppUserException.actionNotAllowed();
         }
         user.setDisabled(true);
+        String editorName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser editor = appUserRepository.findByLogin(editorName);
+        user.setModifiedBy(editor);
 
     }
 
@@ -203,6 +215,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             throw AppUserException.userNotDisabled();
         }
         user.setDisabled(false);
+        String editorName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser editor = appUserRepository.findByLogin(editorName);
+        user.setModifiedBy(editor);
     }
 
     @Override
@@ -225,6 +240,9 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             throw AppUserException.languageAlreadyInUse();
         }
         user.setLanguage(language.toLowerCase());
+        String editorName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser editor = appUserRepository.findByLogin(editorName);
+        user.setModifiedBy(editor);
 
     }
 
@@ -255,6 +273,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             throw AppUserException.alreadyActivated();
         }
         user.setActivated(true);
+        user.setModifiedBy(user);
     }
 
     @Override
@@ -292,6 +311,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             throw AppUserException.passwordUsed();
         }
         user.setPassword(passwordEncoder.encode(newPassword));
+        user.setModifiedBy(user);
     }
 
     @Override
@@ -384,6 +404,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
             throw AppUserException.userNotDisabled();
         }
         user.setDisabled(false);
+        user.setModifiedBy(user);
     }
 
     @Override

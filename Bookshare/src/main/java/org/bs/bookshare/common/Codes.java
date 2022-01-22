@@ -16,6 +16,7 @@ public class Codes {
     public static final String AT_LEAST_ONE_ROLE = "at_least_one_role";
     public static final String VERSION_MISMATCH = "version_mismatch";
     public static final String BOOK_NOT_FOUND = "book_not_found";
+    public static final String CANT_DELETE_BOOK_WITH_EXAMPLES = "cant_delete_book_with_examples";
     public static final String GENRE_EXIST = "genre_exist";
     public static final String GENRE_NOT_EXIST = "genre_not_exist";
     public static final String UNKNOWN_LANGUAGE = "unknown_language";
@@ -34,6 +35,8 @@ public class Codes {
     public static final String RESET_TOKEN_INVALID = "reset_token_invalid";
     public static final String RESET_TOKEN_EXPIRED = "reset_token_expired";
     public static final String BOOKSHELF_NOT_FOUND = "bookshelf_not_found";
+    public static final String AUTHOR_NOT_FOUND = "author_not_found";
+    public static final String CANT_DELETE_AUTHOR_WITH_BOOKS = "cant_delete_author_with_books";
     public static final String QUERY_ERROR = "query_error";
 
     public static final String ACTIVATION_MAIL_SUBJECT = "activation_mail_subject";
