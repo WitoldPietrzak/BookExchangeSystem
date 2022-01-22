@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookshelfFilteredListRequestDTO {
+public class BookshelfRequestWithLocationDTO {
     private Double latitude;
     private Double longitude;
-    private Double distance;
-    private Integer bookCount;
 }

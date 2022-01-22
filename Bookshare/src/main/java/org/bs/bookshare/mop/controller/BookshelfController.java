@@ -4,16 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.BookshelfException;
 import org.bs.bookshare.model.Bookshelf;
 import org.bs.bookshare.model.Roles;
-import org.bs.bookshare.mok.dto.response.UserListResponseDTO;
-import org.bs.bookshare.mop.dto.request.BookFilteredListRequestDTO;
+import org.bs.bookshare.mop.dto.request.BookshelfFilteredListRequestDTO;
 import org.bs.bookshare.mop.dto.request.BookshelfCreateRequestDTO;
+import org.bs.bookshare.mop.dto.request.BookshelfRequestWithLocationDTO;
+import org.bs.bookshare.mop.dto.response.BookshelfDetailResponseDTO;
 import org.bs.bookshare.mop.dto.response.BookshelfListResponseDTO;
 import org.bs.bookshare.mop.dto.response.BookshelfResponseDTO;
 import org.bs.bookshare.mop.service.BookshelfService;
 import org.bs.bookshare.utils.DistanceCounter;
-import org.bs.bookshare.utils.converter.UserConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,18 +47,18 @@ public class BookshelfController {
 
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
     @PostMapping("/all")
-    public ResponseEntity<?> getShelvesFiltered(@RequestBody BookFilteredListRequestDTO dto) throws BookshelfException {
+    public ResponseEntity<?> getShelvesFiltered(@RequestBody BookshelfFilteredListRequestDTO dto) throws BookshelfException {
         return ResponseEntity.ok().body(new BookshelfListResponseDTO(
                 bookshelfService.getAllBookshelvesFiltered(dto.getLatitude(), dto.getLongitude(), dto.getDistance(), dto.getBookCount())
-                .stream()
-                .map(bookshelf -> new BookshelfResponseDTO(
-                        bookshelf.getId(),
-                        bookshelf.getLocationLat(),
-                        bookshelf.getLocationLong(),
-                        bookshelf.getBooksOnShelf().size(),
-                        DistanceCounter.calculateDistance(dto.getLatitude(),dto.getLongitude(),bookshelf.getLocationLat(),bookshelf.getLocationLong()),
-                        bookshelf.getVersion()))
-                .collect(Collectors.toList())));
+                        .stream()
+                        .map(bookshelf -> new BookshelfResponseDTO(
+                                bookshelf.getId(),
+                                bookshelf.getLocationLat(),
+                                bookshelf.getLocationLong(),
+                                bookshelf.getBooksOnShelf().size(),
+                                DistanceCounter.calculateDistance(dto.getLatitude(), dto.getLongitude(), bookshelf.getLocationLat(), bookshelf.getLocationLong()),
+                                bookshelf.getVersion()))
+                        .collect(Collectors.toList())));
     }
 
     @RolesAllowed({Roles.ROLE_MODERATOR})
@@ -65,5 +66,31 @@ public class BookshelfController {
     public ResponseEntity<?> createShelf(@RequestBody BookshelfCreateRequestDTO dto) {
         bookshelfService.createBookshelf(dto.getLatitude(), dto.getLongitude());
         return ResponseEntity.ok().build();
+    }
+
+    @RolesAllowed({Roles.ROLE_MODERATOR, Roles.ROLE_USER})
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getShelf(@PathVariable Long id) throws BookshelfException {
+        Bookshelf bookshelf = bookshelfService.getBookshelf(id);
+        return ResponseEntity.ok().body(new BookshelfDetailResponseDTO(
+                bookshelf.getId(),
+                bookshelf.getLocationLat(),
+                bookshelf.getLocationLong(),
+                bookshelf.getBooksOnShelf(),
+                null,
+                bookshelf.getVersion()));
+    }
+
+    @RolesAllowed({Roles.ROLE_MODERATOR, Roles.ROLE_USER})
+    @PostMapping("/{id}")
+    public ResponseEntity<?> getShelfWithLDistance(@PathVariable Long id, @RequestBody BookshelfRequestWithLocationDTO dto) throws BookshelfException {
+        Bookshelf bookshelf = bookshelfService.getBookshelf(id);
+        return ResponseEntity.ok().body(new BookshelfDetailResponseDTO(
+                bookshelf.getId(),
+                bookshelf.getLocationLat(),
+                bookshelf.getLocationLong(),
+                bookshelf.getBooksOnShelf(),
+                DistanceCounter.calculateDistance(dto.getLatitude(), dto.getLongitude(), bookshelf.getLocationLat(), bookshelf.getLocationLong()),
+                bookshelf.getVersion()));
     }
 }
