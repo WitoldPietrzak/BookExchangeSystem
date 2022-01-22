@@ -3,7 +3,8 @@
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT" ignoreExceptions="false">
             <PatternLayout
-                    pattern=" %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
+                    pattern=" %d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{%level}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=blue} [%t] %style{%c{1}}{cyan} --- %msg%n"
+                    disableAnsi="false"/>
 
         </Console>
         <RollingFile name="RollingFile"

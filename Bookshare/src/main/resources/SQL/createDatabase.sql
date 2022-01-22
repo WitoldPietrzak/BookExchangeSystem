@@ -175,6 +175,6 @@ CREATE TABLE logs
     eventdate TIMESTAMPTZ DEFAULT NULL,
     logger    VARCHAR(100),
     level     VARCHAR(100),
-    message   VARCHAR(100),
+    message   TEXT,
     exception VARCHAR(100)
 )
