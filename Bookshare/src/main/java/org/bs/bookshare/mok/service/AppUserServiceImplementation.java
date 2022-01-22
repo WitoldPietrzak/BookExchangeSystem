@@ -3,6 +3,7 @@ package org.bs.bookshare.mok.service;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.AppUserException;
 import org.bs.bookshare.model.AppRole;
@@ -15,6 +16,7 @@ import org.bs.bookshare.utils.IpAddressRetriever;
 import org.bs.bookshare.utils.mail.MailProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -24,6 +26,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -50,6 +54,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
     private final PasswordEncoder passwordEncoder;
     private final MailProvider mailProvider;
     private final HttpServletRequest request;
+    private final EntityManager entityManager;
     @Autowired
     private final Environment environment;
 
@@ -323,8 +328,6 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         AppUser user;
 
         try {
-
-
             if (loginOrEmail.contains("@")) {
                 user = appUserRepository.findByEmail(loginOrEmail);
             } else {
@@ -404,6 +407,13 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         tokens.put("roles", authorities);
         return tokens;
 
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void deleteUnactivatedUsers() {
+        Query query = entityManager.createQuery("SELECT u FROM AppUser u WHERE u.activated = false AND u.creationDateTime < :date");
+        List<AppUser> users = query.setParameter("date", LocalDateTime.now().minusDays(7)).getResultList();
+        appUserRepository.deleteAll(users);
     }
 
 
