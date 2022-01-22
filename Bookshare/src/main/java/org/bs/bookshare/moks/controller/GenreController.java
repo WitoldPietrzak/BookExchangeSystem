@@ -29,17 +29,24 @@ public class GenreController {
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_ADMIN, Roles.ROLE_MODERATOR})
     public ResponseEntity<?> getAllGenres() {
         List<Genre> genres = genreService.getAllGenres();
-        return ResponseEntity.ok().body(genreService.getAllGenres().stream().map(g -> {
-            return new SimpleGenreResponseDTO(g.getId(), g.getName());
-        }).collect(Collectors.toList()));
+        return ResponseEntity.ok().body(
+                genreService.getAllGenres()
+                        .stream()
+                        .map(g -> {
+                            return new SimpleGenreResponseDTO(
+                                    g.getId(),
+                                    g.getNameCode(),
+                                    g.getName());
+                        })
+                        .collect(Collectors.toList()));
 
     }
 
     @PostMapping("/add")
     @RolesAllowed({Roles.ROLE_MODERATOR})
     public ResponseEntity<?> addGenre(@RequestBody AddGenreRequestDTO dto) throws GenreException {
-        genreService.addGenre(new Genre(dto.getName()));
-        return ResponseEntity.ok().build();  //TODO status 201 zamiast 200?
+        genreService.addGenre(dto.getNameCode(), dto.getNames());
+        return ResponseEntity.ok().build();
     }
 
 
