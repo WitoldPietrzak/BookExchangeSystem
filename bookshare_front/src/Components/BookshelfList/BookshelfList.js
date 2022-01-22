@@ -198,7 +198,7 @@ class BookshelfListNoTr extends React.Component {
                     </div>
                     <Button className={'m-1'} variant={'outline-dark'} size={'md'}
                             onClick={this.reloadTable.bind(this)}>
-                        <img src={RefreshIcon} width={20} height={20}/>
+                        <img src={RefreshIcon} alt={''} width={20} height={20}/>
                     </Button>
                     <Button className={'m-1'} variant={'outline-dark'} size={'md'} onClick={this.showFilter.bind(this)}>
                         {t('Form.FilterButton')}
@@ -250,13 +250,13 @@ class BookshelfListNoTr extends React.Component {
                                             disabled={!this.state.locationAvailable}
                                             onClick={this.getLocationFromBrowser.bind(this)}
                                             variant={'outline-dark'}>{
-                                        <img className={'mt-0 mb-0 m-1'} src={Icon} height={25}
+                                        <img alt={''} className={'mt-0 mb-0 m-1'} src={Icon} height={25}
                                              width={25}/>}{t('Form.LocationButton')}
                                     </Button>
                                     <Button className={'mt-3 mb-0 m-1'}
                                             onClick={this.showModal.bind(this)}
                                             variant={'outline-dark'}>{
-                                                <img className={'mt-0 mb-0 m-1'} src={Map} height={25}
+                                                <img alt={''} className={'mt-0 mb-0 m-1'} src={Map} height={25}
                                         width={25}/>}{t('Form.FromMapButton')}
                                     </Button>
                                 </div>

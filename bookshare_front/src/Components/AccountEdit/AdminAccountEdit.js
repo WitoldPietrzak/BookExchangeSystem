@@ -1,10 +1,9 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
 import Cookies from "js-cookie";
-import {Accordion, Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
+import {Alert, Button, Col, Row} from "react-bootstrap";
 import './AdminAccountEdit.css'
-import {isAdmin} from "../../Routes/Router";
-import {Checkbox, Radio} from "@material-ui/core";
+import {Checkbox} from "@material-ui/core";
 import {makeAnyAccountInfoRequest} from "../../Requests/mok/AccountInfoRequest";
 import RefreshIcon from '../../Resources/refresh.png';
 import {addAccessLevel, revokeAccessLevel} from "../../Requests/mok/ChangeAccessLevelRequest";

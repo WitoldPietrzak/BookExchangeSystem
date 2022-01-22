@@ -1,10 +1,10 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
 import Cookies from "js-cookie";
-import {Accordion, Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
+import {Accordion, Alert, Button, Col, Form, Row} from "react-bootstrap";
 import './OwnAccountEdit.css'
 import {isAdmin} from "../../Routes/Router";
-import {Checkbox, Radio} from "@material-ui/core";
+import {Checkbox} from "@material-ui/core";
 import {makeOwnAccountInfoRequest} from "../../Requests/mok/AccountInfoRequest";
 import RefreshIcon from '../../Resources/refresh.png';
 import {makeChangePasswordRequest} from "../../Requests/mok/ChangePasswordRequest";
@@ -210,7 +210,7 @@ class OwnAccountEditNoTr extends React.Component {
             <div className="Info">
                 <div className={'Refresh'}>
                     <Button variant={'outline-dark'} size={'sm'} onClick={this.reloadUserInfo.bind(this)}>
-                        <img src={RefreshIcon} width={25} height={25}/>
+                        <img src={RefreshIcon} alt={''} width={25} height={25}/>
                     </Button>
                 </div>
                 <Row className={'Title'}>
@@ -248,7 +248,6 @@ class OwnAccountEditNoTr extends React.Component {
     }
 
     render() {
-        const {t} = this.props;
         return (
             <Fragment>
                 <Row>

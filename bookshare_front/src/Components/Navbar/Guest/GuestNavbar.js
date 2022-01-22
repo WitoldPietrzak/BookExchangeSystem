@@ -1,12 +1,9 @@
 import React from "react";
 import Nav from "react-bootstrap/Nav";
-import {useTranslation, withTranslation} from "react-i18next";
+import {withTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
 
 class GuestNavbarNoTr extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         const {t} = this.props;

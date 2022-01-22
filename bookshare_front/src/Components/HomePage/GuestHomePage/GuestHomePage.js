@@ -3,9 +3,6 @@ import {withTranslation} from "react-i18next";
 
 
 class GuestHomePageNoTr extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         const {t} = this.props;
@@ -20,7 +17,7 @@ class GuestHomePageNoTr extends React.Component {
 
 const GuestHomePageTr = withTranslation()(GuestHomePageNoTr);
 
-export default function () {
+export default function GuestHomePage() {
     return (
         <GuestHomePageTr/>
     )

@@ -1,4 +1,4 @@
-import React, {Fragment} from "react";
+import React from "react";
 import Cookies from "js-cookie";
 import {withTranslation} from "react-i18next";
 import {MDBContainer, MDBFooter} from "mdbreact";

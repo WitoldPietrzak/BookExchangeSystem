@@ -1,5 +1,4 @@
 import axios from "axios";
-import data from "bootstrap/js/src/dom/data";
 import {makeGeocodingRequest} from "../api/GoogleGeocodingRequest";
 
 export function makeBookshelfInfoRequest(token, id, that) {

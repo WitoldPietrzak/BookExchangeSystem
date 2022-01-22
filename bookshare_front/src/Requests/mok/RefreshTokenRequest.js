@@ -5,7 +5,6 @@ import findDefaultRole from "../../Utils/DefaultRoleFinder";
 
 export function makeRefreshTokenRequest(that) {
 
-    const querystring = require('querystring');
     axios.post(process.env.REACT_APP_BACKEND_URL + "/user/refresh",{
         token: Cookies.get(process.env.REACT_APP_FRONT_REFRESH_TOKEN_COOKIE_NAME),
     }, {

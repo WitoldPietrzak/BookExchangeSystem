@@ -11,7 +11,6 @@ import {
 class PasswordResetFormNoTr extends React.Component {
     constructor(props) {
         super(props);
-        const {t} = this.props;
         this.token = this.props.params.token;
         this.state = ({
             password: '',

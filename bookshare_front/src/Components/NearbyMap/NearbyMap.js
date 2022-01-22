@@ -1,4 +1,4 @@
-import React, {Fragment} from "react";
+import React from "react";
 import {GoogleApiWrapper, InfoWindow, Map, Marker, Circle} from 'google-maps-react';
 import {withTranslation} from "react-i18next";
 import './NearbyMap.css';

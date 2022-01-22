@@ -1,7 +1,4 @@
 import axios from "axios";
-import Cookies from 'js-cookie';
-import {jwtCookieExpirationTime} from '../../Views/MainView';
-import findDefaultRole from "../../Utils/DefaultRoleFinder";
 
 export function makeOwnAccountInfoRequest(token, that) {
 

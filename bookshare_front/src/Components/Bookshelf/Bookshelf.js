@@ -1,17 +1,16 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
 import Cookies from "js-cookie";
-import { Button, Col, Form, Row} from "react-bootstrap";
+import { Button, Col, Row} from "react-bootstrap";
 import './Bookshelf.css'
 import RefreshIcon from '../../Resources/refresh.png';
 import {useParams} from "react-router-dom";
 import {makeBookshelfInfoRequest} from "../../Requests/mop/BookshelfInfoRequest";
-import {GoogleApiWrapper, InfoWindow, Map, Marker} from "google-maps-react";
+import {GoogleApiWrapper, Map, Marker} from "google-maps-react";
 
 class BookshelfNoTr extends React.Component {
     constructor(props) {
         super(props);
-        const {t} = this.props;
         this.id = this.props.params.id;
         this.state = {
             id: '',
@@ -42,7 +41,7 @@ class BookshelfNoTr extends React.Component {
             <div className="Info">
                 <div className={'Refresh'}>
                     <Button variant={'outline-dark'} size={'sm'} onClick={this.reloadUserInfo.bind(this)}>
-                        <img src={RefreshIcon} width={25} height={25}/>
+                        <img alt={''} src={RefreshIcon} width={25} height={25}/>
                     </Button>
                 </div>
                 <Row className={'Title'}>

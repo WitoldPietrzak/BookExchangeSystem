@@ -5,7 +5,6 @@ import {makeAccountListRequest, makeFilteredAccountListRequest} from "../../Requ
 import Cookies from "js-cookie";
 import './AccountList.css';
 import RefreshIcon from '../../Resources/refresh.png';
-import {TextField} from "@material-ui/core";
 import Form from "react-bootstrap/Form";
 
 class AccountListNoTr extends React.Component {
@@ -128,7 +127,7 @@ class AccountListNoTr extends React.Component {
                     </div>
                     <Button className={'m-1'} variant={'outline-dark'} size={'md'}
                             onClick={this.reloadTable.bind(this)}>
-                        <img src={RefreshIcon} width={20} height={20}/>
+                        <img src={RefreshIcon} alt={''} width={20} height={20}/>
                     </Button>
                     <Button className={'m-1'} variant={'outline-dark'} size={'md'} onClick={this.showFilter.bind(this)}>
                         {t('Accounts.FilterButton')}
