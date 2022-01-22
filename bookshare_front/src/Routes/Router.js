@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import Login from "../Components/Login/Login";
 import HomePage from "../Components/HomePage/HomePage";
 import Register from "../Components/Register/Register";
@@ -12,6 +12,7 @@ import AccountList from "../Components/AccountList/AccountList";
 import AdminAccountEdit from "../Components/AccountEdit/AdminAccountEdit";
 import Logs from "../Components/Logs/Logs";
 import BookshelfList from "../Components/BookshelfList/BookshelfList";
+import Bookshelf from "../Components/Bookshelf/Bookshelf";
 
 let token = Cookies !== undefined ? Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME) : undefined;
 const role = token ? Cookies.get(`${process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME}_${Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}`) : undefined;
@@ -36,7 +37,7 @@ export default function Router() {
 
     return (
         <Routes>
-            <Route exact path='/home' element={<HomePage/>}/>
+            <Route exact path='/home' element={isLogged() ? <HomePage/>:<Navigate replace to={'/login'}/>}/>
             <Route exact path='/' element={<Navigate replace to='/home'/>}/>
             <Route exact path='/login' element={!isLogged() ? <Login/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/logs' element={isAdmin() ? <Logs/> : <Navigate replace to='/home'/>}/>
@@ -49,6 +50,7 @@ export default function Router() {
             <Route exact path='/accounts/:id' element={isAdmin() ? <AdminAccountEdit/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/accounts' element={isAdmin() ? <AccountList/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/shelves' element={isModerator() || isUser() ? <BookshelfList/> : <Navigate replace to='/home'/>}/>
+            <Route exact path='/shelves/:id' element={isModerator() || isUser() ? <Bookshelf/> : <Navigate replace to='/home'/>}/>
             <Route path='*' element={<Navigate replace to={'/home'}/>}/>
         </Routes>
     )
