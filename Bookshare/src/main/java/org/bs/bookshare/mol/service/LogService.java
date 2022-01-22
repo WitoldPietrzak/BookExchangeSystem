@@ -1,4 +1,4 @@
-package org.bs.bookshare.logging.service;
+package org.bs.bookshare.mol.service;
 
 import org.bs.bookshare.model.Log;
 

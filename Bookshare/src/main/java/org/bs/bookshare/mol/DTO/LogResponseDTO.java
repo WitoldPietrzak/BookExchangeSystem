@@ -1,4 +1,4 @@
-package org.bs.bookshare.logging.DTO;
+package org.bs.bookshare.mol.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

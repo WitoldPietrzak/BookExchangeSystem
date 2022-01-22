@@ -1,7 +1,7 @@
-package org.bs.bookshare.logging.service;
+package org.bs.bookshare.mol.service;
 
 import lombok.RequiredArgsConstructor;
-import org.bs.bookshare.logging.repositories.LogRepository;
+import org.bs.bookshare.mol.repositories.LogRepository;
 import org.bs.bookshare.model.Log;
 import org.springframework.stereotype.Service;
 

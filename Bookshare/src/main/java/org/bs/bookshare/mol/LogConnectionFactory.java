@@ -1,4 +1,4 @@
-package org.bs.bookshare.logging;
+package org.bs.bookshare.mol;
 
 import javax.sql.DataSource;
 import java.io.IOException;

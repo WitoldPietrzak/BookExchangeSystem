@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.AppUserException;
 import org.bs.bookshare.model.AppUser;
+import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.mok.service.AppUserService;
 import org.bs.bookshare.mok.service.AppUserServiceImplementation;
 import org.bs.bookshare.security.TokenGenerator;
+import org.bs.bookshare.utils.IpAddressRetriever;
+import org.bs.bookshare.utils.mail.MailProvider;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -75,8 +78,6 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-
-
         Map<String, String> responseMap = new HashMap<>();
         response.setStatus(401);
         responseMap.put("message", failed.getMessage());

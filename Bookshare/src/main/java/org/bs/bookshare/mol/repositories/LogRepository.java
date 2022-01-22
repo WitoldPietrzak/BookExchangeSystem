@@ -1,6 +1,5 @@
-package org.bs.bookshare.logging.repositories;
+package org.bs.bookshare.mol.repositories;
 
-import org.bs.bookshare.model.AppUser;
 import org.bs.bookshare.model.Log;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -21,7 +21,7 @@
             </Policies>
         </RollingFile>
         <JDBC name="databaseAppender" tableName="logs">
-            <ConnectionFactory class="org.bs.bookshare.logging.LogConnectionFactory"
+            <ConnectionFactory class="org.bs.bookshare.mol.LogConnectionFactory"
                                method="getDatabaseConnection"/>
             <Column name="eventdate" isEventTimestamp="true" />
             <Column name="level" pattern="%level" isUnicode="false" />

@@ -1,13 +1,11 @@
-package org.bs.bookshare.logging.controller;
+package org.bs.bookshare.mol.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.bs.bookshare.logging.DTO.LogFilteredRequestDTO;
-import org.bs.bookshare.logging.DTO.LogResponseDTO;
-import org.bs.bookshare.logging.DTO.LogsResponseDTO;
-import org.bs.bookshare.logging.service.LogService;
+import org.bs.bookshare.mol.DTO.LogFilteredRequestDTO;
+import org.bs.bookshare.mol.DTO.LogResponseDTO;
+import org.bs.bookshare.mol.DTO.LogsResponseDTO;
+import org.bs.bookshare.mol.service.LogService;
 import org.bs.bookshare.model.Roles;
-import org.bs.bookshare.mok.dto.response.UserListResponseDTO;
-import org.bs.bookshare.utils.converter.UserConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
