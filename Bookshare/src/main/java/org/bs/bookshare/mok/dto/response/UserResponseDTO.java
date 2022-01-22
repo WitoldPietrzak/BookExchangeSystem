@@ -21,7 +21,24 @@ public class UserResponseDTO {
     private List<String> roles;
     String lastSuccessfulLoginAttemptDateTime;
     String creationDateTime;
+    String lastSuccessfulLoginIp;
+    String lastUnsuccessfulLoginAttemptDateTime;
+    String modificationDateTime;
+    String lastUnsuccessfulLoginIp;
 
+
+    public UserResponseDTO(Long id, String login, String email, Long version, String language, boolean activated, boolean disabled, List<String> roles, String lastSuccessfulLoginAttemptDateTime, String creationDateTime) {
+        this.id = id;
+        this.login = login;
+        this.email = email;
+        this.version = version;
+        this.language = language;
+        this.activated = activated;
+        this.disabled = disabled;
+        this.roles = roles;
+        this.lastSuccessfulLoginAttemptDateTime = lastSuccessfulLoginAttemptDateTime;
+        this.creationDateTime = creationDateTime;
+    }
 
     //TODO dodać książki ?
 }

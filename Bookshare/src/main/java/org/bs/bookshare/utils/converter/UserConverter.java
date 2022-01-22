@@ -20,4 +20,22 @@ public class UserConverter {
                 user.getLastSuccessfulLogin() != null ? user.getLastSuccessfulLogin().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null,
                 user.getCreationDateTime() != null ? user.getCreationDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")): null);
     }
+
+    public static UserResponseDTO adminUserResponseDTOFromUser(AppUser user) {
+        return new UserResponseDTO(
+                user.getId(),
+                user.getLogin(),
+                user.getEmail(),
+                user.getVersion(),
+                user.getLanguage(),
+                user.getActivated(),
+                user.getDisabled(),
+                user.getAppRoles().stream().map(AppRole::getName).collect(Collectors.toList()),
+                user.getLastSuccessfulLogin() != null ? user.getLastSuccessfulLogin().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null,
+                user.getCreationDateTime() != null ? user.getCreationDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")): null,
+                user.getLastSuccessfulLoginIp(),
+                user.getLastUnsuccessfulLogin() != null ? user.getLastUnsuccessfulLogin().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null,
+                user.getModificationDateTime() != null ? user.getModificationDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null,
+                user.getLastUnsuccessfulLoginIp());
+    }
 }

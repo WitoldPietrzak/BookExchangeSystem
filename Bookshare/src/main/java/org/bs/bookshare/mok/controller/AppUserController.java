@@ -60,7 +60,7 @@ public class AppUserController {
     @GetMapping("/info/{id}")
     public ResponseEntity<UserResponseDTO> getUser(@NotNull @PathVariable("id") Long id) throws AppUserException {
         AppUser user = userService.getUser(id);
-        return ResponseEntity.ok().body(UserConverter.userResponseDTOFromUser(user));
+        return ResponseEntity.ok().body(UserConverter.adminUserResponseDTOFromUser(user));
     }
 
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_ADMIN, Roles.ROLE_MODERATOR})
