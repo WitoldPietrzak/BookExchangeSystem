@@ -76,7 +76,7 @@ class LogsNoTr extends React.Component {
             }>
                 <td>{row.eventDate}</td>
                 <td>{row.level}</td>
-                <td>{row.message}</td>
+                <td>{(row.message && row.message.length > 100) ? `${row.message.substring(0, 97)}...`:row.message} </td>
             </tr>)
     }
 
@@ -95,7 +95,7 @@ class LogsNoTr extends React.Component {
             });
         }
 
-        return this.state.logs.map(row => this.renderRow(row));
+        return rows.map(row => this.renderRow(row));
 
     }
 
