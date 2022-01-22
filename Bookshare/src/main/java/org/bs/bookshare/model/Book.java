@@ -26,18 +26,18 @@ import java.util.List;
 public class Book extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-    String title;
+    private Long id;
+    private String title;
     @ManyToOne
     @JoinColumn(name = "author")
-    Author author;
+    private Author author;
     @ManyToMany(fetch = FetchType.EAGER)
-    List<Genre> genres = new LinkedList<>();
+    private List<Genre> genres = new LinkedList<>();
 //    @OneToMany(fetch = FetchType.LAZY)
 //    List<BookReview> reviews = new LinkedList<>();
     @OneToMany(mappedBy = "book")
-    List<BookCopy> copies;
-    Integer releaseDate;
+    private List<BookCopy> copies;
+    private Integer releaseDate;
 
     public Book(String title, Author author, List<Genre> genres, Integer releaseDate) {
         this.title = title;
