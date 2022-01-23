@@ -3,8 +3,8 @@ package org.bs.bookshare.exceptions;
 import org.bs.bookshare.model.Book;
 
 import static org.bs.bookshare.common.Codes.BOOKSHELF_NOT_FOUND;
+import static org.bs.bookshare.common.Codes.CANT_DELETE_BOOKSHELF_WITH_BOOKS;
 import static org.bs.bookshare.common.Codes.QUERY_ERROR;
-import static org.bs.bookshare.common.Codes.USER_NOT_FOUND;
 import static org.bs.bookshare.common.Codes.VERSION_MISMATCH;
 
 public class BookshelfException extends AppBaseException{
@@ -20,5 +20,9 @@ public class BookshelfException extends AppBaseException{
     }
 
     public static BookshelfException versionMismatch() { return new BookshelfException(VERSION_MISMATCH);
+    }
+
+    public static BookshelfException cantDeleteBookshelfWithBooks() {
+        return new BookshelfException(CANT_DELETE_BOOKSHELF_WITH_BOOKS);
     }
 }

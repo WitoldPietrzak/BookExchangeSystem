@@ -24,8 +24,10 @@ public class Codes {
     public static final String CANT_CANCEL_NOT_RESERVED_BOOK = "cant_cancel_not_reserved_book";
     public static final String CANT_CANCEL_NOT_OWN_RESERVATION = "cant_cancel_not_own_reservation";
     public static final String CANT_ADD_NOT_OWNED_BOOK_TO_SHELF = "cant_add_not_owned_book_to_shelf";
+    public static final String CANT_DELETE_BOOKSHELF_WITH_BOOKS = "cant_delete_bookshelf_with_books";
     public static final String GENRE_EXIST = "genre_exist";
     public static final String GENRE_NOT_EXIST = "genre_not_exist";
+    public static final String CANT_CREATE_EMPTY_GENRE = "cant_create_empty_genre";
     public static final String UNKNOWN_LANGUAGE = "unknown_language";
     public static final String USER_NOT_ACTIVE = "user_not_active";
     public static final String USER_DISABLED = "user_disabled";

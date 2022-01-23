@@ -35,6 +35,9 @@ public class GenreServiceImplementation implements GenreService {
         if (genres.stream().anyMatch(g -> g.getNameCode().equals(nameCode))) {
             throw GenreException.genreExists();
         }
+        if(name.isEmpty()){
+            throw GenreException.cantCreateEmptyGenre();
+        }
         Genre genre = new Genre(nameCode, name);
         String creatorName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser creator = userRepository.findByLogin(creatorName);

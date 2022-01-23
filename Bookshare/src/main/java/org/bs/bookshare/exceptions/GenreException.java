@@ -1,5 +1,6 @@
 package org.bs.bookshare.exceptions;
 
+import static org.bs.bookshare.common.Codes.CANT_CREATE_EMPTY_GENRE;
 import static org.bs.bookshare.common.Codes.GENRE_EXIST;
 import static org.bs.bookshare.common.Codes.GENRE_NOT_EXIST;
 
@@ -14,5 +15,8 @@ public class GenreException extends AppBaseException {
 
     public static GenreException genreNotFound() {
         return new GenreException(GENRE_NOT_EXIST);
+    }
+
+    public static GenreException cantCreateEmptyGenre() { return new GenreException(CANT_CREATE_EMPTY_GENRE);
     }
 }
