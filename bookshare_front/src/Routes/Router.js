@@ -15,6 +15,7 @@ import BookshelfList from "../Components/BookshelfList/BookshelfList";
 import Bookshelf from "../Components/Bookshelf/Bookshelf";
 import BookshelfAdd from "../Components/BookshelfAdd/BookshelfAdd";
 import GenreAdd from "../Components/GenreAdd/GenreAdd";
+import GenreList from "../Components/GenreList/GenreList";
 
 let token = Cookies !== undefined ? Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME) : undefined;
 const role = token ? Cookies.get(`${process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME}_${Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}`) : undefined;
@@ -55,6 +56,7 @@ export default function Router() {
             <Route exact path='/shelves/:id' element={isModerator() || isUser() ? <Bookshelf/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/shelves/add' element={isModerator() ? <BookshelfAdd/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/genres/add' element={isModerator() ? <GenreAdd/> : <Navigate replace to='/home'/>}/>
+            <Route exact path='/genres/' element={isModerator() ? <GenreList/> : <Navigate replace to='/home'/>}/>
             <Route path='*' element={<Navigate replace to={'/home'}/>}/>
         </Routes>
     )
