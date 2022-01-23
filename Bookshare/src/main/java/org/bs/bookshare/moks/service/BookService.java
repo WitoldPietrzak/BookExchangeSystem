@@ -16,6 +16,7 @@ public interface BookService {
     List<Book> getAllBooks();
     Book updateBook(Book book) throws BookException;
     public void deleteBook(Long id) throws BookException;
+    List<Book> getAllBooksFiltered(String title, Long author,List<Long> genres,Integer releasedBefore, Integer releasedAfter,Integer copyCount);
 
 
 }

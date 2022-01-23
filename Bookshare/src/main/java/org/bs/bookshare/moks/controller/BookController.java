@@ -8,9 +8,12 @@ import org.bs.bookshare.model.Author;
 import org.bs.bookshare.model.Book;
 import org.bs.bookshare.model.Genre;
 import org.bs.bookshare.model.Roles;
+import org.bs.bookshare.moks.dto.request.FilteredBookListRequestDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyInnerResponseDTO;
 import org.bs.bookshare.moks.dto.request.AddBookRequestDTO;
 import org.bs.bookshare.moks.dto.response.AuthorInnerResponseDTO;
+import org.bs.bookshare.moks.dto.response.BookCopyListResponseDTO;
+import org.bs.bookshare.moks.dto.response.BookListResponseDTO;
 import org.bs.bookshare.moks.dto.response.DetailBookResponseDTO;
 import org.bs.bookshare.moks.dto.response.EntityCreatedResponseDTO;
 import org.bs.bookshare.moks.dto.response.SimpleBookResponseDTO;
@@ -65,10 +68,29 @@ public class BookController {
     public ResponseEntity<?> getAllBooks() {
 
         return ResponseEntity.ok().body(
-                bookService.getAllBooks()
-                        .stream()
-                        .map(BookConverter::simpleBookResponseDTOFromBook)
-                        .collect(Collectors.toList()));
+                new BookListResponseDTO(
+                        bookService.getAllBooks()
+                                .stream()
+                                .map(BookConverter::simpleBookResponseDTOFromBook)
+                                .collect(Collectors.toList())));
+    }
+
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
+    @PostMapping("/all")
+    public ResponseEntity<?> getAllBooksFiltered(@RequestBody FilteredBookListRequestDTO dto) {
+
+        return ResponseEntity.ok().body(
+                new BookListResponseDTO(
+                        bookService.getAllBooksFiltered(
+                                dto.getTitle(),
+                                dto.getAuthor(),
+                                dto.getGenres(),
+                                dto.getReleasedBefore(),
+                                dto.getReleasedAfter(),
+                                dto.getCopyCount())
+                                .stream()
+                                .map(BookConverter::simpleBookResponseDTOFromBook)
+                                .collect(Collectors.toList())));
     }
 
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})

@@ -65,6 +65,9 @@ public class BookServiceImplementation implements BookService {  //TODO zabezpie
     }
 
     @Override
+    public List<Book> getAllBooksFiltered(String title, Long author,List<Long> genres,Integer releasedBefore, Integer releasedAfter,Integer copyCount){return bookRepository.findAllFiltered(title,author,genres,releasedBefore,releasedAfter,copyCount);}
+
+    @Override
     public Book updateBook(Book book) throws BookException {
         Book oldBook = bookRepository.findById(book.getId()).orElseThrow(() -> new EntityNotFoundException(book.getId().toString()));
         if (!oldBook.getVersion().equals(book.getVersion())) {
