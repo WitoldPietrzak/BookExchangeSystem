@@ -10,7 +10,7 @@ import org.bs.bookshare.model.Bookshelf;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.moks.dto.request.AddBookCopyRequestDTO;
 import org.bs.bookshare.moks.dto.request.ReturnBookCopyToShelfDTO;
-import org.bs.bookshare.moks.dto.request.TakeBookCopyFromShelfRequestDTO;
+import org.bs.bookshare.moks.dto.request.SimpleBookCopyRequestDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyListElementResponseDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyListResponseDTO;
 import org.bs.bookshare.moks.service.BookCopyService;
@@ -84,9 +84,25 @@ public class BookCopyController {
 
     @PostMapping("/take")
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
-    public ResponseEntity<?> takeBookCopyFromShelf(@RequestBody TakeBookCopyFromShelfRequestDTO dto) throws BookCopyException, BookException, BookshelfException {
+    public ResponseEntity<?> takeBookCopyFromShelf(@RequestBody SimpleBookCopyRequestDTO dto) throws BookCopyException, BookException, BookshelfException {
         BookCopy bookCopy = bookCopyService.getBookCopy(dto.getBookCopyId());
         bookCopyService.addBookCopyToUser(bookCopy, dto.getVersion());
+        return ResponseEntity.ok().build(); //TODO odpowiedzz?
+    }
+
+    @PostMapping("/reservation/make")
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
+    public ResponseEntity<?> makeBookCopyReservation(@RequestBody SimpleBookCopyRequestDTO dto) throws BookCopyException, BookException, BookshelfException {
+        BookCopy bookCopy = bookCopyService.getBookCopy(dto.getBookCopyId());
+        bookCopyService.addBookCopyReservation(bookCopy, dto.getVersion());
+        return ResponseEntity.ok().build(); //TODO odpowiedzz?
+    }
+
+    @PostMapping("/reservation/cancel")
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
+    public ResponseEntity<?> cancelBookCopyReservation(@RequestBody SimpleBookCopyRequestDTO dto) throws BookCopyException, BookException, BookshelfException {
+        BookCopy bookCopy = bookCopyService.getBookCopy(dto.getBookCopyId());
+        bookCopyService.cancelBookCopyReservation(bookCopy, dto.getVersion());
         return ResponseEntity.ok().build(); //TODO odpowiedzz?
     }
 }

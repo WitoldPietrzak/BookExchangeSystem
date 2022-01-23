@@ -12,10 +12,14 @@ import org.bs.bookshare.mok.repositories.AppUserRepository;
 import org.bs.bookshare.moks.repositories.BookCopyRepository;
 import org.bs.bookshare.moks.repositories.BookRepository;
 import org.bs.bookshare.mop.repositories.BookshelfRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,6 +31,7 @@ public class BookCopyServiceImplementation implements BookCopyService {
     private final BookCopyRepository bookCopyRepository;
     private final BookshelfRepository bookshelfRepository;
     private final BookRepository bookRepository;
+    private final EntityManager entityManager;
 
     @Override
     public BookCopy createBookCopy(Book book, CoverType coverType, String language) {
@@ -41,11 +46,13 @@ public class BookCopyServiceImplementation implements BookCopyService {
 
     @Override
     public void addBookCopyToShelf(BookCopy bookCopy, Bookshelf bookshelf, Long version) throws BookCopyException {
+
+        if (!version.equals(bookCopy.getVersion())) {
+            throw BookCopyException.versionMismatch();
+        }
         String callerName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser caller = userRepository.findByLogin(callerName);
-        if (bookCopy.getOwner() != caller && caller.getAppRoles().stream().noneMatch(role -> {
-            return role.getName().equals(Roles.ROLE_MODERATOR);
-        })) {
+        if (bookCopy.getOwner() != caller && caller.getAppRoles().stream().noneMatch(role -> role.getName().equals(Roles.ROLE_MODERATOR))) {
             throw BookCopyException.cantAddNotOwnedBookToShelf();
         }
         bookCopy.setOwner(null);
@@ -56,6 +63,9 @@ public class BookCopyServiceImplementation implements BookCopyService {
 
     @Override
     public void addBookCopyToUser(BookCopy bookCopy, Long version) throws BookCopyException {
+        if (!version.equals(bookCopy.getVersion())) {
+            throw BookCopyException.versionMismatch();
+        }
         String callerName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser caller = userRepository.findByLogin(callerName);
 
@@ -65,13 +75,17 @@ public class BookCopyServiceImplementation implements BookCopyService {
 
         bookCopy.setBookshelf(null);
         bookCopy.setOwner(caller);
+        bookCopy.setReserved(null);
         bookCopy.setModifiedBy(caller);
 
 
     }
 
     @Override
-    public void addBookCopyReservation(BookCopy bookCopy) throws BookCopyException {
+    public void addBookCopyReservation(BookCopy bookCopy, Long version) throws BookCopyException {
+        if (!version.equals(bookCopy.getVersion())) {
+            throw BookCopyException.versionMismatch();
+        }
         String callerName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser caller = userRepository.findByLogin(callerName);
 
@@ -87,15 +101,16 @@ public class BookCopyServiceImplementation implements BookCopyService {
     }
 
     @Override
-    public void cancelBookCopyReservation(BookCopy bookCopy) throws BookCopyException {
+    public void cancelBookCopyReservation(BookCopy bookCopy, Long version) throws BookCopyException {
+        if (!version.equals(bookCopy.getVersion())) {
+            throw BookCopyException.versionMismatch();
+        }
         String callerName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser caller = userRepository.findByLogin(callerName);
         if (bookCopy.getReserved() == null) {
             throw BookCopyException.cantCancelNotReservedBook();
         }
-        if (bookCopy.getReserved() != caller && caller.getAppRoles().stream().noneMatch(role -> {
-            return role.getName().equals(Roles.ROLE_MODERATOR);
-        })) {
+        if (bookCopy.getReserved() != caller && caller.getAppRoles().stream().noneMatch(role -> role.getName().equals(Roles.ROLE_MODERATOR))) {
             throw BookCopyException.cantCancelNotOwnReservation();
         }
         bookCopy.setReserved(null);
@@ -111,5 +126,13 @@ public class BookCopyServiceImplementation implements BookCopyService {
     @Override
     public List<BookCopy> getAllBookCopies() {
         return bookCopyRepository.findAll();
+    }
+
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void cancelReservations() {
+        Query query = entityManager.createQuery("SELECT bc FROM BookCopy bc WHERE bc.reserved is not null AND bc.reservedUntil < :date");
+        List<BookCopy> users = query.setParameter("date", LocalDateTime.now()).getResultList();
+        bookCopyRepository.deleteAll(users);
     }
 }
