@@ -15,3 +15,31 @@
     max-width: 500px;
 
 }
+
+.BookshelfBookList {
+    padding: 20px;
+    border-radius: 6px;
+    background: #eee6c7;
+}
+
+.InfoHeader{
+    margin: 10px;
+}
+
+.BookshelfBookListRow{
+    background: #F5F3EA;
+    margin: 10px;
+    border-radius: 6px;
+    border: grey solid 1px;
+}
+.BookshelfBookListRow:hover{
+    cursor: pointer;
+}
+
+.OptionsPanel{
+    padding: 5px;
+    margin: 5px;
+    border-radius: 6px;
+    text-align: end;
+    /*border: black solid 1px;*/
+}
