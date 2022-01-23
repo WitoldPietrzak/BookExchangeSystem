@@ -5,6 +5,7 @@ import org.bs.bookshare.exceptions.GenreException;
 import org.bs.bookshare.model.Genre;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.moks.dto.request.AddGenreRequestDTO;
+import org.bs.bookshare.moks.dto.response.GenreListResponseDTO;
 import org.bs.bookshare.moks.dto.response.SimpleGenreResponseDTO;
 import org.bs.bookshare.moks.repositories.GenreRepository;
 import org.bs.bookshare.moks.service.GenreService;
@@ -31,10 +32,11 @@ public class GenreController {
     public ResponseEntity<?> getAllGenres() {
         List<Genre> genres = genreService.getAllGenres();
         return ResponseEntity.ok().body(
-                genreService.getAllGenres()
-                        .stream()
-                        .map(BookConverter::simpleGenreResponseDTOFromGenre)
-                        .collect(Collectors.toList()));
+                new GenreListResponseDTO(
+                        genreService.getAllGenres()
+                                .stream()
+                                .map(BookConverter::simpleGenreResponseDTOFromGenre)
+                                .collect(Collectors.toList())));
 
     }
 
