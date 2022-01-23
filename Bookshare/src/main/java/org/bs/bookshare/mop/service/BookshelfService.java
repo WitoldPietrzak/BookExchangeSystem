@@ -13,4 +13,6 @@ public interface BookshelfService {
     Bookshelf getBookshelf(Long id) throws BookshelfException;
 
     void moveShelf(Bookshelf bookshelf, Double lat, Double lng, Long version) throws BookshelfException;
+
+    void removeShelf(Bookshelf bookshelf, Long version) throws BookshelfException;
 }

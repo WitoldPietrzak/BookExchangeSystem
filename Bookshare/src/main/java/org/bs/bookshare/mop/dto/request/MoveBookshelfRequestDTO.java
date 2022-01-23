@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MoveBookshelfRequestDTO {
-    Long shelfId;
-    Double lat;
-    Double lng;
-    Long version;
+    private Long shelfId;
+    private Double lat;
+    private Double lng;
+    private Long version;
 }

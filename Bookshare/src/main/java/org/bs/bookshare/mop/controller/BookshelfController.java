@@ -8,6 +8,7 @@ import org.bs.bookshare.mop.dto.request.BookshelfFilteredListRequestDTO;
 import org.bs.bookshare.mop.dto.request.BookshelfCreateRequestDTO;
 import org.bs.bookshare.mop.dto.request.BookshelfRequestWithLocationDTO;
 import org.bs.bookshare.mop.dto.request.MoveBookshelfRequestDTO;
+import org.bs.bookshare.mop.dto.request.RemoveBookshelfRequestDTO;
 import org.bs.bookshare.mop.dto.response.BookshelfDetailResponseDTO;
 import org.bs.bookshare.mop.dto.response.BookshelfListResponseDTO;
 import org.bs.bookshare.mop.service.BookshelfService;
@@ -94,6 +95,15 @@ public class BookshelfController {
     public ResponseEntity<?> moveShelf(@RequestBody MoveBookshelfRequestDTO dto) throws BookshelfException {
         Bookshelf bookshelf = bookshelfService.getBookshelf(dto.getShelfId());
         bookshelfService.moveShelf(bookshelf,dto.getLat(),dto.getLng(),dto.getVersion());
+        return ResponseEntity.ok().build();
+
+    }
+
+    @RolesAllowed({Roles.ROLE_MODERATOR})
+    @PostMapping("/remove")
+    public ResponseEntity<?> removeShelf(@RequestBody RemoveBookshelfRequestDTO dto) throws BookshelfException {
+        Bookshelf bookshelf = bookshelfService.getBookshelf(dto.getId());
+        bookshelfService.removeShelf(bookshelf,dto.getVersion());
         return ResponseEntity.ok().build();
 
     }

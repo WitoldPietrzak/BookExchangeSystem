@@ -64,4 +64,15 @@ public class BookshelfServiceImplementation implements BookshelfService {
         AppUser modifier = userRepository.findByLogin(modifierName);
         bookshelf.setModifiedBy(modifier);
     }
+
+    @Override
+    public void removeShelf(Bookshelf bookshelf, Long version) throws BookshelfException {
+        if (!bookshelf.getVersion().equals(version)) {
+            throw BookshelfException.versionMismatch();
+        }
+        if (bookshelf.getBooksOnShelf().size() > 0) {
+            throw BookshelfException.cantDeleteBookshelfWithBooks();
+        }
+        bookshelfRepository.delete(bookshelf);
+    }
 }
