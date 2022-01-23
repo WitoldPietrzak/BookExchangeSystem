@@ -18,7 +18,7 @@ class UserHomePageNoTr extends React.Component {
         const {t} = this.props;
         return (
             <Fragment>
-                <div className="Tabs">
+                <div className="Tabs pt-3 pb-3">
                     <Tabs>
                         <Tab title={t('Home.BookMapTab')} eventKey={'jeden'}>
                             <div className='Map m-auto mt-5 mb-5'>

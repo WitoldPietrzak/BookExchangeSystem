@@ -250,6 +250,7 @@ class OwnAccountEditNoTr extends React.Component {
     render() {
         return (
             <Fragment>
+                <div className={'pt-5 pb-1'}>
                 <Row>
                     <Col>
                         {this.renderUserInfo()}
@@ -259,7 +260,9 @@ class OwnAccountEditNoTr extends React.Component {
                     </Col>
                 </Row>
                 {isAdmin() ? this.accessLevelChange() : ''}
+                </div>
             </Fragment>
+
         );
     }
 }

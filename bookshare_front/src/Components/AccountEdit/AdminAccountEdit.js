@@ -166,6 +166,7 @@ class AdminAccountEditNoTr extends React.Component {
         const {t} = this.props;
         return (
             <Fragment>
+                <div className={'pt-5 pb-1'}>
                 <Row>
                     <Col>
                         {this.renderUserInfo()}
@@ -184,6 +185,7 @@ class AdminAccountEditNoTr extends React.Component {
                     </Col>
                 </Row>
                 {this.accessLevelChange()}
+                </div>
             </Fragment>
         );
     }

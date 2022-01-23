@@ -49,7 +49,6 @@ export function makeLoginRequest(login, password, that) {
                 sameSite: 'none'
             });
         }
-        // localStorage.setItem(process.env.REACT_APP_JWT_REFRESH_TOKEN_STORAGE_NAME, response.data.refreshJwtToken.token);
         window.location.hash = "#/home";
         window.location.reload();
     })

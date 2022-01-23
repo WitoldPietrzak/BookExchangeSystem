@@ -3,7 +3,7 @@ import Nav from "react-bootstrap/Nav";
 import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
 
-function Admin() {
+function User() {
     const {t} = useTranslation();
     return (
         <Nav activeKey={window.location.hash}>
@@ -14,4 +14,4 @@ function Admin() {
 }
 
 
-export default Admin;
+export default User;
