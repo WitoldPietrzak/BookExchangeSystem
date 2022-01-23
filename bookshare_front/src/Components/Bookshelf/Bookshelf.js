@@ -194,9 +194,9 @@ class BookshelfNoTr extends React.Component {
 
                     </Col>
                 </Row>
-                <Row>
+                <Row className={'mb-3'}>
                     <Col>
-                        {this.renderBooksInfo()}
+                        {this.state.books.length ? this.renderBooksInfo():''}
                     </Col>
                 </Row>
                 <Modal show={this.state.showModal} onHide={this.hideModal.bind(this)}>
