@@ -23,7 +23,7 @@ class BookshelfListNoTr extends React.Component {
             doFilter: false,
             filterErrors: {},
             button: 'Form.Filter',
-            sortBy: 'bookCountUp',
+            sortBy: 'bookCountDown',
             location: '',
             locationAvailable: false,
             showModal: false
