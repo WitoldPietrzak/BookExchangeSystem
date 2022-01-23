@@ -45,7 +45,7 @@ class LoggedInNavbarNoTr extends React.Component {
         window.location.reload();
     }
 
-    generateRoleButton() { //TODO
+    generateRoleButton() {
         const {t} = this.props;
         const accessLevels = JSON.parse(Cookies.get(process.env.REACT_APP_FRONT_ROLES_COOKIE_NAME));
         if (accessLevels.length > 1) {
@@ -75,8 +75,8 @@ class LoggedInNavbarNoTr extends React.Component {
         return (
             <Fragment>
                 <NavDropdown title={t("Navbar.account")} id="navbarScrollingDropdown">
-                    <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}} as={Link}
-                              to="/account">{t("Navbar.AccountEdit")}</Nav.Link>
+                    <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
+                              href="/?#/account">{t("Navbar.AccountEdit")}</Nav.Link>
                     <NavDropdown.Divider/>
                     <Nav.Link onClick={this.logOut} style={{color: "rgb(127, 127, 127)"}}
                               className="navStyle">{t("Navbar.logout")}</Nav.Link>
