@@ -9,6 +9,7 @@ import org.bs.bookshare.mop.dto.request.BookshelfCreateRequestDTO;
 import org.bs.bookshare.mop.dto.request.BookshelfRequestWithLocationDTO;
 import org.bs.bookshare.mop.dto.request.MoveBookshelfRequestDTO;
 import org.bs.bookshare.mop.dto.request.RemoveBookshelfRequestDTO;
+import org.bs.bookshare.mop.dto.response.BookshelfCreatedResponseDTO;
 import org.bs.bookshare.mop.dto.response.BookshelfDetailResponseDTO;
 import org.bs.bookshare.mop.dto.response.BookshelfListResponseDTO;
 import org.bs.bookshare.mop.service.BookshelfService;
@@ -60,8 +61,8 @@ public class BookshelfController {
     @RolesAllowed({Roles.ROLE_MODERATOR})
     @PostMapping("/add")
     public ResponseEntity<?> createShelf(@RequestBody BookshelfCreateRequestDTO dto) {
-        bookshelfService.createBookshelf(dto.getLatitude(), dto.getLongitude());
-        return ResponseEntity.ok().build();
+        Bookshelf bookshelf = bookshelfService.createBookshelf(dto.getLatitude(), dto.getLongitude());
+        return ResponseEntity.ok().body(new BookshelfCreatedResponseDTO(bookshelf.getId()));
     }
 
     @RolesAllowed({Roles.ROLE_MODERATOR, Roles.ROLE_USER})
