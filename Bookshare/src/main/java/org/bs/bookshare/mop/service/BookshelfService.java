@@ -7,8 +7,10 @@ import java.util.List;
 
 public interface BookshelfService {
 
-    Bookshelf createBookshelf(Float latitude,Float longitude);
+    Bookshelf createBookshelf(Double lat,Double lng);
     List<Bookshelf> getAllBookshelves();
     List<Bookshelf>getAllBookshelvesFiltered(Double latitude, Double longitude, Double distance, Integer bookCount) throws BookshelfException;
     Bookshelf getBookshelf(Long id) throws BookshelfException;
+
+    void moveShelf(Bookshelf bookshelf, Double lat, Double lng, Long version) throws BookshelfException;
 }

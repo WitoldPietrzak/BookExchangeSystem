@@ -2,8 +2,11 @@ package org.bs.bookshare.mop.service;
 
 import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.BookshelfException;
+import org.bs.bookshare.model.AppUser;
 import org.bs.bookshare.model.Bookshelf;
+import org.bs.bookshare.mok.repositories.AppUserRepository;
 import org.bs.bookshare.mop.repositories.BookshelfRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,12 +18,15 @@ import java.util.List;
 public class BookshelfServiceImplementation implements BookshelfService {
 
     private final BookshelfRepository bookshelfRepository;
+    private final AppUserRepository userRepository;
 
     @Override
-    public Bookshelf createBookshelf(Float latitude, Float longitude) {
+    public Bookshelf createBookshelf(Double latitude, Double longitude) {
         Bookshelf bookshelf = new Bookshelf(latitude, longitude);
-        bookshelfRepository.save(bookshelf);
-        return bookshelf;
+        String creatorName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser creator = userRepository.findByLogin(creatorName);
+        bookshelf.setCreatedBy(creator);
+        return bookshelfRepository.save(bookshelf);
     }
 
     @Override
@@ -36,7 +42,7 @@ public class BookshelfServiceImplementation implements BookshelfService {
             }
             return bookshelfRepository.findAllInDistance(latitude, longitude, distance, bookCount);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO
             throw BookshelfException.queryError();
         }
 
@@ -45,5 +51,17 @@ public class BookshelfServiceImplementation implements BookshelfService {
     @Override
     public Bookshelf getBookshelf(Long id) throws BookshelfException {
         return bookshelfRepository.findById(id).orElseThrow(BookshelfException::userNotFound);
+    }
+
+    @Override
+    public void moveShelf(Bookshelf bookshelf, Double lat, Double lng, Long version) throws BookshelfException {
+        if (!bookshelf.getVersion().equals(version)) {
+            throw BookshelfException.versionMismatch();
+        }
+        bookshelf.setLocationLat(lat);
+        bookshelf.setLocationLong(lng);
+        String modifierName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser modifier = userRepository.findByLogin(modifierName);
+        bookshelf.setModifiedBy(modifier);
     }
 }

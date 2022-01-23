@@ -3,7 +3,7 @@ package org.bs.bookshare.utils;
 public class DistanceCounter {
     String DISTANCE_FORMULA = "(6371 * acos(cos(radians(:lat)) * cos(radians(bs.locationLat)) * cos(radians(bs.locationLong) - radians(:lon)) + sin(radians(:lat)) * sin(radians(bs.locationLat))))";
 
-    public static Double calculateDistance(Double lat1, Double long1, Float lat2, Float long2) {
+    public static Double calculateDistance(Double lat1, Double long1, Double lat2, Double long2) {
         if (lat1 == null || lat2 == null || long1 == null || long2 == null) {
             return null;
         }

@@ -12,8 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 public class BookshelfDetailResponseDTO {
     private Long id;
-    private Float latitude;
-    private Float longitude;
+    private Double latitude;
+    private Double longitude;
     private List<BookCopyInBookshelfDetailResponseDTO> books;
     private Double distance;
     private Long version;

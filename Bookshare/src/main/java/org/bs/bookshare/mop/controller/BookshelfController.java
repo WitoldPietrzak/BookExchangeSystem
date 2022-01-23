@@ -7,6 +7,7 @@ import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.mop.dto.request.BookshelfFilteredListRequestDTO;
 import org.bs.bookshare.mop.dto.request.BookshelfCreateRequestDTO;
 import org.bs.bookshare.mop.dto.request.BookshelfRequestWithLocationDTO;
+import org.bs.bookshare.mop.dto.request.MoveBookshelfRequestDTO;
 import org.bs.bookshare.mop.dto.response.BookshelfDetailResponseDTO;
 import org.bs.bookshare.mop.dto.response.BookshelfListResponseDTO;
 import org.bs.bookshare.mop.service.BookshelfService;
@@ -86,5 +87,14 @@ public class BookshelfController {
                 bookshelf.getBooksOnShelf().stream().map(BookConverter::bookCopyInBookshelfDetailResponseDTOFromBookCopy).collect(Collectors.toList()),
                 DistanceCounter.calculateDistance(dto.getLatitude(), dto.getLongitude(), bookshelf.getLocationLat(), bookshelf.getLocationLong()),
                 bookshelf.getVersion()));
+    }
+
+    @RolesAllowed({Roles.ROLE_MODERATOR})
+    @PostMapping("/move")
+    public ResponseEntity<?> moveShelf(@RequestBody MoveBookshelfRequestDTO dto) throws BookshelfException {
+        Bookshelf bookshelf = bookshelfService.getBookshelf(dto.getShelfId());
+        bookshelfService.moveShelf(bookshelf,dto.getLat(),dto.getLng(),dto.getVersion());
+        return ResponseEntity.ok().build();
+
     }
 }

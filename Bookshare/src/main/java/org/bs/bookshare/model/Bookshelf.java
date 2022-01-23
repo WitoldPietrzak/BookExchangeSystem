@@ -25,13 +25,13 @@ public class Bookshelf extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
-    private Float locationLat;
+    private Double locationLat;
     @NotNull
-    private Float locationLong;
+    private Double locationLong;
     @OneToMany(mappedBy = "bookshelf")
     private List<BookCopy> booksOnShelf = new LinkedList<>();
 
-    public Bookshelf(Float locationLat, Float locationLong) {
+    public Bookshelf(Double locationLat, Double locationLong) {
         this.locationLat = locationLat;
         this.locationLong = locationLong;
     }
