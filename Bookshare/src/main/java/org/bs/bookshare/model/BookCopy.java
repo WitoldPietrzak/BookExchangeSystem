@@ -45,14 +45,20 @@ public class BookCopy extends AbstractEntity {
     @Column(name = "cover")
     private CoverType coverType;
 //    String state;
+    private String language;
 
     public boolean isAvailable() {
         return bookshelf != null && reserved == null;
     }
 
-    public BookCopy(Book book, AppUser owner, CoverType coverType) {
+    public boolean isAvailableForUser(AppUser user) {
+        return bookshelf != null && (reserved == user || reserved == null);
+    }
+
+    public BookCopy(Book book, AppUser owner, CoverType coverType, String language) {
         this.book = book;
         this.owner = owner;
         this.coverType = coverType;
+        this.language = language;
     }
 }

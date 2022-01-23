@@ -14,13 +14,15 @@ public class BookCopyListElementResponseDTO {
     private Boolean available;
     private Double distance;
     private String cover;
+    private String language;
 
-    public BookCopyListElementResponseDTO(Long id, String title, AuthorInnerResponseDTO author, Boolean available, String cover) {
+    public BookCopyListElementResponseDTO(Long id, String title, AuthorInnerResponseDTO author, Boolean available, String cover, String language) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.available = available;
         this.distance = null;
         this.cover = cover;
+        this.language = language;
     }
 }

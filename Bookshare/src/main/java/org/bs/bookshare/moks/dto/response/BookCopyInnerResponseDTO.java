@@ -11,4 +11,5 @@ public class BookCopyInnerResponseDTO {
     private Long id;
     private boolean isAvailable;
     private String coverType;
+    private String language;
 }

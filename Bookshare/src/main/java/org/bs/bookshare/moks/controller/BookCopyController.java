@@ -10,6 +10,7 @@ import org.bs.bookshare.model.Bookshelf;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.moks.dto.request.AddBookCopyRequestDTO;
 import org.bs.bookshare.moks.dto.request.ReturnBookCopyToShelfDTO;
+import org.bs.bookshare.moks.dto.request.TakeBookCopyFromShelfRequestDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyListElementResponseDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyListResponseDTO;
 import org.bs.bookshare.moks.service.BookCopyService;
@@ -57,7 +58,8 @@ public class BookCopyController {
                                 bookCopy.getBook().getTitle(),
                                 BookConverter.authorInnerResponseDTOFromAuthor(bookCopy.getBook().getAuthor()),
                                 bookCopy.isAvailable(),
-                                bookCopy.getCoverType().toString()))
+                                bookCopy.getCoverType().name(),
+                                bookCopy.getLanguage()))
                         .collect(Collectors.toList())));
     }
 
@@ -66,7 +68,7 @@ public class BookCopyController {
     public ResponseEntity<?> createBookCopy(@RequestBody AddBookCopyRequestDTO dto) throws BookCopyException, BookException {
         Book book = bookService.findBook(dto.getBookId());
 
-        bookCopyService.createBookCopy(book, dto.getCoverType());
+        bookCopyService.createBookCopy(book, dto.getCoverType(), dto.getLanguage());
         return ResponseEntity.ok().build(); //TODO odpowiedzz?
     }
 
@@ -76,7 +78,15 @@ public class BookCopyController {
         BookCopy bookCopy = bookCopyService.getBookCopy(dto.getBookCopyId());
         Bookshelf bookshelf = bookshelfService.getBookshelf(dto.getBookshelfId());
 
-        bookCopyService.addBookCopyToShelf(bookCopy, bookshelf);
+        bookCopyService.addBookCopyToShelf(bookCopy, bookshelf, dto.getVersion());
+        return ResponseEntity.ok().build(); //TODO odpowiedzz?
+    }
+
+    @PostMapping("/take")
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
+    public ResponseEntity<?> takeBookCopyFromShelf(@RequestBody TakeBookCopyFromShelfRequestDTO dto) throws BookCopyException, BookException, BookshelfException {
+        BookCopy bookCopy = bookCopyService.getBookCopy(dto.getBookCopyId());
+        bookCopyService.addBookCopyToUser(bookCopy, dto.getVersion());
         return ResponseEntity.ok().build(); //TODO odpowiedzz?
     }
 }

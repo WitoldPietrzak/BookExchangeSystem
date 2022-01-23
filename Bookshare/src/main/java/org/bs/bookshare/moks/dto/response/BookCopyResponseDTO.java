@@ -19,6 +19,6 @@ public class BookCopyResponseDTO {
     private String reservedUsername;
     private String reservedUntil;
     private String coverType;
-
+    private String language;
     private Long version;
 }

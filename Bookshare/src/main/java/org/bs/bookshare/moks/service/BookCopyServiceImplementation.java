@@ -29,18 +29,18 @@ public class BookCopyServiceImplementation implements BookCopyService {
     private final BookRepository bookRepository;
 
     @Override
-    public BookCopy createBookCopy(Book book, CoverType coverType) {
+    public BookCopy createBookCopy(Book book, CoverType coverType, String language) {
         String creatorName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser creator = userRepository.findByLogin(creatorName);
 
-        BookCopy bookCopy = new BookCopy(book, creator, coverType);
+        BookCopy bookCopy = new BookCopy(book, creator, coverType, language);
         bookCopy.setCreatedBy(creator);
 
         return bookCopyRepository.save(bookCopy);
     }
 
     @Override
-    public void addBookCopyToShelf(BookCopy bookCopy, Bookshelf bookshelf) throws BookCopyException {
+    public void addBookCopyToShelf(BookCopy bookCopy, Bookshelf bookshelf, Long version) throws BookCopyException {
         String callerName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser caller = userRepository.findByLogin(callerName);
         if (bookCopy.getOwner() != caller && caller.getAppRoles().stream().noneMatch(role -> {
@@ -50,20 +50,22 @@ public class BookCopyServiceImplementation implements BookCopyService {
         }
         bookCopy.setOwner(null);
         bookCopy.setBookshelf(bookshelf);
+        bookCopy.setModifiedBy(caller);
 
     }
 
     @Override
-    public void addBookCopyToUser(BookCopy bookCopy) throws BookCopyException {
+    public void addBookCopyToUser(BookCopy bookCopy, Long version) throws BookCopyException {
         String callerName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser caller = userRepository.findByLogin(callerName);
 
-        if (!bookCopy.isAvailable()) {
+        if (!bookCopy.isAvailableForUser(caller)) {
             throw BookCopyException.cantRentNotAvailableBook();
         }
 
         bookCopy.setBookshelf(null);
         bookCopy.setOwner(caller);
+        bookCopy.setModifiedBy(caller);
 
 
     }
@@ -80,6 +82,7 @@ public class BookCopyServiceImplementation implements BookCopyService {
             throw BookCopyException.userBookReservationLimitReached();
         }
         bookCopy.setReserved(caller);
+        bookCopy.setModifiedBy(caller);
 
     }
 
@@ -96,6 +99,7 @@ public class BookCopyServiceImplementation implements BookCopyService {
             throw BookCopyException.cantCancelNotOwnReservation();
         }
         bookCopy.setReserved(null);
+        bookCopy.setModifiedBy(caller);
 
     }
 

@@ -27,6 +27,7 @@ public class BookConverter {
                 bookCopy.getReserved() != null ? bookCopy.getReserved().getLogin() : null,
                 bookCopy.getReservedUntil() != null ? bookCopy.getReservedUntil().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null,
                 bookCopy.getCoverType().name(),
+                bookCopy.getLanguage(),
                 bookCopy.getVersion()
         );
     }
@@ -38,7 +39,8 @@ public class BookConverter {
         return new BookCopyInnerResponseDTO(
                 bookCopy.getId(),
                 bookCopy.isAvailable(),
-                bookCopy.getCoverType().name()
+                bookCopy.getCoverType().name(),
+                bookCopy.getLanguage()
         );
 
     }
@@ -48,9 +50,11 @@ public class BookConverter {
         }
         return new BookCopyInBookshelfDetailResponseDTO(
                 bookCopy.getId(),
+                bookCopy.getBook().getTitle(),
                 bookCopy.isAvailable(),
                 bookCopy.getCoverType().name(),
-                authorInnerResponseDTOFromAuthor(bookCopy.getBook().getAuthor())
+                authorInnerResponseDTOFromAuthor(bookCopy.getBook().getAuthor()),
+                bookCopy.getLanguage()
         );
 
     }

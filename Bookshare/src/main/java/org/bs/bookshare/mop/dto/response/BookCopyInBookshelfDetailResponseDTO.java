@@ -10,7 +10,9 @@ import org.bs.bookshare.moks.dto.response.AuthorInnerResponseDTO;
 @NoArgsConstructor
 public class BookCopyInBookshelfDetailResponseDTO {
     private Long id;
+    private String title;
     private boolean isAvailable;
     private String coverType;
     private AuthorInnerResponseDTO author;
+    private String language;
 }

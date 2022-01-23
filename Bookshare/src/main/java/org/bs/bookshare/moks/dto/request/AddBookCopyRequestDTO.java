@@ -10,6 +10,7 @@ import org.bs.bookshare.model.CoverType;
 public class AddBookCopyRequestDTO {
     private Long bookId;
     private CoverType coverType;
+    private String language;
 
     public AddBookCopyRequestDTO(Long bookId, String coverType) {
         this.bookId = bookId;

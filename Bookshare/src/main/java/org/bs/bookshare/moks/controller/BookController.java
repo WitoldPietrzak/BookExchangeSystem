@@ -92,7 +92,8 @@ public class BookController {
                                 .map(bookCopy -> new BookCopyInnerResponseDTO(
                                         bookCopy.getId(),
                                         bookCopy.isAvailable(),
-                                        bookCopy.getCoverType().name()))
+                                        bookCopy.getCoverType().name(),
+                                        bookCopy.getLanguage()))
                                 .collect(Collectors.toList()),
                         book.getVersion()));
     }
