@@ -12,6 +12,7 @@ import org.bs.bookshare.moks.dto.response.BookCopyInnerResponseDTO;
 import org.bs.bookshare.moks.dto.request.AddBookRequestDTO;
 import org.bs.bookshare.moks.dto.response.AuthorInnerResponseDTO;
 import org.bs.bookshare.moks.dto.response.DetailBookResponseDTO;
+import org.bs.bookshare.moks.dto.response.EntityCreatedResponseDTO;
 import org.bs.bookshare.moks.dto.response.SimpleBookResponseDTO;
 import org.bs.bookshare.moks.dto.response.SimpleGenreResponseDTO;
 import org.bs.bookshare.moks.service.AuthorService;
@@ -48,8 +49,8 @@ public class BookController {
             genres.add(genreService.findGenre(i));
         }
         Author author = authorService.getAuthor(dto.getAuthor());
-        bookService.createBook(dto.getTitle(), dto.getReleaseDate(), author, genres);
-        return ResponseEntity.ok().build();
+        Book book = bookService.createBook(dto.getTitle(), dto.getReleaseDate(), author, genres);
+        return ResponseEntity.ok().body(new EntityCreatedResponseDTO(book.getId()));
     }
 
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
