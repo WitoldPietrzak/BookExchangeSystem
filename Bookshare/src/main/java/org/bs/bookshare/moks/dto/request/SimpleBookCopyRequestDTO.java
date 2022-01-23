@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TakeBookCopyFromShelfRequestDTO {
+public class SimpleBookCopyRequestDTO {
     private Long bookCopyId;
     private Long version;
 }
