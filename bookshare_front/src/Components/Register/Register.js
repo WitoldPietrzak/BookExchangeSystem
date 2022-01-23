@@ -11,7 +11,6 @@ class RegisterNoTr extends React.Component {
 
     constructor(props) {
         super(props);
-        const {t} = this.props;
         this.state = {
             login: '',
             email:'',
@@ -56,34 +55,34 @@ class RegisterNoTr extends React.Component {
         const errors = {}
 
         if (!loginRegex.test(this.state.login)) {
-            errors.login = "Login format error";
+            errors.login = "Form.FormatError";
         }
-        // if (!passwordRegex.test(this.state.login)) {
+        // if (!passwordRegex.test(this.state.password)) {
         //     errors.password = "Password format error";
         // }
         if (!emailRegex.test(this.state.email)) {
-            errors.email = "Email format error";
+            errors.login = "Form.LoginFormatError";
         }
         if (this.state.login.length < 3) {
-            errors.login = "Login too short";
+            errors.login = "Form.LoginTooShortError";
         }
         if (this.state.login.length < 1) {
-            errors.login = "Field cannot be left empty";
+            errors.login = "Form.EmptyFieldError";
         }
         if (this.state.email.length < 3) {
-            errors.email = "Email too short";
+            errors.email = "Form.EmailTooShortError";
         }
         if (this.state.email.length < 1) {
-            errors.email = "Field cannot be left empty";
+            errors.email = "Form.EmptyFieldError";
         }
         if (this.state.password.length < 8) {
-            errors.password = "Password too short";
+            errors.password = "Form.PasswordTooShortError";
         }
         if (this.state.password.length < 1) {
-            errors.password = "Field cannot be left empty";
+            errors.password = "Form.EmptyFieldError";
         }
         if (this.state.passwordConfirm !== this.state.password) {
-            errors.passwordConfirm = "Passwords dont match";
+            errors.passwordConfirm = "Form.PasswordsNotMatchError";
         }
         return errors;
     };
