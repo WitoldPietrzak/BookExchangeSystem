@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "book_copy_table")
@@ -29,18 +31,28 @@ public class BookCopy extends AbstractEntity {
     @JoinColumn(name = "book", referencedColumnName = "id")
     private Book book;
     @ManyToOne
-    @JoinColumn(name="owner")
+    @JoinColumn(name = "owner")
     private AppUser owner;
 
     @ManyToOne
-    @JoinColumn(name="bookshelf")
+    @JoinColumn(name = "bookshelf")
     private Bookshelf bookshelf;
-    private Boolean reserved;
+    @ManyToOne
+    @JoinColumn(name = "reserved")
+    private AppUser reserved;
+    private LocalDateTime reservedUntil;
     @Enumerated(EnumType.STRING)
+    @Column(name = "cover")
     private CoverType coverType;
 //    String state;
 
-    public boolean isAvailable(){
-        return bookshelf != null && !reserved;
+    public boolean isAvailable() {
+        return bookshelf != null && reserved == null;
+    }
+
+    public BookCopy(Book book, AppUser owner, CoverType coverType) {
+        this.book = book;
+        this.owner = owner;
+        this.coverType = coverType;
     }
 }

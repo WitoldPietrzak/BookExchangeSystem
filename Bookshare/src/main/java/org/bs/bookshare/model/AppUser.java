@@ -42,6 +42,8 @@ public class AppUser extends AbstractEntity {
     private Integer loginAttempts = 0;
     @OneToMany(mappedBy = "owner")
     List<BookCopy> possessedBooks;
+    @OneToMany(mappedBy = "reserved")
+    List<BookCopy> reservedBooks;
     @ManyToMany(fetch = FetchType.LAZY)
     private List<AppRole> appRoles = new LinkedList<>();
     private String language;

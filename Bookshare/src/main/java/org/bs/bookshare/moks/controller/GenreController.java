@@ -8,6 +8,7 @@ import org.bs.bookshare.moks.dto.request.AddGenreRequestDTO;
 import org.bs.bookshare.moks.dto.response.SimpleGenreResponseDTO;
 import org.bs.bookshare.moks.repositories.GenreRepository;
 import org.bs.bookshare.moks.service.GenreService;
+import org.bs.bookshare.utils.converter.BookConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,12 +33,7 @@ public class GenreController {
         return ResponseEntity.ok().body(
                 genreService.getAllGenres()
                         .stream()
-                        .map(g -> {
-                            return new SimpleGenreResponseDTO(
-                                    g.getId(),
-                                    g.getNameCode(),
-                                    g.getName());
-                        })
+                        .map(BookConverter::simpleGenreResponseDTOFromGenre)
                         .collect(Collectors.toList()));
 
     }

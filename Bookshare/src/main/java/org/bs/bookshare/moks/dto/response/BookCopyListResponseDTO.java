@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookCopyInnerResponseDTO {
-    private Long id;
-    private boolean isAvailable;
-    private String coverType;
+public class BookCopyListResponseDTO {
+    private List<BookCopyListElementResponseDTO> copies;
 }

@@ -17,6 +17,7 @@ import org.bs.bookshare.moks.dto.response.SimpleGenreResponseDTO;
 import org.bs.bookshare.moks.service.AuthorService;
 import org.bs.bookshare.moks.service.BookService;
 import org.bs.bookshare.moks.service.GenreService;
+import org.bs.bookshare.utils.converter.BookConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +40,7 @@ public class BookController {
     private final GenreService genreService;
     private final AuthorService authorService;
 
-    @RolesAllowed({Roles.ROLE_USER})
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
     @PostMapping("/add")
     public ResponseEntity<?> addBook(@RequestBody AddBookRequestDTO dto) throws GenreException, AuthorException {
         List<Genre> genres = new LinkedList<>();
@@ -58,31 +59,18 @@ public class BookController {
         return ResponseEntity.ok().build();
     }
 
-    @RolesAllowed({Roles.ROLE_USER})
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
     @GetMapping("/all")
     public ResponseEntity<?> getAllBooks() {
 
         return ResponseEntity.ok().body(
                 bookService.getAllBooks()
                         .stream()
-                        .map(book ->
-                                new SimpleBookResponseDTO(
-                                        book.getId(),
-                                        book.getTitle(),
-                                        new AuthorInnerResponseDTO(book.getAuthor().getId(), book.getAuthor().getName(), book.getAuthor().getSurname()),
-                                        book.getGenres()
-                                                .stream()
-                                                .map(genre ->
-                                                        new SimpleGenreResponseDTO(
-                                                                genre.getId(),
-                                                                genre.getNameCode(),
-                                                                genre.getName()))
-                                                .collect(Collectors.toList()),
-                                        book.getReleaseDate()))
+                        .map(BookConverter::simpleBookResponseDTOFromBook)
                         .collect(Collectors.toList()));
     }
 
-    @RolesAllowed({Roles.ROLE_USER})
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
     @GetMapping("/info/{id}")
     public ResponseEntity<?> getBookById(@PathVariable Long id) throws BookException {
         Book book = bookService.findBook(id);
@@ -90,7 +78,7 @@ public class BookController {
                 new DetailBookResponseDTO(
                         book.getId(),
                         book.getTitle(),
-                        new AuthorInnerResponseDTO(book.getAuthor().getId(), book.getAuthor().getName(), book.getAuthor().getSurname()),
+                        BookConverter.authorInnerResponseDTOFromAuthor(book.getAuthor()),
                         book.getReleaseDate(),
                         book.getGenres()
                                 .stream()
@@ -103,7 +91,8 @@ public class BookController {
                                 .stream()
                                 .map(bookCopy -> new BookCopyInnerResponseDTO(
                                         bookCopy.getId(),
-                                        bookCopy.isAvailable()))
+                                        bookCopy.isAvailable(),
+                                        bookCopy.getCoverType().name()))
                                 .collect(Collectors.toList()),
                         book.getVersion()));
     }

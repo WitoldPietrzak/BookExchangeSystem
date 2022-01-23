@@ -16,7 +16,14 @@ public class Codes {
     public static final String AT_LEAST_ONE_ROLE = "at_least_one_role";
     public static final String VERSION_MISMATCH = "version_mismatch";
     public static final String BOOK_NOT_FOUND = "book_not_found";
+    public static final String BOOK_COPY_NOT_FOUND = "book_copy_not_found";
     public static final String CANT_DELETE_BOOK_WITH_EXAMPLES = "cant_delete_book_with_examples";
+    public static final String CANT_RENT_NOT_AVAILABLE_BOOK = "cant_rent_not_available_book";
+    public static final String CANT_RESERVE_NOT_AVAILABLE_BOOK = "cant_reserve_not_available_book";
+    public static final String USER_BOOK_RESERVATION_LIMIT_REACHED = "user_book_reservation_limit_reached";
+    public static final String CANT_CANCEL_NOT_RESERVED_BOOK = "cant_cancel_not_reserved_book";
+    public static final String CANT_CANCEL_NOT_OWN_RESERVATION = "cant_cancel_not_own_reservation";
+    public static final String CANT_ADD_NOT_OWNED_BOOK_TO_SHELF = "cant_add_not_owned_book_to_shelf";
     public static final String GENRE_EXIST = "genre_exist";
     public static final String GENRE_NOT_EXIST = "genre_not_exist";
     public static final String UNKNOWN_LANGUAGE = "unknown_language";
