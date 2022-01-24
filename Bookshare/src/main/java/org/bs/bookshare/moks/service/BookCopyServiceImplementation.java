@@ -128,6 +128,16 @@ public class BookCopyServiceImplementation implements BookCopyService {
         return bookCopyRepository.findAll();
     }
 
+    @Override
+    public List<BookCopy> getAllBookCopiesFiltered(Long book, String title, Long author, List<Long> genres, Integer releasedBefore, Integer releasedAfter, String language, CoverType coverType, Boolean availability, Double lat, Double lng, Double distance) {
+
+        if (lat == null || lng == null || distance == null) {
+            return bookCopyRepository.findAllFiltered(book, title, author, genres, releasedBefore, releasedAfter, language, coverType, availability, genres != null ? genres.size() : 0L);
+        }
+
+        return bookCopyRepository.findAllFilteredWithLocation(book, title, author, genres, releasedBefore, releasedAfter, language, coverType, availability, genres != null ? genres.size() : 0L, lat, lng, distance);
+    }
+
 
     @Scheduled(cron = "0 0 0 * * *")
     public void cancelReservations() {

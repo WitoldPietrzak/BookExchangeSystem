@@ -16,5 +16,6 @@ public interface BookCopyService{
     public void cancelBookCopyReservation(BookCopy bookCopy, Long version) throws BookCopyException;
     public BookCopy getBookCopy(Long id) throws BookCopyException;
     public List<BookCopy> getAllBookCopies();
+    public List<BookCopy> getAllBookCopiesFiltered(Long book, String title, Long author, List<Long> genres, Integer releasedBefore, Integer releasedAfter, String language, CoverType coverType, Boolean availability, Double lat, Double lng, Double distance);
 
 }

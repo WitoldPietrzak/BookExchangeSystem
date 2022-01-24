@@ -9,6 +9,7 @@ import org.bs.bookshare.model.BookCopy;
 import org.bs.bookshare.model.Bookshelf;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.moks.dto.request.AddBookCopyRequestDTO;
+import org.bs.bookshare.moks.dto.request.FilteredBookCopyListRequestDTO;
 import org.bs.bookshare.moks.dto.request.ReturnBookCopyToShelfDTO;
 import org.bs.bookshare.moks.dto.request.SimpleBookCopyRequestDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyListElementResponseDTO;
@@ -17,6 +18,7 @@ import org.bs.bookshare.moks.dto.response.EntityCreatedResponseDTO;
 import org.bs.bookshare.moks.service.BookCopyService;
 import org.bs.bookshare.moks.service.BookService;
 import org.bs.bookshare.mop.service.BookshelfService;
+import org.bs.bookshare.utils.DistanceCounter;
 import org.bs.bookshare.utils.converter.BookConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,7 +62,52 @@ public class BookCopyController {
                                 BookConverter.authorInnerResponseDTOFromAuthor(bookCopy.getBook().getAuthor()),
                                 bookCopy.isAvailable(),
                                 bookCopy.getCoverType().name(),
-                                bookCopy.getLanguage()))
+                                bookCopy.getLanguage(),
+                                bookCopy.getBook()
+                                        .getGenres()
+                                        .stream()
+                                        .map(BookConverter::simpleGenreResponseDTOFromGenre)
+                                        .collect(Collectors.toList()),
+                                bookCopy.getBook().getReleaseDate()))
+                        .collect(Collectors.toList())));
+    }
+
+    @PostMapping("/get/all")
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
+    public ResponseEntity<?> getAllBookCopies(@RequestBody FilteredBookCopyListRequestDTO dto) throws BookCopyException {
+        return ResponseEntity.ok()
+                .body(new BookCopyListResponseDTO(bookCopyService.getAllBookCopiesFiltered(
+                        dto.getBook(),
+                        dto.getTitle(),
+                        dto.getAuthor(),
+                        dto.getGenres(),
+                        dto.getReleasedBefore(),
+                        dto.getReleasedAfter(),
+                        dto.getLanguage(),
+                        dto.getCoverType(),
+                        dto.getAvailability(),
+                        dto.getLat(),
+                        dto.getLng(),
+                        dto.getDistance())
+                        .stream()
+                        .map(bookCopy -> new BookCopyListElementResponseDTO(
+                                bookCopy.getId(),
+                                bookCopy.getBook().getTitle(),
+                                BookConverter.authorInnerResponseDTOFromAuthor(bookCopy.getBook().getAuthor()),
+                                bookCopy.isAvailable(),
+                                bookCopy.getBookshelf() != null ? DistanceCounter.calculateDistance(
+                                        dto.getLat(),
+                                        dto.getLng(),
+                                        bookCopy.getBookshelf().getLocationLat(),
+                                        bookCopy.getBookshelf().getLocationLong()) : null,
+                                bookCopy.getCoverType().name(),
+                                bookCopy.getLanguage(),
+                                bookCopy.getBook()
+                                        .getGenres()
+                                        .stream()
+                                        .map(BookConverter::simpleGenreResponseDTOFromGenre)
+                                        .collect(Collectors.toList()),
+                                bookCopy.getBook().getReleaseDate()))
                         .collect(Collectors.toList())));
     }
 
