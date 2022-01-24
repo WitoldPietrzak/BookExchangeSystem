@@ -6,6 +6,7 @@ import './Logs.css';
 import RefreshIcon from '../../Resources/refresh.png';
 import Form from "react-bootstrap/Form";
 import {makeFilteredLogsRequest, makeLogsRequest} from "../../Requests/mok/LogsRequest";
+import TextField from "@mui/material/TextField";
 
 class LogsNoTr extends React.Component {
     constructor(props) {
@@ -15,9 +16,9 @@ class LogsNoTr extends React.Component {
             requestError: false,
             message: '',
             showFilter: false,
-            filterLevel: '',
-            filterAfter: '',
-            filterBefore: '',
+            filterLevel: null,
+            filterAfter: null,
+            filterBefore: null,
             doFilter: false,
             filterErrors: {},
             button: 'Form.Filter',
@@ -76,7 +77,7 @@ class LogsNoTr extends React.Component {
             }>
                 <td>{row.eventDate}</td>
                 <td>{row.level}</td>
-                <td>{(row.message && row.message.length > 100) ? `${row.message.substring(0, 97)}...`:row.message} </td>
+                <td>{(row.message && row.message.length > 100) ? `${row.message.substring(0, 97)}...` : row.message} </td>
             </tr>)
     }
 
@@ -165,7 +166,7 @@ class LogsNoTr extends React.Component {
                         {this.state.logs ? this.renderRows() : ''}
                         </tbody>
                     </Table>
-                    </div>
+                </div>
                 <Offcanvas show={this.state.showFilter} onHide={this.hideFilter.bind(this)}>
                     <Offcanvas.Header closeButton>
                         <Offcanvas.Title>{t('Filter.Title')}</Offcanvas.Title>
@@ -187,6 +188,28 @@ class LogsNoTr extends React.Component {
                                     <option value={'FATAL'}>FATAL</option>
                                 </Form.Select>
                             </Form.Group>
+                            <Form.Label className="required mt-3">{t('Form.dateBefore')}</Form.Label>
+                            <br/>
+                            <TextField
+                                className={'m-3'}
+                                type={'datetime-local'}
+                                variant={'standard'}
+                                onChange={event => {this.setState({
+                                    filterBefore:event.target.value
+                                })}}
+                            />
+                            <br/>
+                            <Form.Label className="required mt-3">{t('Form.dateAfter')}</Form.Label>
+                            <br/>
+                            <TextField
+                                className={'m-3'}
+                                type={'datetime-local'}
+                                variant={'standard'}
+                                onChange={event => {this.setState({
+                                    filterAfter:event.target.value
+                                })}}
+                            />
+                            <br/>
                             <Button variant='outline-dark' size="md" type="submit" className='m-3' disabled={false}>
                                 {typeof this.state.button === "string" ? t(this.state.button) : this.state.button}
                             </Button>
@@ -229,7 +252,6 @@ class LogsNoTr extends React.Component {
                                 {t('Form.exception')}: {this.state.log.exception}
                             </div>
                         </div>
-
 
 
                     </Offcanvas.Body>
