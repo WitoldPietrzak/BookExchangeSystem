@@ -136,7 +136,7 @@ class GenreNoTr extends React.Component {
 
                 </Row>
                 {this.renderOptionBar()}
-                <Row>
+                <Row className={'mb-4'}>
                     <Col className={'w-75'}>
                         {this.renderGenreInfo()}
                     </Col>
