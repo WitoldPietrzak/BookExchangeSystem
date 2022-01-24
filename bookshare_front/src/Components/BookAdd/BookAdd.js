@@ -172,11 +172,6 @@ class BookAddNoTr extends React.Component {
                                            releaseYear: event.target.value
                                        })
                                    }}/>
-                        <Collapse in={this.state.errors.releaseYear}>
-                            <MuiAlert variant="outlined" severity="error">
-                                {t(this.state.errors.releaseYear)}
-                            </MuiAlert>
-                        </Collapse>
                         <Button variant='outline-dark' size="md" type="submit" className='m-3' disabled={false}>
                             {typeof this.state.button === "string" ? t(this.state.button) : this.state.button}
                         </Button>
