@@ -17,7 +17,7 @@ public class Codes {
     public static final String VERSION_MISMATCH = "version_mismatch";
     public static final String BOOK_NOT_FOUND = "book_not_found";
     public static final String BOOK_COPY_NOT_FOUND = "book_copy_not_found";
-    public static final String CANT_DELETE_BOOK_WITH_EXAMPLES = "cant_delete_book_with_examples";
+    public static final String CANT_DELETE_BOOK_WITH_COPIES = "cant_delete_book_with_copies";
     public static final String CANT_RENT_NOT_AVAILABLE_BOOK = "cant_rent_not_available_book";
     public static final String CANT_RESERVE_NOT_AVAILABLE_BOOK = "cant_reserve_not_available_book";
     public static final String USER_BOOK_RESERVATION_LIMIT_REACHED = "user_book_reservation_limit_reached";

@@ -8,6 +8,7 @@ import org.bs.bookshare.model.Author;
 import org.bs.bookshare.model.Book;
 import org.bs.bookshare.model.Genre;
 import org.bs.bookshare.model.Roles;
+import org.bs.bookshare.moks.dto.request.DeleteEntityRequestDTO;
 import org.bs.bookshare.moks.dto.request.FilteredBookListRequestDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyInnerResponseDTO;
 import org.bs.bookshare.moks.dto.request.AddBookRequestDTO;
@@ -56,10 +57,11 @@ public class BookController {
         return ResponseEntity.ok().body(new EntityCreatedResponseDTO(book.getId()));
     }
 
-    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
-    @GetMapping("/delete/{id}")
-    public ResponseEntity<?> deleteBook(@PathVariable Long id) throws BookException {
-        bookService.deleteBook(id);
+    @RolesAllowed({ Roles.ROLE_MODERATOR})
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteBook(@RequestBody DeleteEntityRequestDTO dto) throws BookException {
+        Book book = bookService.findBook(dto.getId());
+        bookService.deleteBook(book,dto.getVersion());
         return ResponseEntity.ok().build();
     }
 

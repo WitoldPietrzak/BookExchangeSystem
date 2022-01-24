@@ -5,18 +5,14 @@ import org.bs.bookshare.exceptions.GenreException;
 import org.bs.bookshare.model.Genre;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.moks.dto.request.AddGenreRequestDTO;
-import org.bs.bookshare.moks.dto.request.DeleteGenreRequestDTO;
+import org.bs.bookshare.moks.dto.request.DeleteEntityRequestDTO;
 import org.bs.bookshare.moks.dto.response.EntityCreatedResponseDTO;
 import org.bs.bookshare.moks.dto.response.GenreListResponseDTO;
 import org.bs.bookshare.moks.dto.response.GenreResponseDTO;
-import org.bs.bookshare.moks.dto.response.SimpleGenreResponseDTO;
-import org.bs.bookshare.moks.repositories.GenreRepository;
 import org.bs.bookshare.moks.service.GenreService;
 import org.bs.bookshare.utils.converter.BookConverter;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,7 +58,7 @@ public class GenreController {
 
     @PostMapping("/delete")
     @RolesAllowed({Roles.ROLE_MODERATOR})
-    public ResponseEntity<?> deleteGenre(@RequestBody DeleteGenreRequestDTO dto) throws GenreException {
+    public ResponseEntity<?> deleteGenre(@RequestBody DeleteEntityRequestDTO dto) throws GenreException {
         Genre genre = genreService.findGenre(dto.getId());
         genreService.deleteGenre(genre, dto.getVersion());
         return ResponseEntity.ok().build();

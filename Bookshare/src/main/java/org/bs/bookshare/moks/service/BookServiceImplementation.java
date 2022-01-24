@@ -8,13 +8,11 @@ import org.bs.bookshare.model.Book;
 import org.bs.bookshare.model.Genre;
 import org.bs.bookshare.mok.repositories.AppUserRepository;
 import org.bs.bookshare.moks.repositories.BookRepository;
-import org.bs.bookshare.security.TokenGenerator;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,15 +33,6 @@ public class BookServiceImplementation implements BookService {  //TODO zabezpie
     }
 
     @Override
-    public void deleteBook(Long id) throws BookException {
-        Book book = bookRepository.findById(id).orElseThrow(BookException::notFound);
-        if (book.getCopies().size() > 0) {
-            throw BookException.cantDeleteBookWithExamples();
-        }
-        bookRepository.delete(book);
-    }
-
-    @Override
     public Book findBook(Long id) throws BookException {
         return bookRepository.findById(id).orElseThrow(BookException::notFound);
     }
@@ -54,9 +43,14 @@ public class BookServiceImplementation implements BookService {  //TODO zabezpie
     }
 
     @Override
-    public void removeBook(Long id) throws BookException {
-
-        bookRepository.delete(findBook(id));
+    public void deleteBook(Book book, Long version) throws BookException {
+        if(!book.getVersion().equals(version)){
+            throw BookException.versionMismatch();
+        }
+        if(!book.getCopies().isEmpty()){
+            throw BookException.cantDeleteBookWithCopies();
+        }
+        bookRepository.delete(book);
     }
 
     @Override

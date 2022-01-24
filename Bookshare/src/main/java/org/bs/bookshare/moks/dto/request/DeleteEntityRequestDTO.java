@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeleteGenreRequestDTO {
+public class DeleteEntityRequestDTO {
     private Long id;
     private Long version;
 }
