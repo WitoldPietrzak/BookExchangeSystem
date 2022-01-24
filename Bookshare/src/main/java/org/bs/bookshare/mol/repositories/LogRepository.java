@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface LogRepository extends JpaRepository<Log, Long> {
 
-    @Query("SELECT log FROM Log log WHERE " +
+    @Query("SELECT DISTINCT log FROM Log log WHERE " +
             "((:level) is NULL or log.level LIKE :level) " +
             "AND (cast(:after as date) is NULL or log.eventDate > :after) " +
             "AND (cast(:before as date) is NULL or log.eventDate < :before) ")
