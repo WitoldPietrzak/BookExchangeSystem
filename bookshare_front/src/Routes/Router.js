@@ -19,6 +19,7 @@ import GenreList from "../Components/GenreList/GenreList";
 import BookAdd from "../Components/BookAdd/BookAdd";
 import BookList from "../Components/BookList/BookList";
 import Genre from "../Components/Genre/Genre";
+import Book from "../Components/Book/Book";
 
 let token = Cookies !== undefined ? Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME) : undefined;
 const role = token ? Cookies.get(`${process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME}_${Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}`) : undefined;
@@ -61,6 +62,7 @@ export default function Router() {
             <Route exact path='/genres/add' element={isModerator() ? <GenreAdd/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/genres/' element={isModerator() ? <GenreList/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/genres/:id' element={isModerator() ? <Genre/> : <Navigate replace to='/home'/>}/>
+            <Route exact path='/books/:id' element={isModerator() || isUser() ? <Book/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/books/add' element={isModerator() || isUser() ? <BookAdd/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/books' element={isModerator() || isUser() ? <BookList/> : <Navigate replace to='/home'/>}/>
             <Route path='*' element={<Navigate replace to={'/home'}/>}/>
