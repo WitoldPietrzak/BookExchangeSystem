@@ -17,17 +17,24 @@ function Moderator() {
             </NavDropdown>
             <NavDropdown title={t("Navbar.genres")}>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
-                          href="/#/genres/add">{t("Navbar.genres.add")}</Nav.Link>
+                          href="/?#/genres/add">{t("Navbar.genres.add")}</Nav.Link>
                 <NavDropdown.Divider/>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
                           href="/?#/genres">{t("Navbar.genres.list")}</Nav.Link>
             </NavDropdown>
             <NavDropdown title={t("Navbar.books")} id="navbarScrollingDropdown">
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
-                          href="/#/books/add">{t("Navbar.books.add")}</Nav.Link>
+                          href="/?#/books/add">{t("Navbar.books.add")}</Nav.Link>
                 <NavDropdown.Divider/>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
                           href="/?#/books">{t("Navbar.books.list")}</Nav.Link>
+            </NavDropdown>
+            <NavDropdown title={t("Navbar.bookCopies")} id="navbarScrollingDropdown">
+                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
+                          href="/?#/books/copies/add">{t("Navbar.bookCopy.add")}</Nav.Link>
+                <NavDropdown.Divider/>
+                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
+                          href="/?#/books">{t("Navbar.bookCopies.list")}</Nav.Link>
             </NavDropdown>
         </Nav>
     );

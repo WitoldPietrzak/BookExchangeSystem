@@ -19,6 +19,13 @@ function User() {
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
                           href="/?#/books">{t("Navbar.books.list")}</Nav.Link>
             </NavDropdown>
+            <NavDropdown title={t("Navbar.bookCopies")} id="navbarScrollingDropdown">
+                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
+                          href="/?#/books/copies/add">{t("Navbar.bookCopy.add")}</Nav.Link>
+                <NavDropdown.Divider/>
+                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
+                          href="/?#/books">{t("Navbar.bookCopies.list")}</Nav.Link>
+            </NavDropdown>
         </Nav>
     );
 }
