@@ -105,10 +105,7 @@ public class BookController {
                         book.getReleaseDate(),
                         book.getGenres()
                                 .stream()
-                                .map(genre -> new SimpleGenreResponseDTO(
-                                        genre.getId(),
-                                        genre.getNameCode(),
-                                        genre.getName()))
+                                .map(BookConverter::simpleGenreResponseDTOFromGenre)
                                 .collect(Collectors.toList()),
                         book.getCopies()
                                 .stream()
