@@ -112,6 +112,8 @@
   "Form.AccountCreatedMessage": "Account has been created. You will receive email with activation link soon",
   "Form.PasswordsNotMatchError": "Passwords do not match",
   "Form.BookDeletedMessage": "Book has been deleted",
+  "Form.dateBefore": "Date before",
+  "Form.dateAfter": "Date after",
   "Genre.code": "Genre Name",
   "Genre.key": "Language",
   "Genre.keys": "Languages",

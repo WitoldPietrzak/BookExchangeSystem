@@ -1,7 +1,6 @@
 import React from "react";
 import Nav from "react-bootstrap/Nav";
 import {useTranslation} from "react-i18next";
-import {Link} from "react-router-dom";
 import {NavDropdown} from "react-bootstrap";
 
 function User() {
@@ -24,7 +23,7 @@ function User() {
                           href="/?#/books/copies/add">{t("Navbar.bookCopy.add")}</Nav.Link>
                 <NavDropdown.Divider/>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
-                          href="/?#/books">{t("Navbar.bookCopies.list")}</Nav.Link>
+                          href="/?#/books/copies">{t("Navbar.bookCopies.list")}</Nav.Link>
             </NavDropdown>
         </Nav>
     );

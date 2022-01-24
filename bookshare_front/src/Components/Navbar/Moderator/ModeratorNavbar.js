@@ -34,7 +34,7 @@ function Moderator() {
                           href="/?#/books/copies/add">{t("Navbar.bookCopy.add")}</Nav.Link>
                 <NavDropdown.Divider/>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
-                          href="/?#/books">{t("Navbar.bookCopies.list")}</Nav.Link>
+                          href="/?#/books/copies">{t("Navbar.bookCopies.list")}</Nav.Link>
             </NavDropdown>
         </Nav>
     );

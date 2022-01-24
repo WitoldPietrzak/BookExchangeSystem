@@ -112,6 +112,8 @@
   "Form.AccountCreatedMessage": "Konto zostało utworzone. Niedługo otrzymasz wiadomość z linkiem aktywacyjnym",
   "Form.PasswordsNotMatchError": "Hasła nie są takie same",
   "Form.BookDeletedMessage": "Książka została usunięta",
+  "Form.dateBefore": "Przed datą",
+  "Form.dateAfter": "Po dacie",
   "Genre.code": "Nazwa gatunku",
   "Genre.key": "Język",
   "Genre.keys": "Języki",
