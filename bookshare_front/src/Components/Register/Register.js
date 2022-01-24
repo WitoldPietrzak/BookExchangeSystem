@@ -3,7 +3,7 @@ import {withTranslation} from "react-i18next";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import './Register.css';
-import {Alert, Spinner} from "react-bootstrap";
+import {Alert, Modal, Spinner} from "react-bootstrap";
 import {makeRegisterRequest} from "../../Requests/mok/RegisterAccountRequest";
 
 
@@ -20,8 +20,15 @@ class RegisterNoTr extends React.Component {
             button: 'Form.registerButton',
             response: '',
             errorCode: '',
-            requestFailed: false
+            requestFailed: false,
+            showSuccessModal:false
         };
+    }
+
+    hideSuccessModal(){
+        this.setState({
+            showSuccessModal:true
+        })
     }
 
     handleSubmit(event) {
@@ -171,7 +178,17 @@ class RegisterNoTr extends React.Component {
                         </Button>
                     </Form>
                 </div>
-
+                <Modal show={this.state.showSuccessModal} onHide={this.hideSuccessModal.bind(this)} backdrop={'static'}>
+                    <Modal.Header>
+                        <Modal.Title>{t('Form.Success')}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <t>{t('Form.AccountCreatedMessage')}</t>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant={'outline-dark'} href={`/?#/login`}>{t('Form.OK')}</Button>
+                    </Modal.Footer>
+                </Modal>
             </Fragment>
         )
     }

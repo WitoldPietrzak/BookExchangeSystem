@@ -16,8 +16,10 @@ export function makeAddGenreRequest(token, nameCode, names, that) {
             "Authorization": `Bearer ${token}`
         }
     }).then((response) => {
-        window.location.hash = "#/home";
-        window.location.reload();
+        that.setState({
+            showSuccessModal: true,
+            id:response.data.id
+        })
     }).catch((response) => {
         if (response.response) {
             if (response.response) {

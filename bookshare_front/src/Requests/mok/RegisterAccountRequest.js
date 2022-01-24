@@ -13,8 +13,9 @@ export function makeRegisterRequest(login, password, email, that) {
             "Content-Type": "application/json"
         }
     }).then((response) => {
-        window.location.hash = "#/home";
-        window.location.reload();
+        that.setState({
+            showSuccessModal: true
+        })
     }).catch((response) => {
         if (response.response) {
             if (response.response) {

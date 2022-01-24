@@ -2,7 +2,7 @@ import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {Alert, Col, Row, Spinner} from "react-bootstrap";
+import {Alert, Col, Modal, Row, Spinner} from "react-bootstrap";
 import './GenreAdd.css';
 import {makeAddGenreRequest} from "../../Requests/moks/AddGenreRequest";
 import Cookies from "js-cookie";
@@ -12,7 +12,6 @@ class GenreAddNoTr extends React.Component {
 
     constructor(props) {
         super(props);
-        const {t} = this.props;
         this.state = {
             genreCode: '',
             fields: [],
@@ -20,8 +19,16 @@ class GenreAddNoTr extends React.Component {
             button: 'Form.CreateGenreButton',
             response: '',
             errorCode: '',
-            requestFailed: false
+            requestFailed: false,
+            showSuccessModal: false,
+            id:''
         };
+    }
+
+    hideSuccessModal(){
+        this.setState({
+            showSuccessModal: false
+        })
     }
 
     handleSubmit(event) {
@@ -220,6 +227,17 @@ class GenreAddNoTr extends React.Component {
                         </Button>
                     </Form>
                 </div>
+                <Modal show={this.state.showSuccessModal} onHide={this.hideSuccessModal.bind(this)} backdrop={'static'}>
+                    <Modal.Header>
+                        <Modal.Title>{t('Form.Success')}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <t>{t('Form.GenreCreatedMessage')}</t>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant={'outline-dark'} href={`/?#/genres/${this.state.id}`}>{t('Form.OK')}</Button>
+                    </Modal.Footer>
+                </Modal>
 
             </Fragment>
         )

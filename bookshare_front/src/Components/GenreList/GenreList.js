@@ -37,11 +37,12 @@ class GenreListNoTr extends React.Component {
     renderRow(row) {
         return (
             <tr className={'accountRow'} onClick={() => {
-                window.location.hash = `#/genre/${row.id}`;
+                window.location.hash = `#/genres/${row.id}`;
                 window.location.reload();
             }}>
                 <td>{row.nameCode}</td>
                 <td>{Object.keys(row.name).toString()}</td>
+                <td>{row.usageCount}</td>
             </tr>)
     }
 
@@ -71,6 +72,20 @@ class GenreListNoTr extends React.Component {
 
             });
         }
+
+            if (this.state.sortBy === "usageCountUp") {
+                rows.sort((a, b) => {
+                    return a.usageCount > b.usageCount ? 1 : (b.usageCount > a.usageCount ? -1 : 0)
+
+                });
+            }
+            if (this.state.sortBy === "usageCountDown") {
+                rows.sort((a, b) => {
+                    return a.usageCount < b.usageCount ? 1 : (b.usageCount < a.usageCount ? -1 : 0)
+
+                });
+
+        }
         return rows.map(row => this.renderRow(row));
 
     }
@@ -93,6 +108,8 @@ class GenreListNoTr extends React.Component {
                             <option value={'genreCodeDown'}>{t('Form.genreCodeDown')}</option>
                             <option value={'genreKeysUp'}>{t('Form.genreKeysUp')}</option>
                             <option value={'genreKeysDown'}>{t('Form.genreKeysDown')}</option>
+                            <option value={'usageCountUp'}>{t('Form.usageCountUp')}</option>
+                            <option value={'usageCountDown'}>{t('Form.usageCountDown')}</option>
 
                         </Form.Select>
                     </div>
@@ -106,6 +123,7 @@ class GenreListNoTr extends React.Component {
                         <thead>
                         <th>{t('Genre.code')}</th>
                         <th>{t('Genre.keys')}</th>
+                        <th>{t('Genre.usageCount')}</th>
                         </thead>
                         <tbody>
                         {this.state.genres ? this.renderRows() : ''}
