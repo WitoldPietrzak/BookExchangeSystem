@@ -8,6 +8,7 @@ import org.bs.bookshare.model.Genre;
 import org.bs.bookshare.moks.dto.response.AuthorInnerResponseDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyInnerResponseDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyResponseDTO;
+import org.bs.bookshare.moks.dto.response.BookListElementResponseDTO;
 import org.bs.bookshare.moks.dto.response.SimpleBookResponseDTO;
 import org.bs.bookshare.moks.dto.response.SimpleGenreResponseDTO;
 import org.bs.bookshare.mop.dto.response.BookCopyInBookshelfDetailResponseDTO;
@@ -66,6 +67,17 @@ public class BookConverter {
                 authorInnerResponseDTOFromAuthor(book.getAuthor()),
                 book.getGenres().stream().map(BookConverter::simpleGenreResponseDTOFromGenre).collect(Collectors.toList()),
                 book.getReleaseDate()
+        );
+    }
+
+    public static BookListElementResponseDTO bookListElementResponseDTOFromBook(Book book) {
+        return new BookListElementResponseDTO(
+                book.getId(),
+                book.getTitle(),
+                authorInnerResponseDTOFromAuthor(book.getAuthor()),
+                book.getGenres().stream().map(BookConverter::simpleGenreResponseDTOFromGenre).collect(Collectors.toList()),
+                book.getReleaseDate(),
+                book.getCopies().size()
         );
     }
 

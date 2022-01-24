@@ -71,7 +71,7 @@ public class BookController {
                 new BookListResponseDTO(
                         bookService.getAllBooks()
                                 .stream()
-                                .map(BookConverter::simpleBookResponseDTOFromBook)
+                                .map(BookConverter::bookListElementResponseDTOFromBook)
                                 .collect(Collectors.toList())));
     }
 
@@ -89,7 +89,7 @@ public class BookController {
                                 dto.getReleasedAfter(),
                                 dto.getCopyCount())
                                 .stream()
-                                .map(BookConverter::simpleBookResponseDTOFromBook)
+                                .map(BookConverter::bookListElementResponseDTOFromBook)
                                 .collect(Collectors.toList())));
     }
 

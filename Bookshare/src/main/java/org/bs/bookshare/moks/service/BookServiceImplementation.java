@@ -65,7 +65,10 @@ public class BookServiceImplementation implements BookService {  //TODO zabezpie
     }
 
     @Override
-    public List<Book> getAllBooksFiltered(String title, Long author,List<Long> genres,Integer releasedBefore, Integer releasedAfter,Integer copyCount){return bookRepository.findAllFiltered(title,author,genres,releasedBefore,releasedAfter,copyCount);}
+    public List<Book> getAllBooksFiltered(String title, Long author, List<Long> genres, Integer releasedBefore, Integer releasedAfter, Integer copyCount) {
+        Long listSize = genres == null ? 0L : genres.size();
+        return bookRepository.findAllFiltered(title, author, genres, releasedBefore, releasedAfter, copyCount,listSize );
+    }
 
     @Override
     public Book updateBook(Book book) throws BookException {
