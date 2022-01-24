@@ -11,4 +11,5 @@ public interface GenreService {
     Genre findGenre(Long id) throws GenreException;
     Genre findGenre(String name) throws GenreException;
     List<Genre> getAllGenres();
+    void deleteGenre(Genre genre, Long version) throws GenreException;
 }

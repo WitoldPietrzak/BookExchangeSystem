@@ -28,6 +28,7 @@ public class Codes {
     public static final String GENRE_EXIST = "genre_exist";
     public static final String GENRE_NOT_EXIST = "genre_not_exist";
     public static final String CANT_CREATE_EMPTY_GENRE = "cant_create_empty_genre";
+    public static final String CANT_DELETE_GENRE_USED_BY_BOOKS="cant_delete_genre_used_by_books";
     public static final String UNKNOWN_LANGUAGE = "unknown_language";
     public static final String USER_NOT_ACTIVE = "user_not_active";
     public static final String USER_DISABLED = "user_disabled";

@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -32,8 +33,13 @@ public class Book extends AbstractEntity {
     @JoinColumn(name = "author")
     private Author author;
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "book_table_genres",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genres_id")
+    )
     private List<Genre> genres = new LinkedList<>();
-//    @OneToMany(fetch = FetchType.LAZY)
+    //    @OneToMany(fetch = FetchType.LAZY)
 //    List<BookReview> reviews = new LinkedList<>();
     @OneToMany(mappedBy = "book")
     private List<BookCopy> copies;

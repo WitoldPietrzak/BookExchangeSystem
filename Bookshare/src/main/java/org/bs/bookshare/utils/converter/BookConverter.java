@@ -93,7 +93,8 @@ public class BookConverter {
         return new SimpleGenreResponseDTO(
                 genre.getId(),
                 genre.getNameCode(),
-                genre.getName());
+                genre.getName(),
+                genre.getBooks().size());
     }
 
     public static BookshelfResponseDTO bookshelfResponseDTOFromBookshelf(Bookshelf bookshelf) {
