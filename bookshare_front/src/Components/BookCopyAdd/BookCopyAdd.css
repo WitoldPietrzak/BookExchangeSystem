@@ -1,0 +1,13 @@
+.BookCopyAdd {
+    padding: 60px 0;
+}
+
+.BookCopyAdd form {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 320px;
+    border: 1px solid #000000;
+    border-radius: 6px;
+    -webkit-box-shadow: 1px 1px 5px 1px #000000;
+    box-shadow: 1px 1px 5px 1px #000000;
+}

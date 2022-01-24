@@ -13,6 +13,7 @@ import org.bs.bookshare.moks.dto.request.ReturnBookCopyToShelfDTO;
 import org.bs.bookshare.moks.dto.request.SimpleBookCopyRequestDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyListElementResponseDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyListResponseDTO;
+import org.bs.bookshare.moks.dto.response.EntityCreatedResponseDTO;
 import org.bs.bookshare.moks.service.BookCopyService;
 import org.bs.bookshare.moks.service.BookService;
 import org.bs.bookshare.mop.service.BookshelfService;
@@ -67,9 +68,8 @@ public class BookCopyController {
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
     public ResponseEntity<?> createBookCopy(@RequestBody AddBookCopyRequestDTO dto) throws BookCopyException, BookException {
         Book book = bookService.findBook(dto.getBookId());
-
-        bookCopyService.createBookCopy(book, dto.getCoverType(), dto.getLanguage());
-        return ResponseEntity.ok().build(); //TODO odpowiedzz?
+        BookCopy bookCopy = bookCopyService.createBookCopy(book, dto.getCoverType(), dto.getLanguage());
+        return ResponseEntity.ok().body(new EntityCreatedResponseDTO(bookCopy.getId()));
     }
 
     @PostMapping("/return")

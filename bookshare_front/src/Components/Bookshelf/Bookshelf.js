@@ -125,7 +125,7 @@ class BookshelfNoTr extends React.Component {
         const {t} = this.props;
         return (
             <Row className={'BookshelfBookListRow'} onClick={() => {
-                window.location.hash = `#/bookCopy/${row.id}`;
+                window.location.hash = `#/books/copies/${row.id}`;
                 window.location.reload();
             }}>
                 <Col xs={7}>{row.title}</Col>
