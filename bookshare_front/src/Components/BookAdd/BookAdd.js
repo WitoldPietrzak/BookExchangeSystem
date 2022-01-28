@@ -9,11 +9,13 @@ import {makeAuthorListRequest} from "../../Requests/moks/AuthorListRequest";
 import {makeGenreListRequest} from "../../Requests/moks/GenreListRequest";
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import Collapse from '@mui/material/Collapse';
-import {default as MuiAlert} from '@mui/material/Alert';
 import i18n from "i18next";
-import StaticDatePicker from '@mui/lab/StaticDatePicker';
 import {makeAddBookRequest} from "../../Requests/moks/AddBookRequest";
+import InputAdornment from '@mui/material/InputAdornment';
+import GenreAdd from "../GenreAdd/GenreAdd";
+import {Row,Col} from 'react-bootstrap';
+import {isModerator} from "../../Routes/Router";
+import AuthorAdd from "../AuthorAdd/AuthorAdd";
 
 
 class BookAddNoTr extends React.Component {
@@ -21,6 +23,7 @@ class BookAddNoTr extends React.Component {
     constructor(props) {
         super(props);
         const {t} = this.props;
+        this.genreAdd=isModerator()?<InputAdornment position={'start'}><Button onClick={this.showGenreModal.bind(this)} variant={'outline-dark'} size={'sm'}>+</Button></InputAdornment>:null;
         this.state = {
             authors: [],
             genres: [],
@@ -34,7 +37,9 @@ class BookAddNoTr extends React.Component {
             errorCode: '',
             requestFailed: false,
             showSuccessModal: false,
-            releaseYear: ''
+            releaseYear: '',
+            genreModal:false,
+            authorModal:false
         };
     }
 
@@ -55,6 +60,35 @@ class BookAddNoTr extends React.Component {
             showSuccessModal: false
         })
     }
+    showGenreModal(){
+        this.setState({
+            genreModal: true
+        })
+    }
+    hideGenreModal(){
+        this.setState({
+            genreModal: false
+        })
+        const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
+        setTimeout(()=>{
+            makeGenreListRequest(token, this);
+        },1000)
+
+    }
+    showAuthorModal(){
+        this.setState({
+            authorModal: true
+        })
+    }
+    hideAuthorModal(){
+        this.setState({
+            authorModal: false
+        })
+        const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
+        setTimeout(()=>{
+            makeAuthorListRequest(token, this);
+        },1000)
+    }
 
 
     handleSubmit(event) {
@@ -71,7 +105,6 @@ class BookAddNoTr extends React.Component {
 
 
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
-        // makeCreateShelfRequest(token, this.state.location,this);
         makeAddBookRequest(token, this.state.title, this.state.selectedAuthor.id, this.state.selectedGenres.map(genre=>genre.id), this.state.releaseYear,this);
     }
 
@@ -134,6 +167,10 @@ class BookAddNoTr extends React.Component {
                                                      {...params}
                                                      variant="standard"
                                                      label={t('Book.author')}
+                                                     InputProps={{
+                                                         ...params.InputProps,
+                                                     startAdornment:<InputAdornment position={'start'}><Button onClick={this.showAuthorModal.bind(this)} variant={'outline-dark'} size={'sm'}>+</Button></InputAdornment>
+                                                     }}
                                           />
                                       )}
                         />
@@ -152,11 +189,16 @@ class BookAddNoTr extends React.Component {
                             }}
                             renderInput={(params) => (
                                 <TextField
+                                    {...params}
                                     error={this.state.errors.genres}
                                     helperText={this.state.errors.genres ? t(`${this.state.errors.genres}`) : ''}
                                     {...params}
                                     variant="standard"
                                     label={t('Book.genres')}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                     startAdornment:this.genreAdd
+                                    }}
                                 />
                             )}
                         />
@@ -186,8 +228,31 @@ class BookAddNoTr extends React.Component {
                         <t>{t('Form.BookCreatedMessage')}</t>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button href={`/?#/books/${this.state.id}`}>{t('Form.OK')}</Button>
+                        <Button variant={'outline-dark'} href={`/?#/books/${this.state.id}`}>{t('Form.See')}</Button>
+                        <Button variant={'outline-dark'} onClick={this.hideSuccessModal.bind(this)}>{t('Form.Stay')}</Button>
                     </Modal.Footer>
+                </Modal>
+                <Modal   show={this.state.genreModal} onHide={this.hideGenreModal.bind(this)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{t('Navbar.genres.add')}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Row>
+                            <Col><GenreAdd/></Col>
+                        </Row>
+
+                    </Modal.Body>
+                </Modal>
+                <Modal   show={this.state.authorModal} onHide={this.hideAuthorModal.bind(this)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{t('Navbar.author.add')}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Row>
+                            <Col><AuthorAdd/></Col>
+                        </Row>
+
+                    </Modal.Body>
                 </Modal>
             </Fragment>
         )

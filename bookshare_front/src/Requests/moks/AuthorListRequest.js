@@ -9,7 +9,8 @@ export function makeAuthorListRequest(token, that) {
         }
     }).then((response) => {
         that.setState({
-            authors: response.data.authors
+            authors: response.data.authors,
+            active:0
 
         });
     }).catch((response) => {

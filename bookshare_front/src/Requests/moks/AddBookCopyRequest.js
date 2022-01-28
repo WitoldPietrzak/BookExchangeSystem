@@ -1,5 +1,4 @@
 import axios from "axios";
-import Cookies from 'js-cookie';
 
 export function makeAddBookCopyRequest(token, book, language, coverType, that) {
 
@@ -21,7 +20,6 @@ export function makeAddBookCopyRequest(token, book, language, coverType, that) {
         if (response.response) {
             if (response.response) {
                 that.setState({
-                    button: 'Form.registerButton',
                     errorCode: response.response.status.toString(10),
                     response: response.response.data.message,
                     requestFailed: true

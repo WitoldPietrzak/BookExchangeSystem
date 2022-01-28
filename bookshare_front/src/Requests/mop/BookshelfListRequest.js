@@ -9,13 +9,17 @@ export function makeBookshelfListRequest(token, that) {
         }
     }).then((response) => {
         that.setState({
-            shelves: response.data.bookshelves
+            shelves: response.data.bookshelves,
+            active:0
 
         });
     }).catch((response) => {
         if (response.response) {
             that.setState({
                 errorCode: response.response.status.toString(10),
+                response: response.response.data.message,
+                requestFailed: true,
+                message: response.response.data.message,
             })
         }
     })
@@ -38,13 +42,17 @@ export function makeFilteredBookshelfListRequest(token, longitude, latitude,dist
         }
     }).then((response) => {
         that.setState({
-            shelves: response.data.bookshelves
+            shelves: response.data.bookshelves,
+            active:0
 
         });
     }).catch((response) => {
         if (response.response) {
             that.setState({
                 errorCode: response.response.status.toString(10),
+                response: response.response.data.message,
+                requestFailed: true,
+                message: response.response.data.message,
             })
         }
     })

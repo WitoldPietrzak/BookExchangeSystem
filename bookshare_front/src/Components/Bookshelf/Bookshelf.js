@@ -15,8 +15,8 @@ import {makeRemoveShelfRequest} from "../../Requests/mop/RemoveShelfRequest";
 class BookshelfNoTr extends React.Component {
     constructor(props) {
         super(props);
-        this.tempLocation={lng:0,lat:0}
-        this.id = this.props.params.id;
+        this.tempLocation = {lng: 0, lat: 0}
+        this.id = this.props.params.id != null ? this.props.params.id : this.props.id;
         this.state = {
             id: '',
             location: '',
@@ -35,6 +35,7 @@ class BookshelfNoTr extends React.Component {
     componentDidMount() {
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         makeBookshelfInfoRequest(token, this.id, this);
+
     }
 
     reloadUserInfo() {
@@ -46,7 +47,7 @@ class BookshelfNoTr extends React.Component {
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         this.hideModal();
         makeMoveShelfRequest(token, this.state.id, lng, lat, this.state.version, this);
-        this.reloadUserInfo();
+        // this.reloadUserInfo();
     }
 
     removeBookshelf() {
@@ -159,9 +160,6 @@ class BookshelfNoTr extends React.Component {
     }
 
     render() {
-        console.log(this.state.bookshelfLocation)
-        console.log(this.state.bookshelfLocation.lng)
-        console.log(this.state.bookshelfLocation.lat)
         const {t} = this.props;
         return (
             <Fragment>
@@ -183,12 +181,13 @@ class BookshelfNoTr extends React.Component {
                     <Col>
                         <div className={'d-grid gap-2 mt-0 mb-0 m-5 Map InfoFrame'}>
                             <Map google={this.props.google} zoom={17}
-                                 center={typeof this.state.bookshelfLocation.lat ==='number' && typeof this.state.bookshelfLocation.lng ==='number'? this.state.bookshelfLocation:this.tempLocation}
+                                 center={typeof this.state.bookshelfLocation.lat === 'number' && typeof this.state.bookshelfLocation.lng === 'number' ? this.state.bookshelfLocation : this.tempLocation}
                                  className='GoogleMap'
                                  style={{width: 'auto', height: '200px', position: 'relative'}}>
                                 <Marker
-                                    position={typeof this.state.bookshelfLocation.lat ==='number' && typeof this.state.bookshelfLocation.lng ==='number'? this.state.bookshelfLocation:this.tempLocation}
+                                    position={typeof this.state.bookshelfLocation.lat === 'number' && typeof this.state.bookshelfLocation.lng === 'number' ? this.state.bookshelfLocation : this.tempLocation}
                                 />
+
                             </Map>
                         </div>
 
@@ -196,10 +195,10 @@ class BookshelfNoTr extends React.Component {
                 </Row>
                 <Row className={'mb-3'}>
                     <Col>
-                        {this.state.books.length ? this.renderBooksInfo():''}
+                        {this.state.books.length ? this.renderBooksInfo() : ''}
                     </Col>
                 </Row>
-                <Modal show={this.state.showModal} onHide={this.hideModal.bind(this)}>
+                <Modal  show={this.state.showModal} onHide={this.hideModal.bind(this)}>
                     <Modal.Header>
                         <Modal.Title>{t('Modal.PickLocation')}</Modal.Title>
                     </Modal.Header>
@@ -209,6 +208,14 @@ class BookshelfNoTr extends React.Component {
                                    zoom={10}
                                    onChangeLocation={this.moveBookshelf.bind(this)}
                         />
+                        {/*<Map google={this.props.google} zoom={17}*/}
+                        {/*     center={this.state.bookshelfLocation}*/}
+                        {/*     className='GoogleMap'*/}
+                        {/*     style={{width: 'auto', height: '200px', position: 'relative'}}>*/}
+                        {/*    <Marker*/}
+                        {/*        position={typeof this.state.bookshelfLocation.lat === 'number' && typeof this.state.bookshelfLocation.lng === 'number' ? this.state.bookshelfLocation : this.tempLocation}*/}
+                        {/*    />*/}
+                        {/*</Map>*/}
                     </Modal.Body>
                 </Modal>
                 <Modal show={this.state.showDeleteConfirm} onHide={this.hideDelete.bind(this)}>

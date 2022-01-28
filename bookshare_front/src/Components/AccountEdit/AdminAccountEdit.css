@@ -26,6 +26,13 @@
 .InfoRightColumn{
     text-align: end;
 }
+.InfoRightColumnWithLink{
+    text-align: end;
+}
+.InfoRightColumnWithLink:hover{
+    cursor: pointer;
+    text-align: end;
+}
 
 .PasswordAccordion{
     background: #F5F3EA;

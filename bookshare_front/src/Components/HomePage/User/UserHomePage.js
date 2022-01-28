@@ -19,23 +19,9 @@ class UserHomePageNoTr extends React.Component {
         return (
             <Fragment>
                 <div className="Tabs pt-3 pb-3">
-                    <Tabs>
-                        <Tab title={t('Home.BookMapTab')} eventKey={'jeden'}>
-                            <div className='Map m-auto mt-5 mb-5'>
-                                <QuickSearchBook/>
-                            </div>
-                        </Tab>
-                        <Tab title={t('Home.BookshelfMapTab')} eventKey={'dwa'}>
-                            <div className='Map m-auto mt-5 mb-5'>
-                                <QuickSearchBookshelf/>
-                            </div>
-                        </Tab>
-                        <Tab title={t('Home.NearbyTab')} eventKey={'trzy'}>
                             <div className='Map m-auto mt-5 mb-5'>
                                 <NearbyMap/>
                             </div>
-                        </Tab>
-                    </Tabs>
                 </div>
             </Fragment>
         )

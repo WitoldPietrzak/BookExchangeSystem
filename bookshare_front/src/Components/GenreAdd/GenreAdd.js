@@ -235,7 +235,8 @@ class GenreAddNoTr extends React.Component {
                         <t>{t('Form.GenreCreatedMessage')}</t>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant={'outline-dark'} href={`/?#/genres/${this.state.id}`}>{t('Form.OK')}</Button>
+                        <Button variant={'outline-dark'} href={`/?#/genres/${this.state.id}`}>{t('Form.See')}</Button>
+                        <Button variant={'outline-dark'} onClick={this.hideSuccessModal.bind(this)}>{t('Form.Stay')}</Button>
                     </Modal.Footer>
                 </Modal>
 

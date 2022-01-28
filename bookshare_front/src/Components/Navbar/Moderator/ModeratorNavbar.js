@@ -31,9 +31,6 @@ function Moderator() {
             </NavDropdown>
             <NavDropdown title={t("Navbar.bookCopies")} id="navbarScrollingDropdown">
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
-                          href="/?#/books/copies/add">{t("Navbar.bookCopy.add")}</Nav.Link>
-                <NavDropdown.Divider/>
-                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
                           href="/?#/books/copies">{t("Navbar.bookCopies.list")}</Nav.Link>
             </NavDropdown>
         </Nav>

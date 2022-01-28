@@ -4,13 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.BookCopyException;
 import org.bs.bookshare.model.AppUser;
 import org.bs.bookshare.model.Book;
+import org.bs.bookshare.model.BookActionType;
 import org.bs.bookshare.model.BookCopy;
+import org.bs.bookshare.model.BookStory;
 import org.bs.bookshare.model.Bookshelf;
 import org.bs.bookshare.model.CoverType;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.mok.repositories.AppUserRepository;
 import org.bs.bookshare.moks.repositories.BookCopyRepository;
 import org.bs.bookshare.moks.repositories.BookRepository;
+import org.bs.bookshare.moks.repositories.BookStoryRepository;
 import org.bs.bookshare.mop.repositories.BookshelfRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,8 +32,7 @@ public class BookCopyServiceImplementation implements BookCopyService {
 
     private final AppUserRepository userRepository;
     private final BookCopyRepository bookCopyRepository;
-    private final BookshelfRepository bookshelfRepository;
-    private final BookRepository bookRepository;
+    private final BookStoryRepository storyRepository;
     private final EntityManager entityManager;
 
     @Override
@@ -40,8 +42,11 @@ public class BookCopyServiceImplementation implements BookCopyService {
 
         BookCopy bookCopy = new BookCopy(book, creator, coverType, language);
         bookCopy.setCreatedBy(creator);
-
-        return bookCopyRepository.save(bookCopy);
+        BookStory bookStory = new BookStory(bookCopy, BookActionType.CREATED);
+        bookStory.setCreatedBy(creator);
+        bookCopy = bookCopyRepository.save(bookCopy);
+        storyRepository.save(bookStory);
+        return bookCopy;
     }
 
     @Override
@@ -59,6 +64,10 @@ public class BookCopyServiceImplementation implements BookCopyService {
         bookCopy.setBookshelf(bookshelf);
         bookCopy.setModifiedBy(caller);
 
+        BookStory bookStory = new BookStory(bookCopy, BookActionType.PUT, bookshelf.getLocationLat(), bookshelf.getLocationLong());
+        bookStory.setCreatedBy(caller);
+        storyRepository.save(bookStory);
+
     }
 
     @Override
@@ -73,6 +82,9 @@ public class BookCopyServiceImplementation implements BookCopyService {
             throw BookCopyException.cantRentNotAvailableBook();
         }
 
+        BookStory bookStory = new BookStory(bookCopy, BookActionType.TAKEN, bookCopy.getBookshelf().getLocationLat(), bookCopy.getBookshelf().getLocationLong());
+        bookStory.setCreatedBy(caller);
+        storyRepository.save(bookStory);
         bookCopy.setBookshelf(null);
         bookCopy.setOwner(caller);
         bookCopy.setReserved(null);
@@ -96,7 +108,19 @@ public class BookCopyServiceImplementation implements BookCopyService {
             throw BookCopyException.userBookReservationLimitReached();
         }
         bookCopy.setReserved(caller);
+        bookCopy.setReservedUntil(LocalDateTime.now().plusDays(7)); //TODO do zmiennej?
         bookCopy.setModifiedBy(caller);
+
+    }
+
+    @Override
+    public void deleteBookCopy(BookCopy bookCopy, Long version) throws BookCopyException {
+        if (!version.equals(bookCopy.getVersion())) {
+            throw BookCopyException.versionMismatch();
+        }
+        storyRepository.deleteAll(bookCopy.getStory());
+        bookCopyRepository.delete(bookCopy);
+
 
     }
 
@@ -138,11 +162,36 @@ public class BookCopyServiceImplementation implements BookCopyService {
         return bookCopyRepository.findAllFilteredWithLocation(book, title, author, genres, releasedBefore, releasedAfter, language, coverType, availability, genres != null ? genres.size() : 0L, lat, lng, distance);
     }
 
+    @Override
+    public void moveBookCopy(BookCopy bookCopy, Bookshelf bookshelf, Long version) throws BookCopyException {
+        if (!version.equals(bookCopy.getVersion())) {
+            throw BookCopyException.versionMismatch();
+        }
+        if (!bookCopy.isAvailable()) {
+            throw BookCopyException.bookNotAvailable();
+        }
+        if (bookCopy.getBookshelf() == bookshelf) {
+            throw BookCopyException.bookAlreadyOnShelf();
+        }
+        String callerName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser caller = userRepository.findByLogin(callerName);
+
+        BookStory bookStory = new BookStory(bookCopy, BookActionType.MOVED, bookCopy.getBookshelf().getLocationLat(), bookCopy.getBookshelf().getLocationLong(), bookshelf.getLocationLat(), bookshelf.getLocationLong());
+        bookStory.setCreatedBy(caller);
+        storyRepository.save(bookStory);
+        bookCopy.setBookshelf(bookshelf);
+
+
+    }
+
 
     @Scheduled(cron = "0 0 0 * * *")
     public void cancelReservations() {
         Query query = entityManager.createQuery("SELECT bc FROM BookCopy bc WHERE bc.reserved is not null AND bc.reservedUntil < :date");
-        List<BookCopy> users = query.setParameter("date", LocalDateTime.now()).getResultList();
-        bookCopyRepository.deleteAll(users);
+        List<BookCopy> copies = query.setParameter("date", LocalDateTime.now()).getResultList();
+        copies.forEach(bookCopy -> {
+            bookCopy.setReserved(null);
+            bookCopy.setReservedUntil(null);
+        });
     }
 }

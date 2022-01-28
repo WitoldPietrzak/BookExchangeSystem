@@ -13,7 +13,6 @@ export function makeMoveShelfRequest(token, id, lng, lat, version, that) {
             "Authorization": `Bearer ${token}`
         }
     }).then((response) => {
-
     }).catch((response) => {
         if (response.response) {
             that.setState({

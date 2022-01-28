@@ -9,13 +9,15 @@ import org.bs.bookshare.model.CoverType;
 import java.util.List;
 
 public interface BookCopyService{
-    public BookCopy createBookCopy(Book book, CoverType coverType, String language);
-    public void addBookCopyToShelf(BookCopy bookCopy, Bookshelf bookshelf, Long version) throws BookCopyException;
-    public void addBookCopyToUser(BookCopy bookCopy, Long version) throws BookCopyException;
-    public void addBookCopyReservation(BookCopy bookCopy, Long version) throws BookCopyException;
-    public void cancelBookCopyReservation(BookCopy bookCopy, Long version) throws BookCopyException;
-    public BookCopy getBookCopy(Long id) throws BookCopyException;
-    public List<BookCopy> getAllBookCopies();
-    public List<BookCopy> getAllBookCopiesFiltered(Long book, String title, Long author, List<Long> genres, Integer releasedBefore, Integer releasedAfter, String language, CoverType coverType, Boolean availability, Double lat, Double lng, Double distance);
+    BookCopy createBookCopy(Book book, CoverType coverType, String language);
+     void addBookCopyToShelf(BookCopy bookCopy, Bookshelf bookshelf, Long version) throws BookCopyException;
+     void addBookCopyToUser(BookCopy bookCopy, Long version) throws BookCopyException;
+     void addBookCopyReservation(BookCopy bookCopy, Long version) throws BookCopyException;
+     void deleteBookCopy(BookCopy bookCopy, Long version) throws BookCopyException;
+     void cancelBookCopyReservation(BookCopy bookCopy, Long version) throws BookCopyException;
+     BookCopy getBookCopy(Long id) throws BookCopyException;
+     List<BookCopy> getAllBookCopies();
+     List<BookCopy> getAllBookCopiesFiltered(Long book, String title, Long author, List<Long> genres, Integer releasedBefore, Integer releasedAfter, String language, CoverType coverType, Boolean availability, Double lat, Double lng, Double distance);
+     void moveBookCopy(BookCopy bookCopy,Bookshelf bookshelf, Long version) throws BookCopyException;
 
 }

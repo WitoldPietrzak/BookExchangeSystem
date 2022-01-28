@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "access_token.valid_time_in_minutes",
+      "type": "java.lang.String",
+      "description": "Description for access_token.valid_time_in_minutes."
+  }
+] }

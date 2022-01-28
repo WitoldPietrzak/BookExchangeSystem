@@ -1,6 +1,7 @@
-import React from "react";
+import React,{Fragment} from "react";
 import {withTranslation} from "react-i18next";
 import Cookies from "js-cookie";
+import {Col, Row} from "react-bootstrap";
 
 
 class LoggedInHomePageNoTr extends React.Component {
@@ -12,9 +13,15 @@ class LoggedInHomePageNoTr extends React.Component {
         const {t} = this.props;
         const username = Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME);
         return (
-            <div>
-                Hello {username}
-            </div>
+            <Fragment>
+                <div className={'LoggedInHomePage'}>
+                <Row>
+                    <Col></Col>
+                    <Col>Hello {username}</Col>
+                    <Col></Col>
+                </Row>
+                </div>
+            </Fragment>
         )
     }
 

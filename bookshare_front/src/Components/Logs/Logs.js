@@ -1,12 +1,13 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
-import {Alert, Button, Col, Row, Offcanvas, Table} from "react-bootstrap";
+import {Alert, Button, Col, Row, Offcanvas, Table, Pagination} from "react-bootstrap";
 import Cookies from "js-cookie";
 import './Logs.css';
 import RefreshIcon from '../../Resources/refresh.png';
 import Form from "react-bootstrap/Form";
 import {makeFilteredLogsRequest, makeLogsRequest} from "../../Requests/mok/LogsRequest";
 import TextField from "@mui/material/TextField";
+import BootstrapTable from 'react-bootstrap-table-next';
 
 class LogsNoTr extends React.Component {
     constructor(props) {
@@ -24,7 +25,9 @@ class LogsNoTr extends React.Component {
             button: 'Form.Filter',
             sortBy: 'eventDateDown',
             showLog: false,
-            log: {}
+            log: {},
+            active:0,
+            display:15
 
         };
     }
@@ -64,6 +67,9 @@ class LogsNoTr extends React.Component {
 
     reloadTable() {
         this.makeRequest();
+        this.setState({
+            active:0
+        })
     }
 
     renderRow(row) {
@@ -96,7 +102,9 @@ class LogsNoTr extends React.Component {
             });
         }
 
-        return rows.map(row => this.renderRow(row));
+        return rows.map((row,index) => {
+            return (index>= (this.state.active * this.state.display)&&index< (this.state.active + 1) * this.state.display)?this.renderRow(row):''
+        });
 
     }
 
@@ -104,7 +112,8 @@ class LogsNoTr extends React.Component {
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         if (this.state.filterLevel || this.state.filterBefore || this.state.filterAfter) {
             this.setState({
-                doFilter: true
+                doFilter: true,
+                active:0
             });
             makeFilteredLogsRequest(token, this.state.filterLevel, this.state.filterAfter, this.state.filterBefore, this);
         }
@@ -135,6 +144,29 @@ class LogsNoTr extends React.Component {
                        className={' mt-0 mb-3 m-5'}>{t(this.state.message)}</Alert>
                 {this.state.doFilter ? this.displayFilterInfo() : ''}
                 <div className={'logsButtons'}>
+                    <div className={'m-3 sortDiv'}>                <Pagination className={'ms-5'}>
+                        <Pagination.Prev disabled={this.state.active===0} onClick={()=>this.setState({
+                            active: this.state.active-1
+                        })}/>
+                        <Pagination.Next disabled={((this.state.active + 1)  * this.state.display) >= this.state.logs.length} onClick={()=>this.setState({
+                            active: this.state.active+1
+                        })}/>
+                        <div className={'ms-3 mt-1'}>{t(`Form.PaginationInfo`,{from:`${this.state.active * this.state.display + 1}`,to:`${Math.min(this.state.logs.length,(this.state.active + 1) * this.state.display)}`,of: `${this.state.logs.length}`})}</div>
+                    </Pagination> </div>
+                    <div className={'m-3 sortDiv'}>
+                        <Form.Label>{t('Form.displaySize')}</Form.Label>
+                        <Form.Select defaultValue={this.state.sortBy} onChange={(e) => {
+                            this.setState({
+                                display: e.target.value,
+                                active:0
+                            });
+                        }}>
+                            <option value={15}>{t('15')}</option>
+                            <option value={30}>{t('30')}</option>
+                            <option value={50}>{t('50')}</option>
+                            <option value={100}>{t('100')}</option>
+                        </Form.Select>
+                    </div>
                     <div className={'m-3 sortDiv'}>
                         <Form.Label>{t('Form.sortBy')}</Form.Label>
                         <Form.Select defaultValue={this.state.sortBy} onChange={(e) => {
@@ -154,8 +186,8 @@ class LogsNoTr extends React.Component {
                         {t('Logs.FilterButton')}
                     </Button>
                 </div>
-                <div className={'mt-3 mb-3 m-5 logs'}>
 
+                <div className={'mt-3 mb-3 m-5 logs'}>
                     <Table striped hover>
                         <thead>
                         <th>{t('Form.date')}</th>

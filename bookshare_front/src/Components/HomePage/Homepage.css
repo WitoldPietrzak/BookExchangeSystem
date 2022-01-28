@@ -1,0 +1,11 @@
+.Homepage{
+    min-height: 200px;
+}
+
+.LoggedInHomePage{
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+}

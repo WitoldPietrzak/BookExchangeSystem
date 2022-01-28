@@ -3,6 +3,8 @@ package org.bs.bookshare.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -15,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKey;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +29,8 @@ import java.util.Map;
 @AllArgsConstructor
 public class Genre extends AbstractEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "genre_generator")
+    @SequenceGenerator(name="genre_generator", sequenceName = "genre_seq", allocationSize = 1)
     private Long id;
     private String nameCode;
     @ManyToMany(mappedBy = "genres")

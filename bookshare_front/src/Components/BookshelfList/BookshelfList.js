@@ -1,6 +1,6 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
-import {Alert, Button, Modal, Offcanvas, Table} from "react-bootstrap";
+import {Alert, Button, Modal, Offcanvas, Pagination, Table} from "react-bootstrap";
 import Cookies from "js-cookie";
 import './BookshelfList.css';
 import RefreshIcon from '../../Resources/refresh.png';
@@ -26,7 +26,9 @@ class BookshelfListNoTr extends React.Component {
             sortBy: 'bookCountDown',
             location: '',
             locationAvailable: false,
-            showModal: false
+            showModal: false,
+            active:0,
+            display:15
 
         };
     }
@@ -107,7 +109,7 @@ class BookshelfListNoTr extends React.Component {
                 window.location.hash = `#/shelves/${row.id}`;
                 window.location.reload();
             }}>
-                {/*<td>{row.longitude} {row.latitude}</td>*/}
+                <td>{row.id}</td>
                 <td>{row.bookCount}</td>
                 <td>{row.distance ? (row.distance > 1 ? `${row.distance.toFixed(1)} km` : `${row.distance.toFixed(3).substring(2, 5)} m`) : t('Bookshelf.noLocation')}</td>
             </tr>)
@@ -141,7 +143,9 @@ class BookshelfListNoTr extends React.Component {
         }
 
 
-        return rows.map(row => this.renderRow(row));
+        return rows.map((row,index) => {
+            return (index>= (this.state.active * this.state.display)&&index< (this.state.active + 1) * this.state.display)?this.renderRow(row):''
+        });
 
     }
 
@@ -182,6 +186,29 @@ class BookshelfListNoTr extends React.Component {
                        className={' mt-0 mb-3 m-5'}>{t(this.state.message)}</Alert>
                 {this.state.doFilter ? this.displayFilterInfo() : ''}
                 <div className={'usersButtons'}>
+                    <div className={'m-3 sortDiv'}>                <Pagination className={'ms-5'}>
+                        <Pagination.Prev disabled={this.state.active===0} onClick={()=>this.setState({
+                            active: this.state.active-1
+                        })}/>
+                        <Pagination.Next disabled={((this.state.active + 1)  * this.state.display) >= this.state.shelves.length} onClick={()=>this.setState({
+                            active: this.state.active+1
+                        })}/>
+                        <div className={'ms-3 mt-1'}>{t(`Form.PaginationInfo`,{from:`${this.state.active * this.state.display + 1}`,to:`${Math.min(this.state.shelves.length,(this.state.active + 1) * this.state.display)}`,of: `${this.state.shelves.length}`})}</div>
+                    </Pagination> </div>
+                    <div className={'m-3 sortDiv'}>
+                        <Form.Label>{t('Form.displaySize')}</Form.Label>
+                        <Form.Select defaultValue={this.state.sortBy} onChange={(e) => {
+                            this.setState({
+                                display: e.target.value,
+                                active:0
+                            });
+                        }}>
+                            <option value={15}>{t('15')}</option>
+                            <option value={30}>{t('30')}</option>
+                            <option value={50}>{t('50')}</option>
+                            <option value={100}>{t('100')}</option>
+                        </Form.Select>
+                    </div>
                     <div className={'m-3 sortDiv'}>
                         <Form.Label>{t('Form.sortBy')}</Form.Label>
                         <Form.Select defaultValue={this.state.sortBy} onChange={(e) => {
@@ -207,6 +234,7 @@ class BookshelfListNoTr extends React.Component {
                 <div className={'mt-3 mb-3 m-5 accounts'}>
                     <Table striped hover>
                         <thead>
+                        <th>Id</th>
                         <th>{t('Form.bookCount')}</th>
                         <th>{t('Form.distance')}</th>
                         </thead>

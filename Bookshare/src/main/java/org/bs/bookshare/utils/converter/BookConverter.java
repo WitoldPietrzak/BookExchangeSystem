@@ -9,6 +9,7 @@ import org.bs.bookshare.moks.dto.response.AuthorInnerResponseDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyInnerResponseDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyResponseDTO;
 import org.bs.bookshare.moks.dto.response.BookListElementResponseDTO;
+import org.bs.bookshare.moks.dto.response.BookStoryResponseDTO;
 import org.bs.bookshare.moks.dto.response.SimpleBookResponseDTO;
 import org.bs.bookshare.moks.dto.response.SimpleGenreResponseDTO;
 import org.bs.bookshare.mop.dto.response.BookCopyInBookshelfDetailResponseDTO;
@@ -29,12 +30,23 @@ public class BookConverter {
                 bookCopy.getReservedUntil() != null ? bookCopy.getReservedUntil().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null,
                 bookCopy.getCoverType().name(),
                 bookCopy.getLanguage(),
+                bookCopy.getStory()
+                        .stream()
+                        .map(bookStory -> new BookStoryResponseDTO(
+                                bookStory.getAction(),
+                                bookStory.getCreatedBy().getLogin(),
+                                bookStory.getCreationDateTime(),
+                                bookStory.getLat1(),
+                                bookStory.getLng1(),
+                                bookStory.getLat2(),
+                                bookStory.getLng2()))
+                        .collect(Collectors.toList()),
                 bookCopy.getVersion()
         );
     }
 
     public static BookCopyInnerResponseDTO bookCopyInnerResponseDTOfromBookCopy(BookCopy bookCopy) {
-        if(bookCopy == null){
+        if (bookCopy == null) {
             return new BookCopyInnerResponseDTO();
         }
         return new BookCopyInnerResponseDTO(
@@ -45,8 +57,9 @@ public class BookConverter {
         );
 
     }
+
     public static BookCopyInBookshelfDetailResponseDTO bookCopyInBookshelfDetailResponseDTOFromBookCopy(BookCopy bookCopy) {
-        if(bookCopy == null){
+        if (bookCopy == null) {
             return new BookCopyInBookshelfDetailResponseDTO();
         }
         return new BookCopyInBookshelfDetailResponseDTO(

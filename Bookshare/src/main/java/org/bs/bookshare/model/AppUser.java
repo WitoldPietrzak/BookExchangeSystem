@@ -3,6 +3,8 @@ package org.bs.bookshare.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
@@ -25,7 +28,8 @@ import java.util.List;
 @AllArgsConstructor
 public class AppUser extends AbstractEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
+    @SequenceGenerator(name="user_generator", sequenceName = "user_seq", allocationSize = 1)
     private Long id;
     private String login;
     @Email
@@ -44,9 +48,12 @@ public class AppUser extends AbstractEntity {
     List<BookCopy> possessedBooks;
     @OneToMany(mappedBy = "reserved")
     List<BookCopy> reservedBooks;
+    @OneToMany(mappedBy = "createdBy")
+    List<BookCopy> createdBooks;
     @ManyToMany(fetch = FetchType.LAZY)
     private List<AppRole> appRoles = new LinkedList<>();
     private String language;
+
     public AppUser(String login, String email, String password, String language) {
         super();
         this.login = login;

@@ -23,7 +23,8 @@ class MainViewNoTr extends React.Component {
         this.state = {
             refreshError: false,
             message: '',
-            checkForReadiness: true
+            checkForReadiness: true,
+            connection:true
         };
         document.title = t("Site.name");
         Cookies.get(process.env.REACT_APP_LANGUAGE_COOKIE_NAME) === undefined ? Cookies.set(process.env.REACT_APP_LANGUAGE_COOKIE_NAME, i18n.language, {
@@ -52,6 +53,15 @@ class MainViewNoTr extends React.Component {
         this.setState({
             refreshError: false
         })
+        if(this.state.response === 'auth_token_expired'){
+            Cookies.remove(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
+            Cookies.remove(process.env.REACT_APP_FRONT_ROLES_COOKIE_NAME);
+            Cookies.remove(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME);
+            Cookies.remove(process.env.REACT_APP_FRONT_REFRESH_TOKEN_COOKIE_NAME);
+            window.location.hash = "#/home";
+            window.location.reload();
+        }
+
     }
 
 
@@ -72,9 +82,9 @@ class MainViewNoTr extends React.Component {
                         </MDBContainer>
                     </div>
                 </MDBFooter>
-                <Modal show={this.state.refreshError} onHide={this.hideModal.bind(this)}>
+                <Modal show={this.state.refreshError} onHide={this.hideModal.bind(this)} backdrop={'static'}>
                     <Modal.Header closeButton>
-                        <Modal.Title>{t('Error.Title')}</Modal.Title>
+                        <Modal.Title>{this.state.connection === false?t('Error.Title'):('Info.Title')}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>{t(this.state.message)}</Modal.Body>
                     <Modal.Footer>

@@ -47,7 +47,6 @@ import static org.bs.bookshare.common.Codes.USER_NOT_FOUND;
 @Service
 @RequiredArgsConstructor
 @Transactional
-//@Slf4j
 public class AppUserServiceImplementation implements AppUserService, UserDetailsService {
     private final AppUserRepository appUserRepository;
     private final AppRoleRepository appRoleRepository;
@@ -68,7 +67,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         if (password == null || password.length() < 8) {
             throw AppUserException.passwordTooShort();
         }
-        if (email == null) { //TODO email walidacja
+        if (email == null) {
             throw AppUserException.emailInvalid();
         }
         if (users.stream().anyMatch(u -> (u.getEmail().equals(email)))) {

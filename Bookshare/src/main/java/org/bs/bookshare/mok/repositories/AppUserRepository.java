@@ -4,9 +4,12 @@ import org.bs.bookshare.model.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional(propagation = Propagation.MANDATORY)
 public interface AppUserRepository extends JpaRepository<AppUser,Long> {
     AppUser findByLogin(String login);
     AppUser findByEmail(String email);

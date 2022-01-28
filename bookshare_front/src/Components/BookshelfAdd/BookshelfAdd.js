@@ -161,6 +161,7 @@ class BookshelfAddNoTr extends React.Component {
                             <img alt={''} className={'mt-0 mb-0 m-1'} src={Map} height={25}
                                  width={25}/>}{t('Form.FromMapButton')}
                         </Button>
+                        <br/>
                         <Button variant='outline-dark' size="md" type="submit" className='m-3' disabled={false}>
                             {typeof this.state.button === "string" ? t(this.state.button) : this.state.button}
                         </Button>

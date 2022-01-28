@@ -1,19 +1,26 @@
-DROP TABLE IF EXISTS user_table_app_roles;
-DROP TABLE IF EXISTS user_table;
-DROP TABLE IF EXISTS role_table;
-DROP TABLE IF EXISTS user_table_app_roles;
-DROP TABLE IF EXISTS book_table_genres;
-DROP TABLE IF EXISTS genre_translations_table;
-DROP TABLE IF EXISTS genre_table;
+DROP TABLE IF EXISTS book_story_table;
 DROP TABLE IF EXISTS book_copy_table;
+DROP TABLE IF EXISTS genre_translations_table;
+DROP TABLE IF EXISTS book_table_genres;
+DROP TABLE IF EXISTS genre_table;
 DROP TABLE IF EXISTS book_table;
 DROP TABLE IF EXISTS book_review_table;
 DROP TABLE IF EXISTS bookshelf_table;
-DROP TABLE IF EXISTS logs;
-DROP TABLE IF EXISTS cover_type_table;
 DROP TABLE IF EXISTS author_table;
+DROP TABLE IF EXISTS logs;
+DROP TABLE IF EXISTS user_table_app_roles;
+DROP TABLE IF EXISTS user_table;
+DROP TABLE IF EXISTS role_table;
+
 
 DROP SEQUENCE IF EXISTS user_seq;
+DROP SEQUENCE IF EXISTS author_seq;
+DROP SEQUENCE IF EXISTS book_seq;
+DROP SEQUENCE IF EXISTS book_copy_seq;
+DROP SEQUENCE IF EXISTS book_review_seq;
+DROP SEQUENCE IF EXISTS bookshelf_seq;
+DROP SEQUENCE IF EXISTS book_story_seq;
+DROP SEQUENCE IF EXISTS genre_seq;
 
 CREATE TABLE logs
 (
@@ -32,12 +39,6 @@ CREATE TABLE role_table
         CONSTRAINT role_check CHECK ( role_name in ('ROLE_USER', 'ROLE_ADMIN', 'ROLE_MODERATOR') ) UNIQUE
 );
 
-CREATE TABLE cover_type_table
-(
-    id   BIGINT PRIMARY KEY,
-    name VARCHAR(32) NOT NULL
-        CONSTRAINT cover_type_check CHECK ( name in ('HARD', 'SOFT', 'CUSTOM') ) UNIQUE
-);
 
 CREATE TABLE user_table
 (
@@ -68,11 +69,51 @@ CREATE TABLE user_table
 );
 
 CREATE SEQUENCE user_seq
-    START WITH 1
+    START WITH 10000
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
+CREATE SEQUENCE author_seq
+    START WITH 20000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE CACHE 1;
+
+CREATE SEQUENCE book_seq
+    START WITH 30000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE CACHE 1;
+
+CREATE SEQUENCE book_copy_seq
+    START WITH 40000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE CACHE 1;
+
+-- CREATE SEQUENCE book_review_seq
+--     START WITH 50000
+--     INCREMENT BY 1
+--     NO MINVALUE
+--     NO MAXVALUE CACHE 1;
+
+CREATE SEQUENCE bookshelf_seq
+    START WITH 60000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE CACHE 1;
+CREATE SEQUENCE book_story_seq
+    START WITH 70000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE CACHE 1;
+
+CREATE SEQUENCE genre_seq
+    START WITH 80000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE CACHE 1;
 
 CREATE TABLE user_table_app_roles
 (
@@ -149,6 +190,23 @@ CREATE TABLE book_table
     version                BIGINT
 );
 
+CREATE TABLE bookshelf_table
+(
+    id                     BIGINT PRIMARY KEY,
+    location_lat           DECIMAL(8, 6) NOT NULL,
+    location_long          DECIMAL(9, 6) NOT NULL,
+    modified_by            BIGINT,
+    FOREIGN KEY (modified_by) REFERENCES user_table (id),
+    modification_date_time TIMESTAMPTZ,
+    modified_by_ip         VARCHAR(256),
+    created_by             BIGINT,
+    FOREIGN KEY (created_by) REFERENCES user_table (id),
+    creation_date_time     TIMESTAMPTZ   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by_ip          VARCHAR(256),
+
+    version                BIGINT
+);
+
 CREATE TABLE book_copy_table
 (
     id                     BIGINT PRIMARY KEY,
@@ -183,11 +241,35 @@ CREATE TABLE book_table_genres
         CONSTRAINT ref_role REFERENCES genre_table (id)
 );
 
-CREATE TABLE bookshelf_table
+
+-- CREATE TABLE book_review_table
+-- (
+--     id                     BIGINT PRIMARY KEY,
+--     review                 VARCHAR(1000),
+--     rating                 BIGINT,
+--     modified_by            BIGINT,
+--     FOREIGN KEY (modified_by) REFERENCES user_table (id),
+--     modification_date_time TIMESTAMPTZ,
+--     modified_by_ip         VARCHAR(256),
+--     created_by             BIGINT,
+--     FOREIGN KEY (created_by) REFERENCES user_table (id),
+--     creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     created_by_ip          VARCHAR(256),
+--
+--     version                BIGINT
+-- );
+
+CREATE TABLE book_story_table
 (
     id                     BIGINT PRIMARY KEY,
-    location_lat           DECIMAL(8, 6) NOT NULL,
-    location_long          DECIMAL(9, 6) NOT NULL,
+    book                   BIGINT      NOT NULL,
+    FOREIGN KEY (book) REFERENCES book_copy_table (id),
+    action                 VARCHAR(10),
+    CONSTRAINT action_heck CHECK ( action in ('CREATED', 'MOVED', 'PUT', 'TAKEN') ),
+    lat1                   DECIMAL(8, 6),
+    lng1                   DECIMAL(9, 6),
+    lat2                   DECIMAL(8, 6),
+    lng2                   DECIMAL(9, 6),
     modified_by            BIGINT,
     FOREIGN KEY (modified_by) REFERENCES user_table (id),
     modification_date_time TIMESTAMPTZ,
@@ -196,25 +278,6 @@ CREATE TABLE bookshelf_table
     FOREIGN KEY (created_by) REFERENCES user_table (id),
     creation_date_time     TIMESTAMPTZ   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by_ip          VARCHAR(256),
-
-    version                BIGINT
-);
-
-CREATE TABLE book_review_table
-(
-    id                     BIGINT PRIMARY KEY,
-    anonymous              BOOL,
-    review                 VARCHAR(1000),
-    rating                 BIGINT,
-    modified_by            BIGINT,
-    FOREIGN KEY (modified_by) REFERENCES user_table (id),
-    modification_date_time TIMESTAMPTZ,
-    modified_by_ip         VARCHAR(256),
-    created_by             BIGINT,
-    FOREIGN KEY (created_by) REFERENCES user_table (id),
-    creation_date_time     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by_ip          VARCHAR(256),
-
     version                BIGINT
 );
 
@@ -227,9 +290,3 @@ VALUES (2, 'ROLE_ADMIN');
 INSERT INTO role_table(id, role_name)
 VALUES (3, 'ROLE_MODERATOR');
 
-INSERT INTO cover_type_table(id, name)
-VALUES (1, 'HARD');
-INSERT INTO cover_type_table(id, name)
-VALUES (2, 'SOFT');
-INSERT INTO cover_type_table(id, name)
-VALUES (3, 'CUSTOM');

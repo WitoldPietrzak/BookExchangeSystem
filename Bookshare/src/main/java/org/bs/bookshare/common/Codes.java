@@ -15,6 +15,8 @@ public class Codes {
     public static final String ROLE_NOT_FOUND = "role_not_found";
     public static final String AT_LEAST_ONE_ROLE = "at_least_one_role";
     public static final String VERSION_MISMATCH = "version_mismatch";
+    public static final String BOOK_NOT_AVAILABLE = "book_not_available";
+    public static final String BOOK_ALREADY_ON_SHELF = "book_already_on_shelf";
     public static final String BOOK_NOT_FOUND = "book_not_found";
     public static final String BOOK_COPY_NOT_FOUND = "book_copy_not_found";
     public static final String CANT_DELETE_BOOK_WITH_COPIES = "cant_delete_book_with_copies";

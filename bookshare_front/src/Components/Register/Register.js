@@ -64,11 +64,11 @@ class RegisterNoTr extends React.Component {
         if (!loginRegex.test(this.state.login)) {
             errors.login = "Form.FormatError";
         }
-        // if (!passwordRegex.test(this.state.password)) {
-        //     errors.password = "Password format error";
-        // }
+        if (!passwordRegex.test(this.state.password)) {
+            errors.password = "Password format error";
+        }
         if (!emailRegex.test(this.state.email)) {
-            errors.login = "Form.LoginFormatError";
+            errors.email = "Form.EmailFormatError";
         }
         if (this.state.login.length < 3) {
             errors.login = "Form.LoginTooShortError";

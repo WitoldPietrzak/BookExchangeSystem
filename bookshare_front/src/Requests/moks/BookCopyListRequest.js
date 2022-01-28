@@ -9,13 +9,17 @@ export function makeBookCopyListRequest(token, that) {
         }
     }).then((response) => {
         that.setState({
-            copies: response.data.copies
+            copies: response.data.copies,
+            active:0
 
         });
     }).catch((response) => {
         if (response.response) {
             that.setState({
                 errorCode: response.response.status.toString(10),
+                response: response.response.data.message,
+                requestFailed: true,
+                message: response.response.data.message,
             })
         }
     })
@@ -78,6 +82,31 @@ export function makeFilteredBookCopyListRequest(token, book, title, author, genr
         }
     }).then((response) => {
         that.setState({
+            copies: response.data.copies,
+            active:0
+
+        });
+    }).catch((response) => {
+        if (response.response) {
+            that.setState({
+                errorCode: response.response.status.toString(10),
+                response: response.response.data.message,
+                requestFailed: true,
+                message: response.response.data.message,
+            })
+        }
+    })
+}
+
+export function makeOwnedBookCopyListRequest(token, that) {
+
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/copy/get/all/owned`, {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    }).then((response) => {
+        that.setState({
             copies: response.data.copies
 
         });
@@ -85,6 +114,57 @@ export function makeFilteredBookCopyListRequest(token, book, title, author, genr
         if (response.response) {
             that.setState({
                 errorCode: response.response.status.toString(10),
+                response: response.response.data.message,
+                requestFailed: true,
+                message: response.response.data.message,
+            })
+        }
+    })
+}
+
+export function makeReservedBookCopyListRequest(token, that) {
+
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/copy/get/all/reserved`, {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    }).then((response) => {
+        that.setState({
+            copies: response.data.copies
+
+        });
+    }).catch((response) => {
+        if (response.response) {
+            that.setState({
+                errorCode: response.response.status.toString(10),
+                response: response.response.data.message,
+                requestFailed: true,
+                message: response.response.data.message,
+            })
+        }
+    })
+}
+
+export function makeCreatedBookCopyListRequest(token, that) {
+
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/copy/get/all/created`, {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    }).then((response) => {
+        that.setState({
+            copies: response.data.copies
+
+        });
+    }).catch((response) => {
+        if (response.response) {
+            that.setState({
+                errorCode: response.response.status.toString(10),
+                response: response.response.data.message,
+                requestFailed: true,
+                message: response.response.data.message,
             })
         }
     })

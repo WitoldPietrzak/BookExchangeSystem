@@ -1,6 +1,6 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
-import {Alert, Button, Offcanvas, Table} from "react-bootstrap";
+import {Alert, Button, Offcanvas, Pagination, Table} from "react-bootstrap";
 import {makeAccountListRequest, makeFilteredAccountListRequest} from "../../Requests/mok/AccountListRequest";
 import Cookies from "js-cookie";
 import './AccountList.css';
@@ -20,7 +20,9 @@ class AccountListNoTr extends React.Component {
             doFilter: false,
             filterErrors: {},
             button: 'Form.Filter',
-            sortBy: 'login'
+            sortBy: 'login',
+            active:0,
+            display:15
 
         };
     }
@@ -76,7 +78,10 @@ class AccountListNoTr extends React.Component {
             });
         }
 
-        return this.state.accounts.map(row => this.renderRow(row));
+        return rows.map((row,index) => {
+            return (index>= (this.state.active * this.state.display)&&index< (this.state.active + 1) * this.state.display)?this.renderRow(row):''
+        });
+
 
     }
 
@@ -133,6 +138,15 @@ class AccountListNoTr extends React.Component {
                         {t('Accounts.FilterButton')}
                     </Button>
                 </div>
+                <Pagination className={'ms-5'}>
+                    <Pagination.Prev disabled={this.state.active===0} onClick={()=>this.setState({
+                        active: this.state.active-1
+                    })}/>
+                    <Pagination.Next disabled={((this.state.active + 1)  * this.state.display) >= this.state.accounts.length} onClick={()=>this.setState({
+                        active: this.state.active+1
+                    })}/>
+                    <div className={'ms-3 mt-1'}>{t(`Form.PaginationInfo`,{from:`${this.state.active * this.state.display + 1}`,to:`${Math.min(this.state.accounts.length,(this.state.active + 1) * this.state.display)}`,of: `${this.state.accounts.length}`})}</div>
+                </Pagination>
                 <div className={'mt-3 mb-3 m-5 accounts'}>
                     <Table striped hover>
                         <thead>

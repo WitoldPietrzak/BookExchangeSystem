@@ -1,6 +1,8 @@
 package org.bs.bookshare.exceptions;
 
+import static org.bs.bookshare.common.Codes.BOOK_ALREADY_ON_SHELF;
 import static org.bs.bookshare.common.Codes.BOOK_COPY_NOT_FOUND;
+import static org.bs.bookshare.common.Codes.BOOK_NOT_AVAILABLE;
 import static org.bs.bookshare.common.Codes.CANT_ADD_NOT_OWNED_BOOK_TO_SHELF;
 import static org.bs.bookshare.common.Codes.CANT_CANCEL_NOT_OWN_RESERVATION;
 import static org.bs.bookshare.common.Codes.CANT_CANCEL_NOT_RESERVED_BOOK;
@@ -44,5 +46,11 @@ public class BookCopyException extends AppBaseException{
 
     public static BookCopyException versionMismatch() {
         return new BookCopyException(VERSION_MISMATCH);
+    }
+
+    public static BookCopyException bookNotAvailable() {return new BookCopyException(BOOK_NOT_AVAILABLE);
+    }
+
+    public static BookCopyException bookAlreadyOnShelf() {return new BookCopyException(BOOK_ALREADY_ON_SHELF);
     }
 }

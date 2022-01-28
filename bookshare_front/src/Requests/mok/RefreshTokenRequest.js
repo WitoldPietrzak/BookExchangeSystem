@@ -43,12 +43,10 @@ export function makeRefreshTokenRequest(that) {
 
         .catch((response) => {
             if (response.response) {
-                Cookies.remove(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
-                Cookies.remove(process.env.REACT_APP_FRONT_ROLES_COOKIE_NAME);
-                Cookies.remove(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME);
-                Cookies.remove(process.env.REACT_APP_FRONT_REFRESH_TOKEN_COOKIE_NAME);
-                window.location.hash = "#/home";
-                window.location.reload();
+                that.setState({
+                    refreshError: false,
+                    message:response.response.data.message
+                })
             }
         })
 }

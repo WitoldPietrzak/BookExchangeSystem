@@ -8,7 +8,7 @@ export function makeEnableUserByTokenRequest(token, that) {
         }
     }).then((response) => {
         that.setState({
-            response:response.data.message,
+            response:'user_enabled',
             requestCompleted:true
         })
     }).catch((response) => {

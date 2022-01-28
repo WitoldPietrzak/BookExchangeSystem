@@ -3,8 +3,11 @@ package org.bs.bookshare.mop.service;
 import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.BookshelfException;
 import org.bs.bookshare.model.AppUser;
+import org.bs.bookshare.model.BookActionType;
+import org.bs.bookshare.model.BookStory;
 import org.bs.bookshare.model.Bookshelf;
 import org.bs.bookshare.mok.repositories.AppUserRepository;
+import org.bs.bookshare.moks.repositories.BookStoryRepository;
 import org.bs.bookshare.mop.repositories.BookshelfRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ public class BookshelfServiceImplementation implements BookshelfService {
 
     private final BookshelfRepository bookshelfRepository;
     private final AppUserRepository userRepository;
+    private final BookStoryRepository storyRepository;
 
     @Override
     public Bookshelf createBookshelf(Double latitude, Double longitude) {
@@ -58,10 +62,18 @@ public class BookshelfServiceImplementation implements BookshelfService {
         if (!bookshelf.getVersion().equals(version)) {
             throw BookshelfException.versionMismatch();
         }
-        bookshelf.setLocationLat(lat);
-        bookshelf.setLocationLong(lng);
+
         String modifierName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser modifier = userRepository.findByLogin(modifierName);
+        bookshelf.getBooksOnShelf().forEach(bookCopy -> {
+            BookStory bookStory = new BookStory(bookCopy, BookActionType.MOVED, bookshelf.getLocationLat(), bookshelf.getLocationLong(), lat, lng);
+            bookStory.setCreatedBy(modifier);
+            storyRepository.save(bookStory);
+        });
+
+
+        bookshelf.setLocationLat(lat);
+        bookshelf.setLocationLong(lng);
         bookshelf.setModifiedBy(modifier);
     }
 

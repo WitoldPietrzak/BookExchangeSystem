@@ -1,20 +1,25 @@
-import React from "react";
+import React, {Fragment} from "react";
 import {GoogleApiWrapper, InfoWindow, Map, Marker, Circle} from 'google-maps-react';
 import {withTranslation} from "react-i18next";
 import './NearbyMap.css';
 import {makeFilteredBookshelfListRequest} from "../../Requests/mop/BookshelfListRequest";
 import Cookies from "js-cookie";
 import Icon from '../../Resources/pin.svg';
+import {Slider, Switch} from "@mui/material";
+import Bookshelf from "../Bookshelf/Bookshelf";
+import BookshelfAdd from "../BookshelfAdd/BookshelfAdd";
 
 class NearbyMapNoTr extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            location: {lat: 0.0, lng: 0.0},
+            location: {lat: 51.75, lng: 19.59},
             shelves: [],
             showingInfoWindow: false,
             activeMarker: {},
-            selectedPlace: {}
+            selectedPlace: {},
+            distance: 3000,
+            bookCount:0
         };
 
         if (navigator.geolocation) {
@@ -23,10 +28,11 @@ class NearbyMapNoTr extends React.Component {
                     location: {lat: loc.coords.latitude, lng: loc.coords.longitude}
                 })
                 const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
-                makeFilteredBookshelfListRequest(token, this.state.location.lng, this.state.location.lat, 3,0, this);
+                makeFilteredBookshelfListRequest(token, this.state.location.lng, this.state.location.lat, this.state.distance / 1000, this.state.bookCount, this);
             })
         }
     }
+
 
     onMarkerClick = (props, marker, e) =>
         this.setState({
@@ -47,18 +53,22 @@ class NearbyMapNoTr extends React.Component {
     renderMarker(shelf) {
         return (
             <Marker
-                titles={'123'}
+                id={shelf.id}
                 name={shelf.distance.toString().substring(0, 5)}
                 position={{lat: shelf.latitude, lng: shelf.longitude}}
-                onClick={this.onMarkerClick}
+                onClick={()=>{
+                    window.location.hash = `#/shelves/${shelf.id}`;
+                    window.location.reload();
+
+                }}
             />
         )
     }
 
-    renderCircle(){
-        return(
-                <Circle
-                radius={3000}
+    renderCircle() {
+        return (
+            <Circle
+                radius={this.state.distance}
                 center={this.state.location}
                 strokeColor='transparent'
                 strokeOpacity={0}
@@ -71,8 +81,6 @@ class NearbyMapNoTr extends React.Component {
     }
 
 
-
-
     renderMarkers() {
         return this.state.shelves ? this.state.shelves.map(shelf => this.renderMarker(shelf)) : '';
     }
@@ -81,28 +89,60 @@ class NearbyMapNoTr extends React.Component {
         const {t} = this.props;
         const {google} = this.props;
         return (
-            <Map onClick={this.onMapClicked} google={this.props.google} zoom={13} center={this.state.location}
-                 className='GoogleMap'
-                 style={{width: 'auto', height: '600px', position: 'relative'}}>
-                {this.renderMarkers()}
-                <Marker
-                    titles={'123'}
-                    name={'My location'}
-                    position={{lat: this.state.location.lat, lng: this.state.location.lng}}
-                    onClick={this.onMarkerClick}
-                    icon={{
-                        url: Icon,
-                        anchor: new google.maps.Point(15,20),
-                        scaledSize: new google.maps.Size(32,32)
-                    }}
-                />
-                {this.renderCircle()}
-                <InfoWindow marker={this.state.activeMarker} visible={this.state.showingInfoWindow}>
-                    <div>
-                        {this.state.selectedPlace.name}
-                    </div>
-                </InfoWindow>
-            </Map>
+            <Fragment>
+                {t('Nearby.MinimalBooksValue')}
+                <br/>
+                <Slider aria-label="Always visible"
+                        max={4}
+                        min={0}
+                        value={this.state.bookCount}
+                        valueLabelDisplay={'on'}
+                        onChange={e => {
+                            this.setState({
+                                bookCount: e.target.value
+                            })
+                            const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
+                            makeFilteredBookshelfListRequest(token, this.state.location.lng, this.state.location.lat, this.state.distance / 1000, e.target.value, this);
+                        }
+                        }/>
+                <br/>
+                {t('Form.distance')} [m]
+                <Slider aria-label="Always visible"
+                        max={10000}
+                        min={0}
+                        value={this.state.distance}
+                        valueLabelDisplay={'on'}
+                        onChange={e => {
+                            this.setState({
+                                distance: e.target.value
+                            })
+                            const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
+                            makeFilteredBookshelfListRequest(token, this.state.location.lng, this.state.location.lat, e.target.value / 1000, this.state.bookCount, this);
+                        }
+                        }/>
+                <Map onClick={this.onMapClicked} google={this.props.google} zoom={12} center={this.state.location}
+                     className='GoogleMap'
+                     style={{width: 'auto', height: '600px', position: 'relative'}}>
+                    {this.renderMarkers()}
+                    <Marker
+                        titles={'123'}
+                        name={'My location'}
+                        position={{lat: this.state.location.lat, lng: this.state.location.lng}}
+                        onClick={this.onMarkerClick}
+                        icon={{
+                            url: Icon,
+                            anchor: new google.maps.Point(15, 20),
+                            scaledSize: new google.maps.Size(32, 32)
+                        }}
+                    />
+                    {this.renderCircle()}
+                    <InfoWindow marker={this.state.activeMarker} visible={this.state.showingInfoWindow}>
+                        <div>
+                            {<Bookshelf google={this.props.google} />}
+                        </div>
+                    </InfoWindow>
+                </Map>
+            </Fragment>
         )
     }
 }

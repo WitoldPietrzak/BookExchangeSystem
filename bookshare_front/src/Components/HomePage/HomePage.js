@@ -4,19 +4,21 @@ import {isLogged, isUser} from "../../Routes/Router";
 import LoggedInHomePage from "./LoggedInHomePage/LoggedInHomePage";
 import GuestHomePage from "./GuestHomePage/GuestHomePage";
 import UserHomePage from "./User/UserHomePage";
+import './Homepage.css';
 
 export default function HomePage() {
     const {t} = useTranslation();
     return (
         <Fragment>
+            <div className={'Homepage'}>
             {renderHomePage()}
+            </div>
         </Fragment>
     )
 }
 
 function renderHomePage() {
-    if(isUser()){
+    if(isLogged()){
         return <UserHomePage/>;
     }
-    return isLogged() ? <LoggedInHomePage/> : <GuestHomePage/>
 }

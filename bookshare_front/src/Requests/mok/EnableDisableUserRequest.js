@@ -9,7 +9,7 @@ export function makeEnableAccountRequest(token, id, that) {
         }
     }).then((response) => {
         that.setState({
-
+            disabled:false
         });
     }).catch((response) => {
         if (response.response) {
@@ -31,7 +31,7 @@ export function makeDisableAccountRequest(token, id, that) {
         }
     }).then((response) => {
         that.setState({
-
+            disable:true
         });
     }).catch((response) => {
         if (response.response) {

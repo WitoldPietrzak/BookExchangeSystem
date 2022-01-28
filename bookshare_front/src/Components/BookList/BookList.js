@@ -1,6 +1,6 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
-import {Alert, Button, Modal, Offcanvas, Table} from "react-bootstrap";
+import {Alert, Button, Modal, Offcanvas, Pagination, Table} from "react-bootstrap";
 import Cookies from "js-cookie";
 import './BookList.css';
 import RefreshIcon from '../../Resources/refresh.png';
@@ -36,6 +36,8 @@ class BookListNoTr extends React.Component {
             filterErrors: {},
             button: 'Form.Filter',
             sortBy: 'titleUp',
+            active:0,
+            display:15
 
         };
     }
@@ -150,7 +152,9 @@ class BookListNoTr extends React.Component {
         }
 
 
-        return rows.map(row => this.renderRow(row));
+        return rows.map((row,index) => {
+            return (index>= (this.state.active * this.state.display)&&index< (this.state.active + 1) * this.state.display)?this.renderRow(row):''
+        });
 
     }
 
@@ -197,6 +201,29 @@ class BookListNoTr extends React.Component {
                        className={' mt-0 mb-3 m-5'}>{t(this.state.message)}</Alert>
                 {this.state.doFilter ? this.displayFilterInfo() : ''}
                 <div className={'usersButtons'}>
+                    <div className={'m-3 sortDiv'}>                <Pagination className={'ms-5'}>
+                        <Pagination.Prev disabled={this.state.active===0} onClick={()=>this.setState({
+                            active: this.state.active-1
+                        })}/>
+                        <Pagination.Next disabled={((this.state.active + 1)  * this.state.display) >= this.state.books.length} onClick={()=>this.setState({
+                            active: this.state.active+1
+                        })}/>
+                        <div className={'ms-3 mt-1'}>{t(`Form.PaginationInfo`,{from:`${this.state.active * this.state.display + 1}`,to:`${Math.min(this.state.books.length,(this.state.active + 1) * this.state.display)}`,of: `${this.state.books.length}`})}</div>
+                    </Pagination> </div>
+                    <div className={'m-3 sortDiv'}>
+                        <Form.Label>{t('Form.displaySize')}</Form.Label>
+                        <Form.Select defaultValue={this.state.sortBy} onChange={(e) => {
+                            this.setState({
+                                display: e.target.value,
+                                active:0
+                            });
+                        }}>
+                            <option value={15}>{t('15')}</option>
+                            <option value={30}>{t('30')}</option>
+                            <option value={50}>{t('50')}</option>
+                            <option value={100}>{t('100')}</option>
+                        </Form.Select>
+                    </div>
                     <div className={'m-3 sortDiv'}>
                         <Form.Label>{t('Form.sortBy')}</Form.Label>
                         <Form.Select defaultValue={this.state.sortBy} onChange={(e) => {

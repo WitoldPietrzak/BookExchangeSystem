@@ -10,8 +10,8 @@
     </parent>
     <groupId>org.bs</groupId>
     <artifactId>Bookshare</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
     <name>Bookshare</name>
     <description>Demo project for Spring Boot</description>
     <properties>
@@ -130,10 +130,14 @@
     </dependencyManagement>
 
     <build>
+        <finalName>Witold_Pietrzak_224406_Spring_Application</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
             </plugin>
         </plugins>
     </build>

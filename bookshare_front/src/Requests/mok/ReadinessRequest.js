@@ -10,12 +10,21 @@ export function checkReadiness(that) {
             "Content-Type": "application/json"
         }
     }).then((response) => {
+        if(that.state.connection === false){
+            that.setState({
+                refreshError:true,
+                message:'Info.ConnectionBack',
+                connection:true
+            });
+
+        }
     }).catch((response) => {
-        that.setState({
-            refreshError:true,
-            message:'Error.Readiness',
-            checkForReadiness: false
-        });
-        clearInterval(that.readinessId);
+        if(that.state.connection === true){
+            that.setState({
+                refreshError:true,
+                message:'Error.Readiness',
+                connection:false
+            });
+        }
     })
 }

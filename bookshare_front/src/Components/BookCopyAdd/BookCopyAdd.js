@@ -2,7 +2,7 @@ import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {Alert, Modal} from "react-bootstrap";
+import {Alert, Col, Modal, Row} from "react-bootstrap";
 import Cookies from "js-cookie";
 import './BookCopyAdd.css';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -11,6 +11,9 @@ import {makeBookListRequest} from "../../Requests/moks/BookListRequest";
 import {LangCodes} from "../../Utils/LangCodes";
 import {CoverTypes} from "../../Utils/CoverTypes";
 import {makeAddBookCopyRequest} from "../../Requests/moks/AddBookCopyRequest";
+import InputAdornment from "@mui/material/InputAdornment";
+import BookAdd from "../BookAdd/BookAdd";
+import {makeAuthorListRequest} from "../../Requests/moks/AuthorListRequest";
 
 
 class BookCopyAddNoTr extends React.Component {
@@ -29,7 +32,8 @@ class BookCopyAddNoTr extends React.Component {
             errorCode: '',
             requestFailed: false,
             showSuccessModal: false,
-            releaseYear: ''
+            releaseYear: '',
+            bookModal:false
         };
     }
 
@@ -48,6 +52,21 @@ class BookCopyAddNoTr extends React.Component {
         this.setState({
             showSuccessModal: false
         })
+    }
+    showBookModal(){
+        this.setState({
+            bookModal:true
+        })
+    }
+    hideBookModal(){
+        this.setState({
+            bookModal:false
+        })
+
+        const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
+        setTimeout(()=>{
+            makeAuthorListRequest(token, this);
+        },1000);
     }
 
 
@@ -113,6 +132,10 @@ class BookCopyAddNoTr extends React.Component {
                                                      {...params}
                                                      variant="standard"
                                                      label={t('Book.book')}
+                                                     InputProps={{
+                                                         ...params.InputProps,
+                                                         startAdornment:<InputAdornment position={'start'}><Button onClick={this.showBookModal.bind(this)} variant={'outline-dark'} size={'sm'}>+</Button></InputAdornment>
+                                                     }}
                                           />
                                       )}
                         />
@@ -168,8 +191,19 @@ class BookCopyAddNoTr extends React.Component {
                         <t>{t('Form.BookCopyCreatedMessage')}</t>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button href={`/?#/books/copies/${this.state.id}`}>{t('Form.OK')}</Button>
+                        <Button variant={'outline-dark'} href={`/?#/books/copies/${this.state.id}`}>{t('Form.OK')}</Button>
                     </Modal.Footer>
+                </Modal>
+                <Modal   show={this.state.bookModal} onHide={this.hideBookModal.bind(this)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{t('Navbar.books.add')}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Row>
+                            <Col><BookAdd/></Col>
+                        </Row>
+
+                    </Modal.Body>
                 </Modal>
             </Fragment>
         )

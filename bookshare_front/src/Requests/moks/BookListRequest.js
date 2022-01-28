@@ -9,13 +9,17 @@ export function makeBookListRequest(token, that) {
         }
     }).then((response) => {
         that.setState({
-            books: response.data.books
+            books: response.data.books,
+            active:0
 
         });
     }).catch((response) => {
         if (response.response) {
             that.setState({
                 errorCode: response.response.status.toString(10),
+                response: response.response.data.message,
+                requestFailed: true,
+                message: response.response.data.message,
             })
         }
     })
@@ -54,13 +58,17 @@ export function makeFilteredBookListRequest(token, title, author, genres, releas
         }
     }).then((response) => {
         that.setState({
-            books: response.data.books
+            books: response.data.books,
+            active:0
 
         });
     }).catch((response) => {
         if (response.response) {
             that.setState({
                 errorCode: response.response.status.toString(10),
+                response: response.response.data.message,
+                requestFailed: true,
+                message: response.response.data.message,
             })
         }
     })

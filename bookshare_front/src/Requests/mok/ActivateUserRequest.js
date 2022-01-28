@@ -8,7 +8,7 @@ export function makeActivateUserRequest(token, that) {
         }
     }).then((response) => {
         that.setState({
-            response:response.data.message,
+            response:'user_activated',
             requestCompleted:true
         })
     }).catch((response) => {
