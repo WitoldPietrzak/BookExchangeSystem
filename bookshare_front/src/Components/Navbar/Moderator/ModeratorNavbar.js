@@ -14,6 +14,9 @@ function Moderator() {
                 <NavDropdown.Divider/>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
                           href="/?#/shelves">{t("Navbar.bookshelves.list")}</Nav.Link>
+                <NavDropdown.Divider/>
+                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
+                          href="/?#/shelves/map">{t("Navbar.bookshelves.map")}</Nav.Link>
             </NavDropdown>
             <NavDropdown title={t("Navbar.genres")}>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}

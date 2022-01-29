@@ -20,6 +20,9 @@ function User() {
             <NavDropdown title={t("Navbar.bookshelves")} id={'xd'}>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
                           href="/?#/shelves">{t("Navbar.bookshelves.list")}</Nav.Link>
+                <NavDropdown.Divider/>
+                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
+                          href="/?#/shelves/map">{t("Navbar.bookshelves.map")}</Nav.Link>
             </NavDropdown>
             <NavDropdown title={t("Navbar.books")} id="navbarScrollingDropdown">
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
