@@ -1,12 +1,13 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
 import Cookies from "js-cookie";
-import {Alert, Button, Col, Modal, Row} from "react-bootstrap";
+import {Accordion, Alert, Button, Col, Form, Modal, Row} from "react-bootstrap";
 import './Genre.css'
 import RefreshIcon from '../../Resources/refresh.png';
 import {useParams} from "react-router-dom";
 import {makeGenreRequest} from "../../Requests/moks/GenreRequest";
 import {makeDeleteGenreRequest} from "../../Requests/moks/DeleteGenreRequest";
+import GenreModify from "../GenreModify/GenreModify";
 
 class GenreNoTr extends React.Component {
     constructor(props) {
@@ -61,6 +62,25 @@ class GenreNoTr extends React.Component {
         });
     }
 
+    showModify() {
+        this.setState({
+            showModifyModal: true
+
+        });
+    }
+
+    hideModify() {
+        this.setState({
+            showModifyModal: false
+
+        });
+    }
+
+    completeModify(){
+        this.hideModify();
+        this.reloadUserInfo();
+    }
+
     renderGenreKey(key, value) {
         const {t} = this.props;
         return (
@@ -112,7 +132,7 @@ class GenreNoTr extends React.Component {
             <div className={"OptionsPanel mb-5 me-5 "}>
                 <Button onClick={this.showDelete.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                         size={'md'}>{t('Genre.Remove')}</Button>
-                <Button onClick={this.showDelete.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
+                <Button onClick={!this.state.showModifyModal?this.showModify.bind(this):this.hideModify.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                         size={'md'}>{t('Genre.Modify')}</Button>
                 <Button className={'m-1 mt-0 mb-0 me-0'} variant={'outline-dark'} size={'sm'}
                         onClick={this.reloadUserInfo.bind(this)}>
@@ -120,6 +140,7 @@ class GenreNoTr extends React.Component {
                 </Button>
             </div>)
     }
+
 
     render() {
         const {t} = this.props;
@@ -138,6 +159,7 @@ class GenreNoTr extends React.Component {
                 {this.renderOptionBar()}
                 <Row className={'mb-4'}>
                     <Col className={'w-75'}>
+                        {this.state.genre!==''&&this.state.showModifyModal?<GenreModify genre={this.state.genre} onComplete={this.completeModify.bind(this)}/>:''}
                         {this.renderGenreInfo()}
                     </Col>
                 </Row>

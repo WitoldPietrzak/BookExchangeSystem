@@ -21,7 +21,7 @@ VALUES (-101, 'Adam', 'Mickiewicz', -2, 0),
 
 INSERT INTO genre_table(id, name_code, created_by, version)
 VALUES (-201, 'DRAMA', -2, 0),
-       (-202, 'Comedy', -2, 0),
+       (-202, 'COMEDY', -2, 0),
        (-203, 'NOVEL', -2, 0),
        (-204, 'POEM', -2, 0),
        (-205, 'FANTASY', -2, 0)

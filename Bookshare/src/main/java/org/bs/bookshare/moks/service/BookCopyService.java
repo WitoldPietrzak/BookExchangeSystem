@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface BookCopyService{
     BookCopy createBookCopy(Book book, CoverType coverType, String language);
+    void modifyBookCopy(BookCopy bookCopy, Book book, CoverType coverType, String language, Long version) throws BookCopyException;
      void addBookCopyToShelf(BookCopy bookCopy, Bookshelf bookshelf, Long version) throws BookCopyException;
      void addBookCopyToUser(BookCopy bookCopy, Long version) throws BookCopyException;
      void addBookCopyReservation(BookCopy bookCopy, Long version) throws BookCopyException;

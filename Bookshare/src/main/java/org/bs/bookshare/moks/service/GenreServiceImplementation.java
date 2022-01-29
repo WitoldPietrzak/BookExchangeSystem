@@ -71,4 +71,16 @@ public class GenreServiceImplementation implements GenreService {
         genreRepository.delete(genre);
 
     }
+
+    @Override
+    public void updateGenre(Genre genre, Map<String, String> names, Long version) throws GenreException {
+        if (!genre.getVersion().equals(version)) {
+            throw GenreException.versionMismatch();
+        }
+        String modifierName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser modifier = userRepository.findByLogin(modifierName);
+        genre.setName(names);
+        genre.setModifiedBy(modifier);
+
+    }
 }

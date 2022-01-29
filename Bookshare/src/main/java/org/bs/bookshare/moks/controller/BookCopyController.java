@@ -14,6 +14,7 @@ import org.bs.bookshare.mok.service.AppUserService;
 import org.bs.bookshare.moks.dto.request.AddBookCopyRequestDTO;
 import org.bs.bookshare.moks.dto.request.DeleteEntityRequestDTO;
 import org.bs.bookshare.moks.dto.request.FilteredBookCopyListRequestDTO;
+import org.bs.bookshare.moks.dto.request.ModifyBookCopyRequestDTO;
 import org.bs.bookshare.moks.dto.request.MoveBookCopyRequestDTO;
 import org.bs.bookshare.moks.dto.request.ReturnBookCopyToShelfDTO;
 import org.bs.bookshare.moks.dto.request.SimpleBookCopyRequestDTO;
@@ -193,6 +194,15 @@ public class BookCopyController {
     public ResponseEntity<?> createBookCopy(@RequestBody AddBookCopyRequestDTO dto) throws BookException {
         Book book = bookService.findBook(dto.getBookId());
         BookCopy bookCopy = bookCopyService.createBookCopy(book, dto.getCoverType(), dto.getLanguage());
+        return ResponseEntity.ok().body(new EntityCreatedResponseDTO(bookCopy.getId()));
+    }
+
+    @PostMapping("/modify")
+    @RolesAllowed({Roles.ROLE_MODERATOR})
+    public ResponseEntity<?> modifyBookCopy(@RequestBody ModifyBookCopyRequestDTO dto) throws BookException, BookCopyException {
+        BookCopy bookCopy = bookCopyService.getBookCopy(dto.getId());
+        Book book = bookService.findBook(dto.getBookId());
+         bookCopyService.modifyBookCopy(bookCopy,book,dto.getCoverType(),dto.getLanguage(),dto.getVersion());
         return ResponseEntity.ok().body(new EntityCreatedResponseDTO(bookCopy.getId()));
     }
 

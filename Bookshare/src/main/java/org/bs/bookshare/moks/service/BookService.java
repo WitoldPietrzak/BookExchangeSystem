@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface BookService {
     Book createBook(String title, Integer releaseDate, Author author, List<Genre> genres);
+    void modifyBook(Book book, String title, Integer releaseDate, Author author, List<Genre> genres, Long version) throws BookException;
     Book findBook(Long id) throws BookException;
     List<Book> findBook(String name);
     List<Book> getAllBooks();

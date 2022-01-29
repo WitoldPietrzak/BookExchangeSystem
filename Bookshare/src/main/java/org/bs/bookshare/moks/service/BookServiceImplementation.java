@@ -33,6 +33,21 @@ public class BookServiceImplementation implements BookService {  //TODO zabezpie
     }
 
     @Override
+    public void modifyBook(Book book, String title, Integer releaseDate, Author author, List<Genre> genres, Long version) throws BookException {
+        if(!book.getVersion().equals(version)){
+            throw BookException.versionMismatch();
+        }
+        book.setTitle(title);
+        book.setReleaseDate(releaseDate);
+        book.setAuthor(author);
+        book.setGenres(genres);
+        String modifierName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser modifier = userRepository.findByLogin(modifierName);
+        book.setModifiedBy(modifier);
+
+    }
+
+    @Override
     public Book findBook(Long id) throws BookException {
         return bookRepository.findById(id).orElseThrow(BookException::notFound);
     }

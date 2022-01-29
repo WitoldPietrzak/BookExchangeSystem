@@ -6,6 +6,7 @@ import org.bs.bookshare.model.Genre;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.moks.dto.request.AddGenreRequestDTO;
 import org.bs.bookshare.moks.dto.request.DeleteEntityRequestDTO;
+import org.bs.bookshare.moks.dto.request.UpdateGenreRequestDTO;
 import org.bs.bookshare.moks.dto.response.EntityCreatedResponseDTO;
 import org.bs.bookshare.moks.dto.response.GenreListResponseDTO;
 import org.bs.bookshare.moks.dto.response.GenreResponseDTO;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,6 +49,14 @@ public class GenreController {
     public ResponseEntity<?> addGenre(@RequestBody AddGenreRequestDTO dto) throws GenreException {
         Genre genre = genreService.addGenre(dto.getNameCode(), dto.getNames());
         return ResponseEntity.ok().body(new EntityCreatedResponseDTO(genre.getId()));
+    }
+
+    @PostMapping("/modify")
+    @RolesAllowed({Roles.ROLE_MODERATOR})
+    public ResponseEntity<?> updateGenre(@RequestBody UpdateGenreRequestDTO dto) throws GenreException {
+        Genre genre = genreService.findGenre(dto.getId());
+        genreService.updateGenre(genre,dto.getNames(),dto.getVersion());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")

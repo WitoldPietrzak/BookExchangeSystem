@@ -21,21 +21,8 @@ import Bookshelf from "../Bookshelf/Bookshelf";
 import {makeMoveShelfRequest} from "../../Requests/mop/MoveShelfRequest";
 import {makeMoveBookCopyRequest} from "../../Requests/moks/MoveCopyRequest";
 import HorizontalTimeline from "react-horizontal-timeline";
-
-const EXAMPLE = [
-    {
-        data: "2018-03-22",
-        status: "status",
-        statusB: "Ready for Dev",
-        statusE: "In Progress"
-    },
-    {
-        data: "2018-03-23",
-        status: "status",
-        statusB: "In Progress",
-        statusE: "Done"
-    }
-];
+import BookModify from "../BookModify/BookModify";
+import BookCopyModify from "../BookCopyModify/BookCopyModify";
 
 
 class BookCopyNoTr extends React.Component {
@@ -44,7 +31,7 @@ class BookCopyNoTr extends React.Component {
         this.link = encodeURIComponent(window.location.href);
         this.id = this.props.params.id;
         this.state = {
-            bookCopy: {},
+            bookCopy: '',
             shelves: [],
             response: '',
             requestFailed: false,
@@ -177,6 +164,26 @@ class BookCopyNoTr extends React.Component {
         )
     }
 
+
+    showModify() {
+        this.setState({
+            showModifyModal: true
+
+        });
+    }
+
+    hideModify() {
+        this.setState({
+            showModifyModal: false
+
+        });
+    }
+
+    completeModify(){
+        this.hideModify();
+        this.reloadUserInfo();
+    }
+
     moveCopy() {
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         makeMoveBookCopyRequest(token, this.id, this.state.selectedBookshelf, this.state.bookCopy.version, this);
@@ -251,9 +258,9 @@ class BookCopyNoTr extends React.Component {
                 {isModerator() ?
                     <Button onClick={this.showDelete.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                             size={'md'}>{t('BookCopy.Delete')}</Button> : ''}
-                {isModerator() ?
-                    <Button onClick={this.showDelete.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
-                            size={'md'}>{t('BookCopy.Modify')}</Button> : ''}
+                {isModerator()?
+                    <Button onClick={!this.state.showModifyModal?this.showModify.bind(this):this.hideModify.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
+                                       size={'md'}>{t('Book.Modify')}</Button>:''}
                 {isUser() && this.state.bookCopy.reservedUsername === null && this.state.bookCopy.ownerUsername === null && this.state.bookCopy.bookshelf.id !== null ?
                     <Button onClick={this.showDelete.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                             size={'md'}>{t('BookCopy.makeReservation')}</Button> : ''}
@@ -334,6 +341,7 @@ class BookCopyNoTr extends React.Component {
                         </div>
                     </Col>
                     <Col className={'w-75'}>
+                        {this.state.book!==''&&this.state.showModifyModal?<BookCopyModify bookCopy={this.state.bookCopy} onComplete={this.completeModify.bind(this)}/>:''}
                         {this.state.bookCopy.book ? this.renderBookCopyInfo() : ''}
                     </Col>
                 </Row>
@@ -460,7 +468,7 @@ class BookCopyNoTr extends React.Component {
 
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={this.hideMoveSuccess.bind(this)} variant="outline-dark">{t('Form.Ok')}</Button>
+                        <Button onClick={this.hideMoveSuccess.bind(this)} variant="outline-dark">{t('Form.OK')}</Button>
                     </Modal.Footer>
                 </Modal>
             </Fragment>

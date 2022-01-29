@@ -50,6 +50,22 @@ public class BookCopyServiceImplementation implements BookCopyService {
     }
 
     @Override
+    public void modifyBookCopy(BookCopy bookCopy, Book book, CoverType coverType, String language, Long version) throws BookCopyException {
+        if (!version.equals(bookCopy.getVersion())) {
+            throw BookCopyException.versionMismatch();
+        }
+
+        String modifierName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser modifier = userRepository.findByLogin(modifierName);
+        bookCopy.setBook(book);
+        bookCopy.setCoverType(coverType);
+        bookCopy.setLanguage(language);
+        bookCopy.setModifiedBy(modifier);
+
+
+    }
+
+    @Override
     public void addBookCopyToShelf(BookCopy bookCopy, Bookshelf bookshelf, Long version) throws BookCopyException {
 
         if (!version.equals(bookCopy.getVersion())) {

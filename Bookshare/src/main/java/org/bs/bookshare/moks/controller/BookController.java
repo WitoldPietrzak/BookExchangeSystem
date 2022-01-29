@@ -10,6 +10,7 @@ import org.bs.bookshare.model.Genre;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.moks.dto.request.DeleteEntityRequestDTO;
 import org.bs.bookshare.moks.dto.request.FilteredBookListRequestDTO;
+import org.bs.bookshare.moks.dto.request.ModifyBookRequestDTO;
 import org.bs.bookshare.moks.dto.response.BookCopyInnerResponseDTO;
 import org.bs.bookshare.moks.dto.request.AddBookRequestDTO;
 import org.bs.bookshare.moks.dto.response.AuthorInnerResponseDTO;
@@ -55,6 +56,19 @@ public class BookController {
         Author author = authorService.getAuthor(dto.getAuthor());
         Book book = bookService.createBook(dto.getTitle(), dto.getReleaseDate(), author, genres);
         return ResponseEntity.ok().body(new EntityCreatedResponseDTO(book.getId()));
+    }
+
+    @RolesAllowed({ Roles.ROLE_MODERATOR})
+    @PostMapping("/modify")
+    public ResponseEntity<?> modifyBook(@RequestBody ModifyBookRequestDTO dto) throws GenreException, AuthorException, BookException {
+        List<Genre> genres = new LinkedList<>();
+        for (Long i : dto.getGenres()) {
+            genres.add(genreService.findGenre(i));
+        }
+        Author author = authorService.getAuthor(dto.getAuthor());
+        Book book = bookService.findBook(dto.getId());
+        bookService.modifyBook(book,dto.getTitle(),dto.getReleaseDate(),author,genres, dto.getVersion());
+        return ResponseEntity.ok().build();
     }
 
     @RolesAllowed({ Roles.ROLE_MODERATOR})

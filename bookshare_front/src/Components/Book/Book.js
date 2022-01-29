@@ -9,6 +9,8 @@ import {makeBookRequest} from "../../Requests/moks/BookRequest";
 import i18n from "i18next";
 import {isModerator} from "../../Routes/Router";
 import {makeDeleteBookRequest} from "../../Requests/moks/DeleteBookRequest";
+import GenreModify from "../GenreModify/GenreModify";
+import BookModify from "../BookModify/BookModify";
 
 class BookNoTr extends React.Component {
     constructor(props) {
@@ -16,7 +18,7 @@ class BookNoTr extends React.Component {
         this.tempLocation = {lng: 0, lat: 0}
         this.id = this.props.params.id;
         this.state = {
-            book: {},
+            book:'',
             response: '',
             requestFailed: false,
             showDeleteSuccessModal: false,
@@ -61,6 +63,25 @@ class BookNoTr extends React.Component {
             showDeleteConfirm: false
 
         });
+    }
+
+    showModify() {
+        this.setState({
+            showModifyModal: true
+
+        });
+    }
+
+    hideModify() {
+        this.setState({
+            showModifyModal: false
+
+        });
+    }
+
+    completeModify(){
+        this.hideModify();
+        this.reloadUserInfo();
     }
 
     renderBookCopiesInfo() {
@@ -136,7 +157,7 @@ class BookNoTr extends React.Component {
             <div className={"OptionsPanel mb-5 me-5 "}>
                 {isModerator()?<Button onClick={this.showDelete.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                          size={'md'}>{t('Book.Delete')}</Button>:''}
-                {isModerator()?<Button onClick={this.showDelete.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
+                {isModerator()?<Button onClick={!this.state.showModifyModal?this.showModify.bind(this):this.hideModify.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                          size={'md'}>{t('Book.Modify')}</Button>:''}
                 <Button className={'m-1 mt-0 mb-0 me-0'} variant={'outline-dark'} size={'sm'}
                         onClick={this.reloadUserInfo.bind(this)}>
@@ -162,6 +183,7 @@ class BookNoTr extends React.Component {
                 {this.renderOptionBar()}
                 <Row className={'mb-3'}>
                     <Col className={'w-75'}>
+                        {this.state.book!==''&&this.state.showModifyModal?<BookModify book={this.state.book} onComplete={this.completeModify.bind(this)}/>:''}
                         {this.state.book.author ? this.renderBookInfo() : ''}
                     </Col>
                 </Row>

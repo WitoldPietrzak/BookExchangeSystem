@@ -4,7 +4,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {Alert, Modal} from "react-bootstrap";
 import Cookies from "js-cookie";
-import './BookAdd.css';
 import {makeAuthorListRequest} from "../../Requests/moks/AuthorListRequest";
 import {makeGenreListRequest} from "../../Requests/moks/GenreListRequest";
 import Autocomplete from '@mui/material/Autocomplete';
@@ -16,9 +15,10 @@ import GenreAdd from "../GenreAdd/GenreAdd";
 import {Row,Col} from 'react-bootstrap';
 import {isModerator} from "../../Routes/Router";
 import AuthorAdd from "../AuthorAdd/AuthorAdd";
+import {makeModifyBookRequest} from "../../Requests/moks/ModifyBookRequest";
 
 
-class BookAddNoTr extends React.Component {
+class BookModifyNoTr extends React.Component {
 
     constructor(props) {
         super(props);
@@ -27,17 +27,16 @@ class BookAddNoTr extends React.Component {
         this.state = {
             authors: [],
             genres: [],
-            selectedGenres: [],
-            selectedAuthor: '',
-            id: '',
-            title: '',
+            selectedGenres: props.book.genres,
+            selectedAuthor: props.book.author,
+            id: props.book.id,
+            title: props.book.title,
             errors: {},
-            button: 'Form.CreateBookButton',
+            button: 'Form.ModifyBookButton',
             response: '',
             errorCode: '',
             requestFailed: false,
-            showSuccessModal: false,
-            releaseYear: '',
+            releaseYear: props.book.releaseDate,
             genreModal:false,
             authorModal:false
         };
@@ -105,7 +104,7 @@ class BookAddNoTr extends React.Component {
 
 
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
-        makeAddBookRequest(token, this.state.title, this.state.selectedAuthor.id, this.state.selectedGenres.map(genre=>genre.id), this.state.releaseYear,this);
+        makeModifyBookRequest(token,this.state.id,this.state.title, this.state.selectedAuthor.id, this.state.selectedGenres.map(genre=>genre.id), this.state.releaseYear,this.props.book.version,this, this.props.onComplete);
     }
 
 
@@ -158,6 +157,7 @@ class BookAddNoTr extends React.Component {
                                           })
                                       })}
                                       options={this.state.authors}
+                                      value={this.state.selectedAuthor}
                                       getOptionLabel={(option) => {
                                           return `${option.name} ${option.surname} `
                                       }}
@@ -169,22 +169,24 @@ class BookAddNoTr extends React.Component {
                                                      label={t('Book.author')}
                                                      InputProps={{
                                                          ...params.InputProps,
-                                                     startAdornment:<InputAdornment position={'start'}><Button onClick={this.showAuthorModal.bind(this)} variant={'outline-dark'} size={'sm'}>+</Button></InputAdornment>
+                                                         startAdornment:<InputAdornment position={'start'}><Button onClick={this.showAuthorModal.bind(this)} variant={'outline-dark'} size={'sm'}>+</Button></InputAdornment>
                                                      }}
                                           />
                                       )}
                         />
                         <Autocomplete
                             className={'m-3'}
-                            multiple
                             filterSelectedOptions
+                            multiple
                             onChange={((event, newValue) => {
                                 this.setState({
                                     selectedGenres: newValue
                                 })
                             })}
                             options={this.state.genres}
+                            value={this.state.genres.filter(genre=>{return  this.state.selectedGenres.some(e=>{return e.id===genre.id})})}
                             getOptionLabel={(option) => {
+                                console.log(option)
                                 return option.name[i18n.language] ? option.name[i18n.language] : option.nameCode
                             }}
                             renderInput={(params) => (
@@ -224,50 +226,15 @@ class BookAddNoTr extends React.Component {
                         </Button>
                     </Form>
                 </div>
-
-                <Modal show={this.state.showSuccessModal} onHide={this.hideSuccessModal.bind(this)} backdrop={'static'}>
-                    <Modal.Header>
-                        <Modal.Title>{t('Form.Success')}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <t>{t('Form.BookCreatedMessage')}</t>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant={'outline-dark'} href={`/?#/books/${this.state.id}`}>{t('Form.See')}</Button>
-                        <Button variant={'outline-dark'} onClick={this.hideSuccessModal.bind(this)}>{t('Form.Stay')}</Button>
-                    </Modal.Footer>
-                </Modal>
-                <Modal   show={this.state.genreModal} onHide={this.hideGenreModal.bind(this)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>{t('Navbar.genres.add')}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Row>
-                            <Col><GenreAdd/></Col>
-                        </Row>
-
-                    </Modal.Body>
-                </Modal>
-                <Modal   show={this.state.authorModal} onHide={this.hideAuthorModal.bind(this)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>{t('Navbar.author.add')}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Row>
-                            <Col><AuthorAdd/></Col>
-                        </Row>
-
-                    </Modal.Body>
-                </Modal>
             </Fragment>
         )
     }
 }
 
 
-const BookAddTr = withTranslation()(BookAddNoTr)
-export default function BookAdd() {
+const BookModifyTr = withTranslation()(BookModifyNoTr)
+export default function BookModify(props) {
     return (
-        <BookAddTr/>
+        <BookModifyTr  {...props}  />
     )
 }
