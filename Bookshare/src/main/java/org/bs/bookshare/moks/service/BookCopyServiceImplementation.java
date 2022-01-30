@@ -2,6 +2,7 @@ package org.bs.bookshare.moks.service;
 
 import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.BookCopyException;
+import org.bs.bookshare.exceptions.BookshelfException;
 import org.bs.bookshare.model.AppUser;
 import org.bs.bookshare.model.Book;
 import org.bs.bookshare.model.BookActionType;
@@ -66,10 +67,10 @@ public class BookCopyServiceImplementation implements BookCopyService {
     }
 
     @Override
-    public void addBookCopyToShelf(BookCopy bookCopy, Bookshelf bookshelf, Long version) throws BookCopyException {
+    public void addBookCopyToShelf(BookCopy bookCopy, Bookshelf bookshelf,Long version) throws BookCopyException, BookshelfException {
 
-        if (!version.equals(bookCopy.getVersion())) {
-            throw BookCopyException.versionMismatch();
+        if (!version.equals(bookshelf.getVersion())) {
+            throw BookshelfException.versionMismatch();
         }
         String callerName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser caller = userRepository.findByLogin(callerName);
@@ -104,6 +105,7 @@ public class BookCopyServiceImplementation implements BookCopyService {
         bookCopy.setBookshelf(null);
         bookCopy.setOwner(caller);
         bookCopy.setReserved(null);
+        bookCopy.setReservedUntil(null);
         bookCopy.setModifiedBy(caller);
 
 
@@ -154,6 +156,7 @@ public class BookCopyServiceImplementation implements BookCopyService {
             throw BookCopyException.cantCancelNotOwnReservation();
         }
         bookCopy.setReserved(null);
+        bookCopy.setReservedUntil(null);
         bookCopy.setModifiedBy(caller);
 
     }

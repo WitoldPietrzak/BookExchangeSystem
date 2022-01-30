@@ -43,3 +43,18 @@
     text-align: end;
     /*border: black solid 1px;*/
 }
+
+.returnBookChoice{
+    max-width: 330px;
+    width: 330px;
+    text-align: end;
+    align-content: end;
+}
+
+.selectBookDiv{
+    text-align: end;
+    align-content: end;
+    display: inline-block;
+    margin: auto;
+    max-width: 300px;
+}

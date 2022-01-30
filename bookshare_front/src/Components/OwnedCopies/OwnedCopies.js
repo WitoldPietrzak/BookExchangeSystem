@@ -32,7 +32,7 @@ class OwnedCopiesNoTr extends React.Component {
     }
 
     reloadUserInfo() {
-        const {action} = this.params;
+        const {action} = this.props.params;
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         if(this.action==='owned'){
             makeOwnedBookCopyListRequest(token,this)
@@ -66,12 +66,13 @@ class OwnedCopiesNoTr extends React.Component {
         const {t} = this.props;
         return (
             <Row className={'BookshelfBookListRow'} onClick={() => {
-                window.location.hash = `#/bookCopy/${row.id}`;
+                window.location.hash = `#/books/copies/${row.id}`;
                 window.location.reload();
             }}>
                 <Col>{t(row.title)}</Col>
                 <Col>{t(row.cover)}</Col>
                 <Col>{row.language}</Col>
+                {/*{this.action='reserved'?<Col>{t(row.)}</Col>}*/}
             </Row>
         )
 
@@ -105,7 +106,7 @@ class OwnedCopiesNoTr extends React.Component {
                 {this.renderOptionBar()}
                 <Row className={'mb-3'}>
                     <Col>
-                        {this.state.copies.length > 0 ? this.renderBookCopiesInfo() : ''}
+                        {this.state.copies.length > 0 ? this.renderBookCopiesInfo() : <div>{t('List.empty')}</div>}
                     </Col>
                 </Row>
             </Fragment>

@@ -119,7 +119,7 @@ class BookCopyModifyNoTr extends React.Component {
                         <Autocomplete className={'m-3'}
                                       onChange={((event, newValue) => {
                                           this.setState({
-                                              selectedBook: newValue.id
+                                              selectedBook: newValue===null?newValue:newValue.id
                                           })
                                       })}
                                       options={this.state.books}
@@ -143,7 +143,7 @@ class BookCopyModifyNoTr extends React.Component {
                         <Autocomplete className={'m-3'}
                                       onChange={((event, newValue) => {
                                           this.setState({
-                                              selectedLanguage: newValue.code
+                                              selectedLanguage: newValue===null?newValue:newValue.code
                                           })
                                       })}
                                       options={LangCodes}
@@ -163,7 +163,7 @@ class BookCopyModifyNoTr extends React.Component {
                         <Autocomplete className={'m-3'}
                                       onChange={((event, newValue) => {
                                           this.setState({
-                                              selectedCoverType: newValue
+                                              selectedCoverType: newValue===null?newValue:newValue
                                           })
                                       })}
                                       options={CoverTypes}

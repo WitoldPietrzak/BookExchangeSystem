@@ -9,13 +9,13 @@ function User() {
         <Nav activeKey={window.location.hash}>
             <NavDropdown title={t("Navbar.own")} id={'xd'}>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
-                          href="/?#/books/copies/owned">{t("Navbar.own.stored")}</Nav.Link>
+                          href="/?#/books/copies/my/owned">{t("Navbar.own.stored")}</Nav.Link>
                 <NavDropdown.Divider/>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
-                          href="/?#/shelves">{t("Navbar.own.reserved")}</Nav.Link>
+                          href="/?#/books/copies/my/reserved">{t("Navbar.own.reserved")}</Nav.Link>
                 <NavDropdown.Divider/>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
-                          href="/?#/shelves">{t("Navbar.own.added")}</Nav.Link>
+                          href="/?#/books/copies/my/created">{t("Navbar.own.added")}</Nav.Link>
             </NavDropdown>
             <NavDropdown title={t("Navbar.bookshelves")} id={'xd'}>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}

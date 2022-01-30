@@ -7,10 +7,16 @@ import RefreshIcon from '../../Resources/refresh.png';
 import {useParams} from "react-router-dom";
 import {makeBookshelfInfoRequest} from "../../Requests/mop/BookshelfInfoRequest";
 import {GoogleApiWrapper, Map, Marker} from "google-maps-react";
-import {isModerator} from "../../Routes/Router";
+import {isModerator, isUser} from "../../Routes/Router";
 import {makeMoveShelfRequest} from "../../Requests/mop/MoveShelfRequest";
 import MapPicker from "react-google-map-picker";
 import {makeRemoveShelfRequest} from "../../Requests/mop/RemoveShelfRequest";
+import {makeOwnedBookCopyListRequest} from "../../Requests/moks/BookCopyListRequest";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import Form from "react-bootstrap/Form";
+import {makeReturnBookCopyRequest} from "../../Requests/moks/ReturnBookCopyRequest";
 
 class BookshelfNoTr extends React.Component {
     constructor(props) {
@@ -20,6 +26,8 @@ class BookshelfNoTr extends React.Component {
         this.state = {
             id: '',
             location: '',
+            copies: '',
+            selectedBook: null,
             bookshelfLocation: {},
             creationDateTime: '',
             books: [],
@@ -34,13 +42,17 @@ class BookshelfNoTr extends React.Component {
 
     componentDidMount() {
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
-        makeBookshelfInfoRequest(token, this.id, this);
+        this.reloadUserInfo()
 
     }
 
     reloadUserInfo() {
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         makeBookshelfInfoRequest(token, this.id, this);
+        if (isUser()) {
+            makeOwnedBookCopyListRequest(token, this);
+        }
+
     }
 
     moveBookshelf(lat, lng) {
@@ -83,6 +95,31 @@ class BookshelfNoTr extends React.Component {
         this.setState({
             showDeleteConfirm: false
 
+        });
+    }
+
+    showPlace() {
+        this.setState({
+            showPlaceConfirm: true
+
+        });
+    }
+
+    hidePlace() {
+        this.setState({
+            showPlaceConfirm: false
+
+        });
+    }
+
+    addCopy() {
+        const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
+        makeReturnBookCopyRequest(token, this.state.selectedBook.id, this.id, this.state.version, this);
+        setTimeout(() => {
+            this.reloadUserInfo()
+        }, 200);
+        this.setState({
+            selectedBook:null
         });
     }
 
@@ -150,8 +187,32 @@ class BookshelfNoTr extends React.Component {
                     <Button onClick={this.showDelete.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                             size={'md'}
                     >{t('Bookshelf.Remove')}</Button> : ''}
-                <Button className={'m-1 mt-0 mb-0'} variant={'outline-dark'} size={'md'}
-                >{t('Bookshelf.AddBookCopy')}</Button>
+                {isUser() ? (
+
+                    <Fragment>
+                        <div className={'selectBookDiv'}><Autocomplete className={'m-3 w-20 returnBookChoice'}
+                                                                       value={this.state.selectedBook}
+                                                                       onChange={((event, newValue) => {
+                                                                           this.setState({
+                                                                               selectedBook: newValue === null ? null : newValue
+                                                                           })
+                                                                       })}
+                                                                       options={this.state.copies}
+                                                                       getOptionLabel={(option) => {
+                                                                           return option.title;
+                                                                       }}
+                                                                       renderInput={(params) => (
+                                                                           <TextField
+                                                                               // error={this.state.errors.book}
+                                                                               //        helperText={this.state.errors.book ? t(`${this.state.errors.book}`) : ''}
+                                                                               {...params}
+                                                                               variant="standard"
+                                                                               label={t('Bookshelf.AddBookCopy')}
+                                                                           />
+                                                                       )}
+                        /><Button onClick={this.addCopy.bind(this)} disabled={this.state.selectedBook === null}
+                                  variant={'outline-dark'}>{t('Bookshelf.AddBookCopy')}</Button></div>
+                    </Fragment>) : ''}
                 <Button className={'m-1 mt-0 mb-0 me-0'} variant={'outline-dark'} size={'sm'}
                         onClick={this.reloadUserInfo.bind(this)}>
                     <img alt={''} src={RefreshIcon} width={25} height={25}/>
@@ -198,7 +259,7 @@ class BookshelfNoTr extends React.Component {
                         {this.state.books.length ? this.renderBooksInfo() : ''}
                     </Col>
                 </Row>
-                <Modal  show={this.state.showModal} onHide={this.hideModal.bind(this)}>
+                <Modal show={this.state.showModal} onHide={this.hideModal.bind(this)}>
                     <Modal.Header>
                         <Modal.Title>{t('Modal.PickLocation')}</Modal.Title>
                     </Modal.Header>

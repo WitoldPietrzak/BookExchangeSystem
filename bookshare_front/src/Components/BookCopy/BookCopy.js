@@ -23,6 +23,9 @@ import {makeMoveBookCopyRequest} from "../../Requests/moks/MoveCopyRequest";
 import HorizontalTimeline from "react-horizontal-timeline";
 import BookModify from "../BookModify/BookModify";
 import BookCopyModify from "../BookCopyModify/BookCopyModify";
+import {makeTakeBookCopyRequest} from "../../Requests/moks/TakeBookCopyRequest";
+import {makeReserveBookCopyRequest} from "../../Requests/moks/ReserveBoobCopyRequest";
+import {makeCancelReservationBookCopyRequest} from "../../Requests/moks/CancellReservationBookCopyRequest";
 
 
 class BookCopyNoTr extends React.Component {
@@ -184,6 +187,24 @@ class BookCopyNoTr extends React.Component {
         this.reloadUserInfo();
     }
 
+    takeCopy(){
+        const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
+        makeTakeBookCopyRequest(token,this.id, this.state.bookCopy.version,this);
+        setTimeout(()=>{this.reloadUserInfo()},200)
+    }
+
+    reserveCopy(){
+        const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
+        makeReserveBookCopyRequest(token,this.id, this.state.bookCopy.version,this);
+        setTimeout(()=>{this.reloadUserInfo()},200)
+    }
+
+    cancelReservationCopy(){
+        const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
+        makeCancelReservationBookCopyRequest(token,this.id, this.state.bookCopy.version,this);
+        setTimeout(()=>{this.reloadUserInfo()},200)
+    }
+
     moveCopy() {
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         makeMoveBookCopyRequest(token, this.id, this.state.selectedBookshelf, this.state.bookCopy.version, this);
@@ -262,13 +283,13 @@ class BookCopyNoTr extends React.Component {
                     <Button onClick={!this.state.showModifyModal?this.showModify.bind(this):this.hideModify.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                                        size={'md'}>{t('Book.Modify')}</Button>:''}
                 {isUser() && this.state.bookCopy.reservedUsername === null && this.state.bookCopy.ownerUsername === null && this.state.bookCopy.bookshelf.id !== null ?
-                    <Button onClick={this.showDelete.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
+                    <Button onClick={this.reserveCopy.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                             size={'md'}>{t('BookCopy.makeReservation')}</Button> : ''}
                 {(this.state.bookCopy.reservedUsername === Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME) || (this.state.bookCopy.reservedUsername !== null && isModerator())) ?
-                    <Button onClick={this.showDelete.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
+                    <Button onClick={this.cancelReservationCopy.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                             size={'md'}>{t('BookCopy.cancelReservation')}</Button> : ''}
-                {isUser() && this.state.bookCopy.reservedUsername === null && this.state.bookCopy.ownerUsername === null && this.state.bookCopy.bookshelf.id !== null ?
-                    <Button onClick={this.showDelete.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
+                {isUser() && (this.state.bookCopy.reservedUsername === null || this.state.bookCopy.reservedUsername === Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)) && this.state.bookCopy.ownerUsername === null && this.state.bookCopy.bookshelf.id !== null ?
+                    <Button onClick={this.takeCopy.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                             size={'md'}>{t('BookCopy.Take')}</Button> : ''}
                 {isModerator() && this.state.bookCopy.reservedUsername === null && this.state.bookCopy.ownerUsername === null && this.state.bookCopy.bookshelf.id !== null ?
                     <Button onClick={this.showMove.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
@@ -286,16 +307,16 @@ class BookCopyNoTr extends React.Component {
             return;
         }
         if(story.action==="CREATED"){
-            return `Copy has been added do our base by ${story.user}`
+            return t('Story.created',{user:story.user})
         }
         if(story.action==="MOVED"){
-            return `Copy was moved from one shelf to other by ${story.user}`
+            return t('Story.moved',{user:story.user})
         }
         if(story.action==="PUT"){
-            return `Copy was put to shelf by ${story.user}`
+            return t('Story.put',{user:story.user})
         }
         if(story.action==="TAKEN"){
-            return `Copy was taken from shelf by ${story.user}`
+            return t('Story.taken',{user:story.user})
         }
     }
 
@@ -409,7 +430,7 @@ class BookCopyNoTr extends React.Component {
                             <Autocomplete className={'m-3'}
                                           onChange={((event, newValue) => {
                                               this.setState({
-                                                  selectedBookshelf: newValue.id
+                                                  selectedBookshelf: newValue===null?newValue:newValue.id
                                               })
                                           })}
                                           options={this.state.shelves}

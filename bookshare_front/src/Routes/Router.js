@@ -73,10 +73,10 @@ export default function Router() {
             <Route exact path='/books' element={isModerator() || isUser() ? <BookList/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/books/copies/add' element={isModerator() || isUser() ? <BookCopyAdd/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/books/copies/' element={isModerator() || isUser() ? <BookCopyList/> : <Navigate replace to='/home'/>}/>
-            <Route exact path='/books/copies/:id' element= <BookCopy/> />
             <Route exact path='/books/copies/my/:action' element={isUser() ? <OwnedCopies/> : <Navigate replace to='/home'/>}/>
-            <Route exact path='/books/copies/reserved' element={isUser() ? <BookCopyList/> : <Navigate replace to='/home'/>}/>
-            <Route exact path='/books/copies/created' element={isUser() ? <BookCopyList/> : <Navigate replace to='/home'/>}/>
+            <Route exact path='/books/copies/my/:reserved' element={isUser() ? <BookCopyList/> : <Navigate replace to='/home'/>}/>
+            <Route exact path='/books/copies/my/:created' element={isUser() ? <BookCopyList/> : <Navigate replace to='/home'/>}/>
+            <Route exact path='/books/copies/:id' element= <BookCopy/> />
             <Route exact path='/authors/add' element={isModerator() || isUser() ? <AuthorAdd/> : <Navigate replace to='/home'/>}/>
             <Route path='*' element={<Navigate replace to={'/home'}/>}/>
         </Routes>
