@@ -49,7 +49,6 @@ public class BookCopy extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "cover")
     private CoverType coverType;
-//    String state;
     private String language;
     @OneToMany(mappedBy = "book")
     private List<BookStory> story;

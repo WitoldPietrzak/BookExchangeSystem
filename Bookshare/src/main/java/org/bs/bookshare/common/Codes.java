@@ -59,6 +59,8 @@ public class Codes {
     public static final String ACCOUNT_ENABLE_MAIL_TEXT = "account_enable_mail_text";
     public static final String ADMIN_ACCOUNT_LOGIN_MAIL_SUBJECT="admin_account_login_mail_subject";
     public static final String ADMIN_ACCOUNT_LOGIN_MAIL_TEXT="admin_account_login_mail_text";
+    public static final String RESERVATION_CANCELED_MAIL_SUBJECT="reservation_canceled_mail_subject";
+    public static final String RESERVATION_CANCELED_MAIL_TEXT="reservation_canceled_mail_text";
 
     public static final String ACCOUNT_CREATED_MESSAGE = "account_created";
 

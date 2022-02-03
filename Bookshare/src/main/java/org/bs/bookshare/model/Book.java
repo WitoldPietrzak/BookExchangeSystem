@@ -43,8 +43,6 @@ public class Book extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "genres_id")
     )
     private List<Genre> genres = new LinkedList<>();
-    //    @OneToMany(fetch = FetchType.LAZY)
-//    List<BookReview> reviews = new LinkedList<>();
     @OneToMany(mappedBy = "book")
     private List<BookCopy> copies;
     private Integer releaseDate;

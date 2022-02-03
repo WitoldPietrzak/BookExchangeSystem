@@ -76,7 +76,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         if (users.stream().anyMatch(u -> (u.getLogin().equals(login)))) {
             throw AppUserException.loginExists();
         }
-        if (!Arrays.stream(LANGUAGE).anyMatch(lang -> lang.equals(language.toLowerCase()))) {
+        if (Arrays.stream(LANGUAGE).noneMatch(lang -> lang.equals(language.toLowerCase()))) {
             throw AppUserException.unknownLanguage();
         }
         AppUser user = new AppUser(login, email, password, language);
@@ -85,7 +85,7 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
         user.getAppRoles().add(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         appUserRepository.save(user);
-        String token = TokenGenerator.generateActivationToken(user.getLogin(), new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000));
+        String token = TokenGenerator.generateActivationToken(user.getLogin(), new Date(System.currentTimeMillis() + (long) Integer.parseInt(Objects.requireNonNull(environment.getProperty("activation_token_valid_time_in_days"))) * 24 * 60 * 60 * 1000));
         mailProvider.sendActivationMail(user.getEmail(), token, user.getLanguage());
         return user;
     }

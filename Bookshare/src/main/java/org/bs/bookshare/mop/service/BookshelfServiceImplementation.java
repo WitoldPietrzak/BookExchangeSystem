@@ -46,7 +46,7 @@ public class BookshelfServiceImplementation implements BookshelfService {
             }
             return bookshelfRepository.findAllInDistance(latitude, longitude, distance, bookCount);
         } catch (Exception e) {
-            e.printStackTrace(); //TODO
+            e.printStackTrace();
             throw BookshelfException.queryError();
         }
 

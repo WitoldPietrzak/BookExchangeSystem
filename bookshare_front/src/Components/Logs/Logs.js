@@ -1,13 +1,12 @@
 import React, {Fragment} from "react";
 import {withTranslation} from "react-i18next";
-import {Alert, Button, Col, Row, Offcanvas, Table, Pagination} from "react-bootstrap";
+import {Alert, Button, Offcanvas, Table, Pagination} from "react-bootstrap";
 import Cookies from "js-cookie";
 import './Logs.css';
 import RefreshIcon from '../../Resources/refresh.png';
 import Form from "react-bootstrap/Form";
 import {makeFilteredLogsRequest, makeLogsRequest} from "../../Requests/mok/LogsRequest";
 import TextField from "@mui/material/TextField";
-import BootstrapTable from 'react-bootstrap-table-next';
 
 class LogsNoTr extends React.Component {
     constructor(props) {

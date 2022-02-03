@@ -59,7 +59,7 @@ class LoggedInNavbarNoTr extends React.Component {
             return (
                 <Button variant="secondary btn-sm" style={{marginTop: "5px"}}
                         title={t(Cookies.get(`${process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME}_${Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}`))}>
-
+                    {t(Cookies.get(`${process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME}_${Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}`))}
                 </Button>
             )
         }

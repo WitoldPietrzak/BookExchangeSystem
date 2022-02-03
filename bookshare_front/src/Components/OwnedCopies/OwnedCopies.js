@@ -10,11 +10,12 @@ import {
     makeOwnedBookCopyListRequest,
     makeReservedBookCopyListRequest
 } from "../../Requests/moks/BookCopyListRequest";
+import Form from "react-bootstrap/Form";
 
 class OwnedCopiesNoTr extends React.Component {
     constructor(props) {
         super(props);
-        this.action = this.props.params.action;
+        this.action = 'owned';
         this.state = {
             copies: {},
             response: '',
@@ -26,13 +27,11 @@ class OwnedCopiesNoTr extends React.Component {
     }
 
     componentDidMount() {
-        const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         this.reloadUserInfo();
 
     }
 
     reloadUserInfo() {
-        const {action} = this.props.params;
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         if(this.action==='owned'){
             makeOwnedBookCopyListRequest(token,this)
@@ -72,7 +71,6 @@ class OwnedCopiesNoTr extends React.Component {
                 <Col>{t(row.title)}</Col>
                 <Col>{t(row.cover)}</Col>
                 <Col>{row.language}</Col>
-                {/*{this.action='reserved'?<Col>{t(row.)}</Col>}*/}
             </Row>
         )
 
@@ -104,6 +102,17 @@ class OwnedCopiesNoTr extends React.Component {
 
                 </Row>
                 {this.renderOptionBar()}
+                <div className={'m-3 sortDiv'}>
+                    <Form.Label>{t('Form.OwnBooksType')}</Form.Label>
+                    <Form.Select defaultValue={this.state.sortBy} onChange={(e) => {
+                        this.action=e.target.value;
+                        this.reloadUserInfo();
+                    }}>
+                        <option value={'owned'}>{t('Navbar.own.stored')}</option>
+                        <option value={'reserved'}>{t('Navbar.own.reserved')}</option>
+                        <option value={'created'}>{t('Navbar.own.added')}</option>
+                    </Form.Select>
+                </div>
                 <Row className={'mb-3'}>
                     <Col>
                         {this.state.copies.length > 0 ? this.renderBookCopiesInfo() : <div>{t('List.empty')}</div>}
@@ -118,10 +127,9 @@ const OwnedCopiesTr = withTranslation()(OwnedCopiesNoTr);
 
 
 export default function OwnedCopies() {
-    const params = useParams();
 
     return (
-        <OwnedCopiesTr params={params}/>
+        <OwnedCopiesTr/>
     )
 
 

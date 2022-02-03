@@ -7,17 +7,11 @@ function User() {
     const {t} = useTranslation();
     return (
         <Nav activeKey={window.location.hash}>
-            <NavDropdown title={t("Navbar.own")} id={'xd'}>
+            <NavDropdown title={t("Navbar.own")} id={'ownBooks'}>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
-                          href="/?#/books/copies/my/owned">{t("Navbar.own.stored")}</Nav.Link>
-                <NavDropdown.Divider/>
-                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
-                          href="/?#/books/copies/my/reserved">{t("Navbar.own.reserved")}</Nav.Link>
-                <NavDropdown.Divider/>
-                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
-                          href="/?#/books/copies/my/created">{t("Navbar.own.added")}</Nav.Link>
+                          href="/?#/books/copies/my">{t("Navbar.own")}</Nav.Link>
             </NavDropdown>
-            <NavDropdown title={t("Navbar.bookshelves")} id={'xd'}>
+            <NavDropdown title={t("Navbar.bookshelves")} id={'bookShelves'}>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
                           href="/?#/shelves">{t("Navbar.bookshelves.list")}</Nav.Link>
                 <NavDropdown.Divider/>

@@ -16,21 +16,21 @@ public class ExceptionController {
     @ExceptionHandler(AppBaseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public MessageResponseDTO processException(Exception e) {
-        log.error(e.getMessage(),e); //TODO
+        log.error(e.getMessage(),e);
         return new MessageResponseDTO(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public MessageResponseDTO processUnknownException(Exception e) {
-        log.error(e.getMessage(),e); //TODO
-        return new MessageResponseDTO("unknown_error_occured");  //TODO;
+        log.error(e.getMessage(),e);
+        return new MessageResponseDTO("unknown_error_occured");
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class,NumberFormatException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public MessageResponseDTO processParseException(Exception e) {
-        log.error(e.getMessage(),e); //TODO
-        return new MessageResponseDTO("wrong_argument_exception");  //TODO;
+        log.error(e.getMessage(),e);
+        return new MessageResponseDTO("wrong_argument_exception");
     }
 }

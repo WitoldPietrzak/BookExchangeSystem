@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class BookServiceImplementation implements BookService {  //TODO zabezpieczenia
+public class BookServiceImplementation implements BookService {
 
     private final BookRepository bookRepository;
     private final AppUserRepository userRepository;

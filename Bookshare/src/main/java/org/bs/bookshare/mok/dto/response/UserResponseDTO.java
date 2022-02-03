@@ -40,5 +40,5 @@ public class UserResponseDTO {
         this.creationDateTime = creationDateTime;
     }
 
-    //TODO dodać książki ?
+
 }

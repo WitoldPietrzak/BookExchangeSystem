@@ -22,6 +22,8 @@ import static org.bs.bookshare.common.Codes.ADMIN_ACCOUNT_LOGIN_MAIL_SUBJECT;
 import static org.bs.bookshare.common.Codes.ADMIN_ACCOUNT_LOGIN_MAIL_TEXT;
 import static org.bs.bookshare.common.Codes.PASSWORD_RESET_MAIL_SUBJECT;
 import static org.bs.bookshare.common.Codes.PASSWORD_RESET_MAIL_TEXT;
+import static org.bs.bookshare.common.Codes.RESERVATION_CANCELED_MAIL_SUBJECT;
+import static org.bs.bookshare.common.Codes.RESERVATION_CANCELED_MAIL_TEXT;
 
 
 @Component
@@ -71,6 +73,15 @@ public class MailProvider {
         String subject = langBundle.getString(ADMIN_ACCOUNT_LOGIN_MAIL_SUBJECT);
         String from = environment.getProperty("spring.mail.username");
         String message = String.format(langBundle.getString(ADMIN_ACCOUNT_LOGIN_MAIL_TEXT), ip);
+        emailService.sendMail(to, subject, from, message);
+    }
+
+    public void sendReservationCanceledMail(String to, String title, String lang) {
+        Locale locale = new Locale(lang);
+        ResourceBundle langBundle = ResourceBundle.getBundle("LanguageRes", locale);
+        String subject = langBundle.getString(RESERVATION_CANCELED_MAIL_SUBJECT);
+        String from = environment.getProperty("spring.mail.username");
+        String message = String.format(langBundle.getString(RESERVATION_CANCELED_MAIL_TEXT), title);
         emailService.sendMail(to, subject, from, message);
     }
 }

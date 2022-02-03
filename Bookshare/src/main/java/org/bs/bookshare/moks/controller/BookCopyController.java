@@ -213,7 +213,7 @@ public class BookCopyController {
         Bookshelf bookshelf = bookshelfService.getBookshelf(dto.getBookshelfId());
 
         bookCopyService.addBookCopyToShelf(bookCopy, bookshelf, dto.getVersion());
-        return ResponseEntity.ok().build(); //TODO odpowiedzz?
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/take")
@@ -221,7 +221,7 @@ public class BookCopyController {
     public ResponseEntity<?> takeBookCopyFromShelf(@RequestBody SimpleBookCopyRequestDTO dto) throws BookCopyException {
         BookCopy bookCopy = bookCopyService.getBookCopy(dto.getBookCopyId());
         bookCopyService.addBookCopyToUser(bookCopy, dto.getVersion());
-        return ResponseEntity.ok().build(); //TODO odpowiedzz?
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reservation/make")
@@ -229,7 +229,7 @@ public class BookCopyController {
     public ResponseEntity<?> makeBookCopyReservation(@RequestBody SimpleBookCopyRequestDTO dto) throws BookCopyException {
         BookCopy bookCopy = bookCopyService.getBookCopy(dto.getBookCopyId());
         bookCopyService.addBookCopyReservation(bookCopy, dto.getVersion());
-        return ResponseEntity.ok().build(); //TODO odpowiedzz?
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reservation/cancel")
@@ -237,7 +237,7 @@ public class BookCopyController {
     public ResponseEntity<?> cancelBookCopyReservation(@RequestBody SimpleBookCopyRequestDTO dto) throws BookCopyException {
         BookCopy bookCopy = bookCopyService.getBookCopy(dto.getBookCopyId());
         bookCopyService.cancelBookCopyReservation(bookCopy, dto.getVersion());
-        return ResponseEntity.ok().build(); //TODO odpowiedzz?
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/delete")
@@ -245,7 +245,7 @@ public class BookCopyController {
     public ResponseEntity<?> deleteBook(@RequestBody DeleteEntityRequestDTO dto) throws BookCopyException {
         BookCopy bookCopy = bookCopyService.getBookCopy(dto.getId());
         bookCopyService.deleteBookCopy(bookCopy, dto.getVersion());
-        return ResponseEntity.ok().build(); //TODO odpowiedzz?
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/move")

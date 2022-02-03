@@ -121,42 +121,42 @@ public class AppUserController {
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_ADMIN, Roles.ROLE_MODERATOR})
     public ResponseEntity<?> changeLanguage(Principal principal, @RequestBody LanguageChangeRequestDTO dto) throws AppUserException {
         userService.changeLanguage(principal.getName(), dto.getLanguage());
-        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/activate/{token}")
     @PermitAll
     public ResponseEntity<?> activateUser(@PathVariable String token) throws AppUserException {
         userService.activateUser(token);
-        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/password/{token}")
     @PermitAll
     public ResponseEntity<?> resetPassword(@PathVariable String token, @RequestBody PasswordResetRequestDTO dto) throws AppUserException {
         userService.resetPassword(token, dto.getNewPassword(), dto.getNewPasswordConfirm());
-        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/password/{token}")
     @PermitAll
     public ResponseEntity<?> verifyPasswordToken(@PathVariable String token) throws AppUserException {
         userService.verifyPasswordResetToken(token);
-        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/password/reset/{loginOrEmail}")
     @PermitAll
     public ResponseEntity<?> requestPasswordReset(@PathVariable String loginOrEmail) throws AppUserException {
         userService.sendResetPasswordRequest(loginOrEmail);
-        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/enable/token/{token}")
     @PermitAll
     public ResponseEntity<?> enableUserByToken(@PathVariable String token) throws AppUserException {
         userService.enableUserByToken(token);
-        return ResponseEntity.ok().build(); //TODO zwracanie wiadomosci o sukcesie?
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/refresh")

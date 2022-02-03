@@ -2,6 +2,8 @@ package org.bs.bookshare.mol;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -34,19 +36,21 @@ public class LogConnectionFactory {
         Properties properties = PropertiesLoader.loadProperties("application.properties");
 
         try {
-            ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(properties.getProperty("spring.datasource.url"),
-                    properties.getProperty("spring.datasource.username"), properties.getProperty("spring.datasource.password"));
+            URI dbUri = new URI(System.getenv("DATABASE_URL"));
+            String username = dbUri.getUserInfo().split(":")[0];
+            String password = dbUri.getUserInfo().split(":")[1];
+            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+            ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(dbUrl,username,password);
 
             PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory,
                     null);
             ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
 
-            // Set the factory's pool property to the owning pool
             poolableConnectionFactory.setPool(connectionPool);
 
             dataSource = new PoolingDataSource<>(connectionPool);
         } catch (Exception e) {
-            e.printStackTrace();  //TODO
+            e.printStackTrace();
             dataSource = null;
         }
 
@@ -55,14 +59,17 @@ public class LogConnectionFactory {
     int i = 0;
     private static Lock lock = new ReentrantLock();
 
-    public static Connection getDatabaseConnection() throws SQLException, IOException {
+    public static Connection getDatabaseConnection() throws SQLException, IOException, URISyntaxException {
         Properties properties = PropertiesLoader.loadProperties("application.properties");
 
 
         if (Singleton.INSTANCE.i == 0) {
             Singleton.INSTANCE.i++;
-            return DriverManager.getConnection(properties.getProperty("spring.datasource.url"),
-                    properties.getProperty("spring.datasource.username"), properties.getProperty("spring.datasource.password"));
+            URI dbUri = new URI(System.getenv("JDBC_DATABASE_URL"));
+            String username = dbUri.getUserInfo().split(":")[0];
+            String password = dbUri.getUserInfo().split(":")[1];
+            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+            return DriverManager.getConnection(dbUrl, username, password);
 
         }
         if (Singleton.INSTANCE.dataSource == null) {

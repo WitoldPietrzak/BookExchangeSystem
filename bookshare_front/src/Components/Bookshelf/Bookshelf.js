@@ -35,8 +35,8 @@ class BookshelfNoTr extends React.Component {
             response: '',
             requestFailed: false,
             locationGeocode: '',
-            showModal: false,
-            showDeleteConfirm: false
+            showDeleteConfirm: false,
+            moveShelf:false
         }
     }
 
@@ -55,32 +55,19 @@ class BookshelfNoTr extends React.Component {
 
     }
 
-    moveBookshelf(lat, lng) {
+    moveBookshelf(a,b,coords) {
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
-        this.hideModal();
-        makeMoveShelfRequest(token, this.state.id, lng, lat, this.state.version, this);
-        // this.reloadUserInfo();
+        makeMoveShelfRequest(token, this.state.id, coords.latLng.lng(), coords.latLng.lat(), this.state.version, this);
+        this.setState({
+            moveShelf:false
+        })
+        this.reloadUserInfo();
     }
 
     removeBookshelf() {
         const token = Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME);
         makeRemoveShelfRequest(token, this.state.id, this.state.version, this);
         this.hideDelete();
-    }
-
-
-    showModal() {
-        this.setState({
-            showModal: true
-
-        });
-    }
-
-    hideModal() {
-        this.setState({
-            showModal: false
-
-        });
     }
 
 
@@ -180,7 +167,8 @@ class BookshelfNoTr extends React.Component {
         return (
             <div className={"OptionsPanel mb-5 me-5 "}>
                 {isModerator() ?
-                    <Button onClick={this.showModal.bind(this)} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
+                    <Button onClick={()=>{this.setState({
+                        moveShelf:!this.state.moveShelf})}} className={'m-1 mt-0 mb-0'} variant={'outline-dark'}
                             size={'md'}
                     >{t('Bookshelf.Move')}</Button> : ''}
                 {isModerator() ?
@@ -203,8 +191,6 @@ class BookshelfNoTr extends React.Component {
                                                                        }}
                                                                        renderInput={(params) => (
                                                                            <TextField
-                                                                               // error={this.state.errors.book}
-                                                                               //        helperText={this.state.errors.book ? t(`${this.state.errors.book}`) : ''}
                                                                                {...params}
                                                                                variant="standard"
                                                                                label={t('Bookshelf.AddBookCopy')}
@@ -240,8 +226,10 @@ class BookshelfNoTr extends React.Component {
                         {this.renderBookshelfInfo()}
                     </Col>
                     <Col>
+                        <h2>{this.state.moveShelf?t('Modal.PickLocation'):''}</h2>
                         <div className={'d-grid gap-2 mt-0 mb-0 m-5 Map InfoFrame'}>
                             <Map google={this.props.google} zoom={17}
+                                 onClick={this.state.moveShelf?this.moveBookshelf.bind(this):''}
                                  center={typeof this.state.bookshelfLocation.lat === 'number' && typeof this.state.bookshelfLocation.lng === 'number' ? this.state.bookshelfLocation : this.tempLocation}
                                  className='GoogleMap'
                                  style={{width: 'auto', height: '200px', position: 'relative'}}>
@@ -259,26 +247,6 @@ class BookshelfNoTr extends React.Component {
                         {this.state.books.length ? this.renderBooksInfo() : ''}
                     </Col>
                 </Row>
-                <Modal show={this.state.showModal} onHide={this.hideModal.bind(this)}>
-                    <Modal.Header>
-                        <Modal.Title>{t('Modal.PickLocation')}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <MapPicker apiKey={process.env.REACT_APP_GOOGLE_API_KEY}
-                                   defaultLocation={this.state.bookshelfLocation}
-                                   zoom={10}
-                                   onChangeLocation={this.moveBookshelf.bind(this)}
-                        />
-                        {/*<Map google={this.props.google} zoom={17}*/}
-                        {/*     center={this.state.bookshelfLocation}*/}
-                        {/*     className='GoogleMap'*/}
-                        {/*     style={{width: 'auto', height: '200px', position: 'relative'}}>*/}
-                        {/*    <Marker*/}
-                        {/*        position={typeof this.state.bookshelfLocation.lat === 'number' && typeof this.state.bookshelfLocation.lng === 'number' ? this.state.bookshelfLocation : this.tempLocation}*/}
-                        {/*    />*/}
-                        {/*</Map>*/}
-                    </Modal.Body>
-                </Modal>
                 <Modal show={this.state.showDeleteConfirm} onHide={this.hideDelete.bind(this)}>
                     <Modal.Header>
                         <Modal.Title>{t('Modal.DeleteConfirm')}</Modal.Title>

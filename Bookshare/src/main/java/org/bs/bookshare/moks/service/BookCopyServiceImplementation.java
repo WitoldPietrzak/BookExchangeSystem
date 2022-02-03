@@ -16,6 +16,9 @@ import org.bs.bookshare.moks.repositories.BookCopyRepository;
 import org.bs.bookshare.moks.repositories.BookRepository;
 import org.bs.bookshare.moks.repositories.BookStoryRepository;
 import org.bs.bookshare.mop.repositories.BookshelfRepository;
+import org.bs.bookshare.utils.mail.MailProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -35,6 +39,9 @@ public class BookCopyServiceImplementation implements BookCopyService {
     private final BookCopyRepository bookCopyRepository;
     private final BookStoryRepository storyRepository;
     private final EntityManager entityManager;
+    private final MailProvider mailProvider;
+    @Autowired
+    private final Environment environment;
 
     @Override
     public BookCopy createBookCopy(Book book, CoverType coverType, String language) {
@@ -122,11 +129,11 @@ public class BookCopyServiceImplementation implements BookCopyService {
         if (!bookCopy.isAvailable()) {
             throw BookCopyException.cantReserveNotAvailableBook();
         }
-        if (caller.getReservedBooks().size() > 3) {  //TODO do zmiennej?
+        if (caller.getReservedBooks().size() > Integer.parseInt(Objects.requireNonNull(environment.getProperty("max_reservation_limit")))) {
             throw BookCopyException.userBookReservationLimitReached();
         }
         bookCopy.setReserved(caller);
-        bookCopy.setReservedUntil(LocalDateTime.now().plusDays(7)); //TODO do zmiennej?
+        bookCopy.setReservedUntil(LocalDateTime.now().plusDays(Long.parseLong(Objects.requireNonNull(environment.getProperty("enable_account_token_valid_time_in_days")))));
         bookCopy.setModifiedBy(caller);
 
     }
@@ -157,6 +164,10 @@ public class BookCopyServiceImplementation implements BookCopyService {
         }
         bookCopy.setReserved(null);
         bookCopy.setReservedUntil(null);
+        if(bookCopy.getReserved() != caller && caller.getAppRoles().stream().anyMatch(role -> role.getName().equals(Roles.ROLE_MODERATOR))){
+            mailProvider.sendReservationCanceledMail(bookCopy.getReserved().getEmail(),bookCopy.getBook().getTitle(),bookCopy.getReserved().getLanguage());
+
+        }
         bookCopy.setModifiedBy(caller);
 
     }

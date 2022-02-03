@@ -49,7 +49,7 @@ export default function Router() {
 
     return (
         <Routes>
-            <Route exact path='/home' element={isLogged() ? <HomePage/>:<Navigate replace to={'/login'}/>}/>
+            <Route exact path='/home' element={isAdmin()?<Logs/>:isLogged() ? <HomePage/>:<Navigate replace to={'/login'}/>}/>
             <Route exact path='/' element={<Navigate replace to='/home'/>}/>
             <Route exact path='/login' element={!isLogged() ? <Login/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/logs' element={isAdmin() ? <Logs/> : <Navigate replace to='/home'/>}/>
@@ -72,10 +72,8 @@ export default function Router() {
             <Route exact path='/books/add' element={isModerator() || isUser() ? <BookAdd/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/books' element={isModerator() || isUser() ? <BookList/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/books/copies/add' element={isModerator() || isUser() ? <BookCopyAdd/> : <Navigate replace to='/home'/>}/>
+            <Route exact path='/books/copies/my' element={isUser() ? <OwnedCopies /> : <Navigate replace to='/home'/>}/>
             <Route exact path='/books/copies/' element={isModerator() || isUser() ? <BookCopyList/> : <Navigate replace to='/home'/>}/>
-            <Route exact path='/books/copies/my/:action' element={isUser() ? <OwnedCopies/> : <Navigate replace to='/home'/>}/>
-            <Route exact path='/books/copies/my/:reserved' element={isUser() ? <BookCopyList/> : <Navigate replace to='/home'/>}/>
-            <Route exact path='/books/copies/my/:created' element={isUser() ? <BookCopyList/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/books/copies/:id' element= <BookCopy/> />
             <Route exact path='/authors/add' element={isModerator() || isUser() ? <AuthorAdd/> : <Navigate replace to='/home'/>}/>
             <Route path='*' element={<Navigate replace to={'/home'}/>}/>
