@@ -170,6 +170,9 @@ CREATE TABLE author_table
 
     version                BIGINT
 );
+ALTER TABLE author_table
+    ADD CONSTRAINT author_unique_comb UNIQUE (name, surname);
+
 
 CREATE TABLE book_table
 (

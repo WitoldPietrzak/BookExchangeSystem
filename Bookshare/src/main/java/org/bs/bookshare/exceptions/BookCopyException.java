@@ -1,5 +1,6 @@
 package org.bs.bookshare.exceptions;
 
+import static org.bs.bookshare.common.Codes.ACTION_NOT_ALLOWED;
 import static org.bs.bookshare.common.Codes.BOOK_ALREADY_ON_SHELF;
 import static org.bs.bookshare.common.Codes.BOOK_COPY_NOT_FOUND;
 import static org.bs.bookshare.common.Codes.BOOK_NOT_AVAILABLE;
@@ -52,5 +53,8 @@ public class BookCopyException extends AppBaseException{
     }
 
     public static BookCopyException bookAlreadyOnShelf() {return new BookCopyException(BOOK_ALREADY_ON_SHELF);
+    }
+
+    public static BookCopyException actionNotAllowed() {return new BookCopyException(ACTION_NOT_ALLOWED);
     }
 }

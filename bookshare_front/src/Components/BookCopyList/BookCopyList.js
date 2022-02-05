@@ -33,12 +33,12 @@ class BookCopyListNoTr extends React.Component {
             selectedYearBefore: "",
             selectedYearAfter: "",
             selectedCopyCount: "",
-            selectedAvailability:null,
+            selectedAvailability:true,
             copyCount: "",
             requestError: false,
             message: '',
             showFilter: false,
-            doFilter: false,
+            doFilter: true,
             filterErrors: {},
             button: 'Form.Filter',
             sortBy: 'titleUp',
@@ -487,6 +487,7 @@ class BookCopyListNoTr extends React.Component {
                             <Autocomplete
                                 className={'m-3'}
                                 filterSelectedOptions
+                                defaultValue={this.state.selectedAvailability}
                                 onChange={((event, newValue) => {
                                     this.setState({
                                         selectedAvailability: newValue

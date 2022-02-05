@@ -55,6 +55,7 @@ class OwnedCopiesNoTr extends React.Component {
                     <Col>{t('Book.title')}</Col>
                     <Col>{t('Book.coverType')}</Col>
                     <Col>{t('Book.language')}</Col>
+                    {this.action==='reserved'?<Col>{t('Book.Reservation')}</Col>:''}
                 </Row>
                 {this.state.copies.map(book => this.renderBookCopyInfo(book))}
             </div>
@@ -71,6 +72,7 @@ class OwnedCopiesNoTr extends React.Component {
                 <Col>{t(row.title)}</Col>
                 <Col>{t(row.cover)}</Col>
                 <Col>{row.language}</Col>
+                {this.action==='reserved'?<Col>{row.reservationTime}</Col>:''}
             </Row>
         )
 

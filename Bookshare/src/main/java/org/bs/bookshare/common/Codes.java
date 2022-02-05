@@ -50,6 +50,7 @@ public class Codes {
     public static final String AUTHOR_NOT_FOUND = "author_not_found";
     public static final String CANT_DELETE_AUTHOR_WITH_BOOKS = "cant_delete_author_with_books";
     public static final String QUERY_ERROR = "query_error";
+    public static final String AUTHOR_EXISTS="author_exists";
 
     public static final String ACTIVATION_MAIL_SUBJECT = "activation_mail_subject";
     public static final String ACTIVATION_MAIL_TEXT = "activation_mail_text";
@@ -63,6 +64,8 @@ public class Codes {
     public static final String RESERVATION_CANCELED_MAIL_TEXT="reservation_canceled_mail_text";
 
     public static final String ACCOUNT_CREATED_MESSAGE = "account_created";
+
+    public static final String ACCESS_DENIED = "access_denied";
 
 
     public static final String[] LANGUAGE = {"pl", "en"};

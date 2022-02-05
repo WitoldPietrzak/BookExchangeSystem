@@ -12,4 +12,5 @@ public class AuthorListElementResponseDTO {
     private String name;
     private String surname;
     private Integer booksCount;
+    private Long version;
 }

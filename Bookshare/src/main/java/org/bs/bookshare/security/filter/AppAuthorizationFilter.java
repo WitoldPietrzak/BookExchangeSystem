@@ -44,11 +44,12 @@ public class AppAuthorizationFilter extends OncePerRequestFilter {
                 String username = decodedJWT.getSubject();
                 String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                 Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                stream(roles).forEach(role -> {
-                    authorities.add(new SimpleGrantedAuthority(role));
-                });
+//                stream(roles).forEach(role -> {
+//                    authorities.add(new SimpleGrantedAuthority(role));
+//                });
+                AppUser appUser = null;
                 try {
-                    AppUser appUser = appUserService.getUser(username);
+                    appUser = appUserService.getUserWithRoles(username);
                     if(appUser == null){
                         throw AppUserException.userNotFound();
                     }
@@ -63,6 +64,7 @@ public class AppAuthorizationFilter extends OncePerRequestFilter {
                     response.setContentType("application/json");
                     new ObjectMapper().writeValue(response.getOutputStream(), response_message);
                 }
+                appUser.getAppRoles().forEach(role -> {authorities.add(new SimpleGrantedAuthority(role.getName()));});
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);

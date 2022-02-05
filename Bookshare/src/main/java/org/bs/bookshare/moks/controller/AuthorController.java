@@ -5,6 +5,7 @@ import org.bs.bookshare.exceptions.AuthorException;
 import org.bs.bookshare.model.Author;
 import org.bs.bookshare.model.Roles;
 import org.bs.bookshare.moks.dto.request.AddAuthorRequestDTO;
+import org.bs.bookshare.moks.dto.request.DeleteEntityRequestDTO;
 import org.bs.bookshare.moks.dto.response.AuthorDetailResponseDTO;
 import org.bs.bookshare.moks.dto.response.AuthorListElementResponseDTO;
 import org.bs.bookshare.moks.dto.response.AuthorListResponseDTO;
@@ -31,15 +32,15 @@ public class AuthorController {
 
     @RolesAllowed({Roles.ROLE_USER})
     @PostMapping("/add")
-    public ResponseEntity<?> addAuthor(@RequestBody AddAuthorRequestDTO dto) {
+    public ResponseEntity<?> addAuthor(@RequestBody AddAuthorRequestDTO dto) throws AuthorException {
         authorService.createAuthor(dto.getName(), dto.getSurname());
         return ResponseEntity.ok().build();
     }
 
-    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_MODERATOR})
-    @GetMapping("/delete/{id}")
-    public ResponseEntity<?> deleteAuthor(@PathVariable Long id) throws AuthorException {
-        authorService.deleteAuthor(id);
+    @RolesAllowed({Roles.ROLE_MODERATOR})
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteAuthor(@RequestBody DeleteEntityRequestDTO dto) throws AuthorException {
+        authorService.deleteAuthor(dto.getId(),dto.getVersion());
         return ResponseEntity.ok().build();
     }
 
@@ -68,7 +69,8 @@ public class AuthorController {
                                 author.getId(),
                                 author.getName(),
                                 author.getSurname(),
-                                author.getBooks().size()))
+                                author.getBooks().size(),
+                                author.getVersion()))
                         .collect(Collectors.toList())
         ));
     }

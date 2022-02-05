@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 @RestController
@@ -123,7 +125,8 @@ public class BookCopyController {
                                         .stream()
                                         .map(BookConverter::simpleGenreResponseDTOFromGenre)
                                         .collect(Collectors.toList()),
-                                bookCopy.getBook().getReleaseDate()))
+                                bookCopy.getBook().getReleaseDate(),
+                                bookCopy.getReservedUntil().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
                         .collect(Collectors.toList())));
     }
 

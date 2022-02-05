@@ -2,6 +2,7 @@ package org.bs.bookshare.moks.service;
 
 import lombok.RequiredArgsConstructor;
 import org.bs.bookshare.exceptions.AuthorException;
+import org.bs.bookshare.exceptions.GenreException;
 import org.bs.bookshare.model.AppUser;
 import org.bs.bookshare.model.Author;
 import org.bs.bookshare.mok.repositories.AppUserRepository;
@@ -27,8 +28,13 @@ public class AuthorServiceImplementation implements AuthorService {
     }
 
     @Override
-    public void createAuthor(String name, String surname) {
+    public void createAuthor(String name, String surname) throws AuthorException {
         Author author = new Author(name, surname);
+
+        List<Author> authors = authorRepository.findAll();
+        if (authors.stream().anyMatch(a -> a.getName().equals(name) && a.getSurname().equals(surname))) {
+            throw AuthorException.authorExists();
+        }
         String creatorName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser creator = userRepository.findByLogin(creatorName);
         author.setCreatedBy(creator);
@@ -37,8 +43,13 @@ public class AuthorServiceImplementation implements AuthorService {
     }
 
     @Override
-    public void deleteAuthor(Long id) throws AuthorException {
+    public void deleteAuthor(Long id, Long version) throws AuthorException {
         Author author = authorRepository.findById(id).orElseThrow(AuthorException::authorNotFound);
+
+        if(!author.getVersion().equals(version)){
+            throw AuthorException.versionMismatch();
+        }
+
         if (author.getBooks().size() > 0) {
             throw AuthorException.cantDeleteAuthorWithBooks();
         }

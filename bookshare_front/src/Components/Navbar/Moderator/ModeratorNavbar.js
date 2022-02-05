@@ -8,6 +8,13 @@ function Moderator() {
     const {t} = useTranslation();
     return (
         <Nav activeKey={window.location.hash}>
+            <NavDropdown title={t("Navbar.authors")} id={'xd'}>
+                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
+                          href="/?#/authors/add">{t("Navbar.authors.add")}</Nav.Link>
+                <NavDropdown.Divider/>
+                <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
+                          href="/?#/authors">{t("Navbar.authors.list")}</Nav.Link>
+            </NavDropdown>
             <NavDropdown title={t("Navbar.bookshelves")} id={'xd'}>
                 <Nav.Link className="navStyle" style={{color: "rgb(127, 127, 127)"}}
                           href="/?#/shelves/add">{t("Navbar.bookshelves.add")}</Nav.Link>

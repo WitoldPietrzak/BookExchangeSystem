@@ -27,6 +27,13 @@ class PasswordResetFormNoTr extends React.Component {
 
     handleSubmit() {
         const errors = {};
+        const passwordRegex = new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/);
+
+        if (!passwordRegex.test(this.state.password)) {
+            errors.password = "Form.PasswordFormatError";
+        }
+
+
         if (this.state.password.length < 8) {
             errors.password = 'Form.PasswordTooShortError';
         }

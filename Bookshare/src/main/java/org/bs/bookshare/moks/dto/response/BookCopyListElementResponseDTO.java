@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,6 +20,7 @@ public class BookCopyListElementResponseDTO {
     private String language;
     private List<SimpleGenreResponseDTO> genres;
     private Integer releaseDate;
+    private String reservationTime;
 
     public BookCopyListElementResponseDTO(Long id, String title, AuthorInnerResponseDTO author, Boolean available, String cover, String language, List<SimpleGenreResponseDTO> genres, Integer releaseDate) {
         this.id = id;
@@ -30,5 +32,29 @@ public class BookCopyListElementResponseDTO {
         this.language = language;
         this.genres = genres;
         this.releaseDate = releaseDate;
+    }
+
+    public BookCopyListElementResponseDTO(Long id, String title, AuthorInnerResponseDTO author, Boolean available,Double distance, String cover, String language, List<SimpleGenreResponseDTO> genres, Integer releaseDate) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.available = available;
+        this.distance = null;
+        this.cover = cover;
+        this.language = language;
+        this.genres = genres;
+        this.releaseDate = releaseDate;
+    }
+    public BookCopyListElementResponseDTO(Long id, String title, AuthorInnerResponseDTO author, Boolean available, String cover, String language, List<SimpleGenreResponseDTO> genres, Integer releaseDate, String reservationTime) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.available = available;
+        this.distance = null;
+        this.cover = cover;
+        this.language = language;
+        this.genres = genres;
+        this.releaseDate = releaseDate;
+        this.reservationTime = reservationTime;
     }
 }

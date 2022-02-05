@@ -15,7 +15,7 @@ export function makeChangePasswordRequest(token, oldPassword, newPassword, newPa
         that.setState({
             passwordRequestCompleted: true,
             passwordRequestFailed: false,
-            passwordResponse: response.data.message
+            passwordResponse: "password_changed"
 
         });
     }).catch((response) => {

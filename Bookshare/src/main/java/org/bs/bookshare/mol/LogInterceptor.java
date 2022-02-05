@@ -24,19 +24,16 @@ public class LogInterceptor implements HandlerInterceptor {
 
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        String params = getParameters(request);
-        log.info("Request of type "+request.getMethod() +" called using endpoint "+request.getRequestURI()+getParameters(request)+ " received response with status: "+String.valueOf(response.getStatus()));
-    }
-
-    @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        if (ex != null){
-            ex.printStackTrace();
-            log.error("Request of type "+request.getMethod() +" called using endpoint "+request.getRequestURI()+getParameters(request)+" encountered exception: "+ex);
+        if (response.getStatus() != 200){
+            if(ex != null){
+                ex.printStackTrace();
+            }
+
+            log.error("Request of type "+request.getMethod() +" called using endpoint "+request.getRequestURI()+getParameters(request)+ " received response with status: "+String.valueOf(response.getStatus()));
         }
         else {
-            log.info("Request of type "+request.getMethod() +" called using endpoint "+request.getRequestURI()+getParameters(request)+" encountered no exceptions");
+            log.info("Request of type "+request.getMethod() +" called using endpoint "+request.getRequestURI()+getParameters(request)+ " received response with status: "+String.valueOf(response.getStatus()));
         }
 
     }

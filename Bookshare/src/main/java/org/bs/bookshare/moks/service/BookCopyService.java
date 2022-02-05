@@ -21,5 +21,7 @@ public interface BookCopyService{
      List<BookCopy> getAllBookCopies();
      List<BookCopy> getAllBookCopiesFiltered(Long book, String title, Long author, List<Long> genres, Integer releasedBefore, Integer releasedAfter, String language, CoverType coverType, Boolean availability, Double lat, Double lng, Double distance);
      void moveBookCopy(BookCopy bookCopy,Bookshelf bookshelf, Long version) throws BookCopyException;
+    void lostBookCopy(BookCopy bookCopy,Long version) throws BookCopyException;
+    void foundBookCopy(BookCopy bookCopy,Long version) throws BookCopyException;
 
 }

@@ -429,10 +429,10 @@ public class AppUserServiceImplementation implements AppUserService, UserDetails
 
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "${scheduled_tasks_frequency}")
     public void deleteUnactivatedUsers() {
         Query query = entityManager.createQuery("SELECT u FROM AppUser u WHERE u.activated = false AND u.creationDateTime < :date");
-        List<AppUser> users = query.setParameter("date", LocalDateTime.now().minusDays(7)).getResultList();
+        List<AppUser> users = query.setParameter("date", LocalDateTime.now().minusDays(Long.parseLong(environment.getProperty("max_account_unactivated_days_limit")))).getResultList();
         appUserRepository.deleteAll(users);
     }
 

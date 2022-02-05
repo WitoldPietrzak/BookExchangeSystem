@@ -74,6 +74,50 @@ public class BookCopyServiceImplementation implements BookCopyService {
     }
 
     @Override
+    public void lostBookCopy(BookCopy bookCopy,Long version) throws BookCopyException {
+        if (!version.equals(bookCopy.getVersion())) {
+            throw BookCopyException.versionMismatch();
+        }
+
+        String modifierName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser modifier = userRepository.findByLogin(modifierName);
+
+        if(!modifier.equals(bookCopy.getReserved()) && !modifier.equals(bookCopy.getOwner())){
+            throw BookCopyException.actionNotAllowed();
+        }
+        bookCopy.setReserved(null);
+        bookCopy.setOwner(null);
+
+
+
+        bookCopy.setModifiedBy(modifier);
+
+
+    }
+
+    @Override
+    public void foundBookCopy(BookCopy bookCopy,Long version) throws BookCopyException {
+        if (!version.equals(bookCopy.getVersion())) {
+            throw BookCopyException.versionMismatch();
+        }
+
+        String modifierName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser modifier = userRepository.findByLogin(modifierName);
+
+        if(!(bookCopy.getBookshelf() == null && bookCopy.getOwner() == null)){
+            throw BookCopyException.actionNotAllowed();
+        }
+        bookCopy.setReserved(null);
+        bookCopy.setOwner(null);
+
+
+
+        bookCopy.setModifiedBy(modifier);
+
+
+    }
+
+    @Override
     public void addBookCopyToShelf(BookCopy bookCopy, Bookshelf bookshelf,Long version) throws BookCopyException, BookshelfException {
 
         if (!version.equals(bookshelf.getVersion())) {
@@ -133,7 +177,7 @@ public class BookCopyServiceImplementation implements BookCopyService {
             throw BookCopyException.userBookReservationLimitReached();
         }
         bookCopy.setReserved(caller);
-        bookCopy.setReservedUntil(LocalDateTime.now().plusDays(Long.parseLong(Objects.requireNonNull(environment.getProperty("enable_account_token_valid_time_in_days")))));
+        bookCopy.setReservedUntil(LocalDateTime.now().plusDays(Long.parseLong(Objects.requireNonNull(environment.getProperty("reservation_expire_time_in_days")))));
         bookCopy.setModifiedBy(caller);
 
     }
@@ -162,12 +206,12 @@ public class BookCopyServiceImplementation implements BookCopyService {
         if (bookCopy.getReserved() != caller && caller.getAppRoles().stream().noneMatch(role -> role.getName().equals(Roles.ROLE_MODERATOR))) {
             throw BookCopyException.cantCancelNotOwnReservation();
         }
-        bookCopy.setReserved(null);
-        bookCopy.setReservedUntil(null);
         if(bookCopy.getReserved() != caller && caller.getAppRoles().stream().anyMatch(role -> role.getName().equals(Roles.ROLE_MODERATOR))){
             mailProvider.sendReservationCanceledMail(bookCopy.getReserved().getEmail(),bookCopy.getBook().getTitle(),bookCopy.getReserved().getLanguage());
 
         }
+        bookCopy.setReserved(null);
+        bookCopy.setReservedUntil(null);
         bookCopy.setModifiedBy(caller);
 
     }
@@ -215,11 +259,12 @@ public class BookCopyServiceImplementation implements BookCopyService {
     }
 
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "${scheduled_tasks_frequency}")
     public void cancelReservations() {
         Query query = entityManager.createQuery("SELECT bc FROM BookCopy bc WHERE bc.reserved is not null AND bc.reservedUntil < :date");
         List<BookCopy> copies = query.setParameter("date", LocalDateTime.now()).getResultList();
         copies.forEach(bookCopy -> {
+            mailProvider.sendReservationCanceledMail(bookCopy.getReserved().getEmail(),bookCopy.getBook().getTitle(),bookCopy.getReserved().getLanguage());
             bookCopy.setReserved(null);
             bookCopy.setReservedUntil(null);
         });

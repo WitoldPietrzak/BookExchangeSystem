@@ -12,16 +12,8 @@ import {makeDeleteBookCopyRequest} from "../../Requests/moks/DeleteBookCopyReque
 import {makeBookshelfListRequest} from "../../Requests/mop/BookshelfListRequest";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import Form from "react-bootstrap/Form";
-import {makeGeocodingRequestWithVariableName} from "../../Requests/api/GoogleGeocodingRequest";
-import axios from "axios";
-import {GoogleApiWrapper, InfoWindow, Map, Marker} from "google-maps-react";
-import Icon from "../../Resources/pin.svg";
-import Bookshelf from "../Bookshelf/Bookshelf";
-import {makeMoveShelfRequest} from "../../Requests/mop/MoveShelfRequest";
 import {makeMoveBookCopyRequest} from "../../Requests/moks/MoveCopyRequest";
 import HorizontalTimeline from "react-horizontal-timeline";
-import BookModify from "../BookModify/BookModify";
 import BookCopyModify from "../BookCopyModify/BookCopyModify";
 import {makeTakeBookCopyRequest} from "../../Requests/moks/TakeBookCopyRequest";
 import {makeReserveBookCopyRequest} from "../../Requests/moks/ReserveBoobCopyRequest";
@@ -357,6 +349,7 @@ class BookCopyNoTr extends React.Component {
                                         this.setState({curIdx: index, prevIdx: curIdx});
                                     }}
                                     values={this.state.bookCopy.story.map(x => x.date)}
+                                    getLabel={(date)=>{return date.slice(0,10)}}
                                 />
                                 </Fragment> : ''}
                         </div>

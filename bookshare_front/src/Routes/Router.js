@@ -26,6 +26,7 @@ import BookCopy from "../Components/BookCopy/BookCopy";
 import AuthorAdd from "../Components/AuthorAdd/AuthorAdd";
 import OwnedCopies from "../Components/OwnedCopies/OwnedCopies";
 import ShelfMap from "../Components/ShelfMap/ShelfMap";
+import AuthorList from "../Components/AuthorList/AuthorList";
 let token = Cookies !== undefined ? Cookies.get(process.env.REACT_APP_FRONT_JWT_TOKEN_COOKIE_NAME) : undefined;
 const role = token ? Cookies.get(`${process.env.REACT_APP_ACTIVE_ROLE_COOKIE_NAME}_${Cookies.get(process.env.REACT_APP_FRONT_LOGIN_COOKIE_NAME)}`) : undefined;
 
@@ -76,6 +77,7 @@ export default function Router() {
             <Route exact path='/books/copies/' element={isModerator() || isUser() ? <BookCopyList/> : <Navigate replace to='/home'/>}/>
             <Route exact path='/books/copies/:id' element= <BookCopy/> />
             <Route exact path='/authors/add' element={isModerator() || isUser() ? <AuthorAdd/> : <Navigate replace to='/home'/>}/>
+            <Route exact path='/authors/' element={isModerator() || isUser() ? <AuthorList/> : <Navigate replace to='/home'/>}/>
             <Route path='*' element={<Navigate replace to={'/home'}/>}/>
         </Routes>
     )

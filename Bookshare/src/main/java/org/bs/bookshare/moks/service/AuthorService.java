@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AuthorService {
     Author getAuthor(Long id) throws AuthorException;
-    void createAuthor(String name, String surname);
-    void deleteAuthor(Long id) throws AuthorException;
+    void createAuthor(String name, String surname) throws AuthorException;
+    void deleteAuthor(Long id, Long version) throws AuthorException;
     List<Author> getAllAuthors();
 }
