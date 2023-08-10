@@ -34,7 +34,7 @@ The repository contains a fullstack Java/JS web application that is intended to 
 
 - [Java](www.java.com)
 - [Apache Maven](www.maven.apache.org)
-- [Spring Framework] (https://spring.io/projects/spring-framework)
+- [Spring Framework](https://spring.io/projects/spring-framework)
 - [Spring Boot](https://spring.io/projects/spring-boot)
 - [React.js](https://reactjs.org/)
 - [PostgreSQL](https://www.postgresql.org/)
