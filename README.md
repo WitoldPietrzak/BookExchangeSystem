@@ -17,17 +17,17 @@
 The repository contains a fullstack Java/JS web application that is intended to be used to help with book exchanging initiatives
 
 <p align="center">
-    <img src="https://github.com/WitoldPietrzak/BookExchangeSystem/blob/master/.github/LoggedInFrontpage.png" />
+    <img src="https://github.com/WitoldPietrzak/BookExchangeSystem/blob/main/.github/LoggedInFrontpage.png" />
 </p>
     </br>
     </br>
 <p align="center">
-    <img src="https://github.com/WitoldPietrzak/BookExchangeSystem/blob/master/.github/BookListPage.png" />
+    <img src="https://github.com/WitoldPietrzak/BookExchangeSystem/blob/main/.github/BookListPage.png" />
 </p>
     </br>
     </br>
 <p align="center">
-    <img src="https://github.com/WitoldPietrzak/BookExchangeSystem/blob/master/.github/BookPage.png" />
+    <img src="https://github.com/WitoldPietrzak/BookExchangeSystem/blob/main/.github/BookPage.png" />
 </p>
 
 ## ⛏️ Built Using <a name = "built_using"></a>
